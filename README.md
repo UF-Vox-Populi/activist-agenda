@@ -1,0 +1,2 @@
+# BLM-app
+The purpose of this app is to centralize data in terms of the current Black Lives Matter movement. This includes information about local protests, recent news, recent legislations that are being voted on, supplies needed, ways to donate, and other information that is relevant to the current movement. Future implications of this application could include anything that will aid political activism of any future movements as well.
