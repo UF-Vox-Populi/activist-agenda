@@ -56,7 +56,7 @@ export default function SignIn() {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography color="textPrimary" component="h1" variant="h5">
           Sign in
         </Typography>
         <form className={classes.form} noValidate>
