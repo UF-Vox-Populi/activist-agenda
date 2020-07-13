@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+// Made using Material-UI SignIn Template
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -26,6 +28,7 @@ function Copyright() {
   );
 }
 
+//Styling
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -45,6 +48,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
+
+//Function to return props/data on form submit
 
 export default function SignIn() {
   const classes = useStyles();
