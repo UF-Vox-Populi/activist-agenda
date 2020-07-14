@@ -4,7 +4,7 @@
   Based upon Material-UI Template from https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
  */
 
-import React, { Component } from 'react';
+import React, { useState, Component } from 'react';
 //improt material ui components
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -17,7 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 //import Redirect
@@ -25,7 +25,7 @@ import {Redirect} from 'react-router-dom';
 //import cookies
 import Cookies from 'universal-cookie';
 
-var calls = require('./serverCalls.js');
+var calls = require('../serverCalls');
 
 // Made using Material-UI SignIn Template
 
@@ -63,37 +63,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const loginSuccess = makeStyles((theme) => ({
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-    color: theme.palette.success
-  }
-}));
-
-const loginFailure = makeStyles((theme) => ({
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-    color: theme.palette.warning
-  }
-}));
-
 
 //Function to return props/data on form submit
 
-export default function SignIn() {
+export default function SignIn(props) {
+
+  //use theme styling
   const classes = useStyles();
-  let btn_class = classes.submit;
+
+  //stores states for button color and text
+  const [btn_color, setbtnColor] = useState('');
+  const [btn_text, setbtnText] = useState('Sign In');
   
+  //allows theme to be accessed inline
+  const theme = useTheme();
+
   //stores entered user information
   var user = {
     username: '',
     password: ''
   }
-
-  var buttonText = 'Sign In';
-
+  
+  //
   const userCookie = new Cookies();
-  userCookie.set('userState', false, { path: '/'});
 
   //Handlers
   const handleUsername = (event) => {
@@ -104,24 +96,25 @@ export default function SignIn() {
   }
   const handleRemember = (event) => {
     //Use cookie to store IP and compare when next connected from IP
+    
   }
   const handleSubmit = (event) => {
     event.preventDefault();
     calls.checkUser(user.username, user.password).then(out => {
-      if (out)
-      {
+      if (out) {
         //set logged in, need cookie?
-        btn_class = loginSuccess();
-        userCookie.set('userState', true, { path: '/'});
-        buttonText = 'Success! Signing in...';
-
+        setbtnColor(theme.palette.success.main);
+        userCookie.set('userAuthed', true, { path: '/', sameSite: 'strict'});
+        setbtnText('Success! Signing in...');
+        console.log("User found, login success.");
         //redirect to profile page
         return <Redirect to="/profile/" />
       }
       else {
         //incorrect login info
-        btn_class = loginFailure();
-        buttonText = 'Incorrect Email or Password. Try Again.';
+        setbtnColor(theme.palette.error.main);
+        setbtnText('Incorrect Email or Password. Try Again.');
+        console.log("user not found.");
       }
     })
   }
@@ -169,13 +162,15 @@ export default function SignIn() {
           />
           <Button
             type="submit"
-            label={buttonText}
             fullWidth
             variant="contained"
             color="primary"
-            className={btn_class}
+            style={{backgroundColor: btn_color}}
+            className={classes.submit}
             onClick={handleSubmit}
-          />
+          >
+            {btn_text}
+          </Button>
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
@@ -183,7 +178,7 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/signup/" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
