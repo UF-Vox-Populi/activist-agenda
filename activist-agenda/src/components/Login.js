@@ -4,8 +4,8 @@
   Based upon Material-UI Template from https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
  */
 
-
 import React, { Component } from 'react';
+//improt material ui components
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -20,6 +20,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+//import Redirect
+import {Redirect} from 'react-router-dom';
 //import cookies
 import Cookies from 'universal-cookie';
 
@@ -101,7 +103,7 @@ export default function SignIn() {
     user.password = event.target.value;
   }
   const handleRemember = (event) => {
-
+    //Use cookie to store IP and compare when next connected from IP
   }
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -114,6 +116,7 @@ export default function SignIn() {
         buttonText = 'Success! Signing in...';
 
         //redirect to profile page
+        return <Redirect to="/profile/" />
       }
       else {
         //incorrect login info
