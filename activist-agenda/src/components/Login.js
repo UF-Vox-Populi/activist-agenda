@@ -1,4 +1,11 @@
-import React from 'react';
+/* 
+  Login Page Component
+  Created by Laurence Mullen
+  Based upon Material-UI Template from https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
+ */
+
+
+import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +19,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+//import cookies
+import Cookies from 'universal-cookie';
+
+var calls = require('./serverCalls.js');
 
 // Made using Material-UI SignIn Template
 
@@ -49,10 +61,68 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const loginSuccess = makeStyles((theme) => ({
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+    color: theme.palette.success
+  }
+}));
+
+const loginFailure = makeStyles((theme) => ({
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+    color: theme.palette.warning
+  }
+}));
+
+
 //Function to return props/data on form submit
 
 export default function SignIn() {
   const classes = useStyles();
+  let btn_class = classes.submit;
+  
+  //stores entered user information
+  var user = {
+    username: '',
+    password: ''
+  }
+
+  var buttonText = 'Sign In';
+
+  const userCookie = new Cookies();
+  userCookie.set('userState', false, { path: '/'});
+
+  //Handlers
+  const handleUsername = (event) => {
+    user.username = event.target.value;
+  }
+  const handlePassword = (event) => {
+    user.password = event.target.value;
+  }
+  const handleRemember = (event) => {
+
+  }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    calls.checkUser(user.username, user.password).then(out => {
+      if (out)
+      {
+        //set logged in, need cookie?
+        btn_class = loginSuccess();
+        userCookie.set('userState', true, { path: '/'});
+        buttonText = 'Success! Signing in...';
+
+        //redirect to profile page
+      }
+      else {
+        //incorrect login info
+        btn_class = loginFailure();
+        buttonText = 'Incorrect Email or Password. Try Again.';
+      }
+    })
+  }
+
 
   return (
     <Container component="main" maxWidth="xs">
@@ -75,6 +145,7 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={handleUsername}
           />
           <TextField
             variant="outlined"
@@ -86,20 +157,22 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handlePassword}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
+            onChange={handleRemember}
           />
           <Button
             type="submit"
+            label={buttonText}
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
+            className={btn_class}
+            onClick={handleSubmit}
+          />
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
