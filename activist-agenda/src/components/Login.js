@@ -24,7 +24,6 @@ import Container from '@material-ui/core/Container';
 import {Redirect} from 'react-router-dom';
 //import cookies
 import Cookies from 'universal-cookie';
-import { wait } from '@testing-library/react';
 
 var calls = require('../serverCalls');
 
@@ -68,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 //Function to return props/data on form submit
 
 export default function SignIn(props) {
-
+  
   //use theme styling
   const classes = useStyles();
   
@@ -82,6 +81,7 @@ export default function SignIn(props) {
   const [user_error, setUserErr] = useState(false);
   const [pass_error, setPassErr] = useState(false);
   
+  const [remember, updateRemember] = useState(false);
   //allows theme to be accessed inline
   const theme = useTheme();
 
@@ -117,8 +117,10 @@ export default function SignIn(props) {
   }
   const handleRemember = (event) => {
     //Use cookie to store IP and compare when next connected from IP
-    
+    updateRemember(!remember);
+    console.log(remember);
   }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     
@@ -133,7 +135,13 @@ export default function SignIn(props) {
         //if exists and matches
         if (out) {
           //set logged in, need cookie?
-          userCookie.set('userAuthed', true, { path: '/', sameSite: 'strict'});
+
+          //if remember is true, then the cookie will be kept for 7 days, otherwise only the session
+          if (remember)
+            userCookie.set('authedUser', {email: user.email, password: user.password, remember: true, }, { path: '/', sameSite: 'strict', maxAge: 604800});
+          else 
+            userCookie.set('authedUser', {email: user.email, password: user.password, remember: false, }, { path: '/', sameSite: 'strict'});
+
           //set button styling
           setbtnColor(theme.palette.success.main);
           setbtnText(btn_text_options[1]);
