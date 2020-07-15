@@ -108,17 +108,18 @@ export default function SignIn(props) {
       password: user.password});
     //reset button
     resetBtn();
+    if (user_error) setUserErr(false);
   }
   const handlePassword = (event) => {
     updateUser({
       username: user.username,
       password: event.target.value});
     resetBtn();
+    if (pass_error) setPassErr(false);
   }
   const handleRemember = (event) => {
-    //Use cookie to store IP and compare when next connected from IP
+    //toggle remember state
     updateRemember(!remember);
-    console.log(remember);
   }
 
   const handleSubmit = (event) => {
@@ -134,13 +135,14 @@ export default function SignIn(props) {
       calls.checkUser(user.username, user.password).then(out => {
         //if exists and matches
         if (out) {
-          //set logged in, need cookie?
-
-          //if remember is true, then the cookie will be kept for 7 days, otherwise only the session
-          if (remember)
-            userCookie.set('authedUser', {email: user.email, password: user.password, remember: true, }, { path: '/', sameSite: 'strict', maxAge: 604800});
-          else 
-            userCookie.set('authedUser', {email: user.email, password: user.password, remember: false, }, { path: '/', sameSite: 'strict'});
+          //set logged in, get user id to store in cookie
+          calls.getUserIDbyEmail(user.username).then(id => {
+            //if remember is true, then the cookie will be kept for 7 days, otherwise only the session. Will be replaced if another user signs in
+            if (remember)
+              userCookie.set('authedUser', id, { path: '/', sameSite: 'strict', secure: true, maxAge: 604800});
+            else 
+              userCookie.set('authedUser', id, { path: '/', sameSite: 'strict', secure: true});
+          })
 
           //set button styling
           setbtnColor(theme.palette.success.main);
