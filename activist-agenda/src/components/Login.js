@@ -24,6 +24,7 @@ import Container from '@material-ui/core/Container';
 import {Redirect} from 'react-router-dom';
 //import cookies
 import Cookies from 'universal-cookie';
+import { wait } from '@testing-library/react';
 
 var calls = require('../serverCalls');
 
@@ -33,8 +34,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        ActivistAgenda
+      <Link color="inherit" href="#">
+        Vox-Populi
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.info.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -70,10 +71,12 @@ export default function SignIn(props) {
 
   //use theme styling
   const classes = useStyles();
-
+  
+  const btn_text_options = ['Sign In', 'Success! Signing in...', 'Incorrect Email or Password. Try Again.'];
+  
   //stores states for button color and text
   const [btn_color, setbtnColor] = useState('');
-  const [btn_text, setbtnText] = useState('Sign In');
+  const [btn_text, setbtnText] = useState(btn_text_options[0]);
 
   //states for detecting empty fields
   const [user_error, setUserErr] = useState(false);
@@ -83,9 +86,16 @@ export default function SignIn(props) {
   const theme = useTheme();
 
   //stores entered user information
-  var user = {
+  const [user, updateUser] = useState({
     username: '',
     password: ''
+  });
+
+  function resetBtn() {
+    if (btn_text !== btn_text_options[0]) {
+      setbtnColor(theme.palette.primary.main);
+      setbtnText(btn_text_options[0]);
+    }
   }
   
   //creates cookie object
@@ -93,10 +103,17 @@ export default function SignIn(props) {
 
   //Handlers
   const handleUsername = (event) => {
-    user.username = event.target.value;
+    updateUser({
+      username: event.target.value,
+      password: user.password});
+    //reset button
+    resetBtn();
   }
   const handlePassword = (event) => {
-    user.password = event.target.value;
+    updateUser({
+      username: user.username,
+      password: event.target.value});
+    resetBtn();
   }
   const handleRemember = (event) => {
     //Use cookie to store IP and compare when next connected from IP
@@ -104,13 +121,13 @@ export default function SignIn(props) {
   }
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    
     //check if fields are empty
-    if (user.username === '') setUserErr(true);
-    if (user.password === '') setPassErr(true);
-
+    if (user.username === '' ? setUserErr(true) : setUserErr(false));
+    if (user.password === '' ? setPassErr(true) : setPassErr(false));
+    
     //if fields are not empty
-    if (!setUserErr && !setPassErr) {
+    if (!user_error && !pass_error) {
       //check database for matching email/pass
       calls.checkUser(user.username, user.password).then(out => {
         //if exists and matches
@@ -119,14 +136,14 @@ export default function SignIn(props) {
           userCookie.set('userAuthed', true, { path: '/', sameSite: 'strict'});
           //set button styling
           setbtnColor(theme.palette.success.main);
-          setbtnText('Success! Signing in...');
-          //redirect to profile page
-          return <Redirect to="/profile/" />
+          setbtnText(btn_text_options[1]);
+          //redirect to home page
+          return <Redirect to="/" />
         }
         else {
           //incorrect login info, set button styling to error
           setbtnColor(theme.palette.error.main);
-          setbtnText('Incorrect Email or Password. Try Again.');
+          setbtnText(btn_text_options[2]);
         }
       })
     }
