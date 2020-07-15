@@ -73,6 +73,9 @@ export default function SignIn(props) {
 
   //stores states for button color and text
   const [btn_color, setbtnColor] = useState('');
+  const [user_error, setUserErr] = useState(false);
+  const [pass_error, setPassErr] = useState(false);
+
   const [btn_text, setbtnText] = useState('Sign In');
   
   //allows theme to be accessed inline
@@ -100,23 +103,31 @@ export default function SignIn(props) {
   }
   const handleSubmit = (event) => {
     event.preventDefault();
-    calls.checkUser(user.username, user.password).then(out => {
-      if (out) {
-        //set logged in, need cookie?
-        setbtnColor(theme.palette.success.main);
-        userCookie.set('userAuthed', true, { path: '/', sameSite: 'strict'});
-        setbtnText('Success! Signing in...');
-        console.log("User found, login success.");
-        //redirect to profile page
-        return <Redirect to="/profile/" />
-      }
-      else {
-        //incorrect login info
-        setbtnColor(theme.palette.error.main);
-        setbtnText('Incorrect Email or Password. Try Again.');
-        console.log("user not found.");
-      }
-    })
+    if (user.username === '') {
+      setUserErr(true);
+    }
+    if (user.password === '') {
+      setPassErr(true);
+    }
+    if (user.username !== '' && user.password !== '') {
+      calls.checkUser(user.username, user.password).then(out => {
+        if (out) {
+          //set logged in, need cookie?
+          setbtnColor(theme.palette.success.main);
+          userCookie.set('userAuthed', true, { path: '/', sameSite: 'strict'});
+          setbtnText('Success! Signing in...');
+          console.log("User found, login success.");
+          //redirect to profile page
+          return <Redirect to="/profile/" />
+        }
+        else {
+          //incorrect login info
+          setbtnColor(theme.palette.error.main);
+          setbtnText('Incorrect Email or Password. Try Again.');
+          console.log("user not found.");
+        }
+      })
+    }
   }
 
 
@@ -141,6 +152,7 @@ export default function SignIn(props) {
             name="email"
             autoComplete="email"
             autoFocus
+            error={user_error}
             onChange={handleUsername}
           />
           <TextField
@@ -152,6 +164,7 @@ export default function SignIn(props) {
             label="Password"
             type="password"
             id="password"
+            error={pass_error}
             autoComplete="current-password"
             onChange={handlePassword}
           />
