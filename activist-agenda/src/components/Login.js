@@ -73,10 +73,11 @@ export default function SignIn(props) {
 
   //stores states for button color and text
   const [btn_color, setbtnColor] = useState('');
+  const [btn_text, setbtnText] = useState('Sign In');
+
+  //states for detecting empty fields
   const [user_error, setUserErr] = useState(false);
   const [pass_error, setPassErr] = useState(false);
-
-  const [btn_text, setbtnText] = useState('Sign In');
   
   //allows theme to be accessed inline
   const theme = useTheme();
@@ -87,7 +88,7 @@ export default function SignIn(props) {
     password: ''
   }
   
-  //
+  //creates cookie object
   const userCookie = new Cookies();
 
   //Handlers
@@ -103,28 +104,29 @@ export default function SignIn(props) {
   }
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (user.username === '') {
-      setUserErr(true);
-    }
-    if (user.password === '') {
-      setPassErr(true);
-    }
-    if (user.username !== '' && user.password !== '') {
+
+    //check if fields are empty
+    if (user.username === '') setUserErr(true);
+    if (user.password === '') setPassErr(true);
+
+    //if fields are not empty
+    if (!setUserErr && !setPassErr) {
+      //check database for matching email/pass
       calls.checkUser(user.username, user.password).then(out => {
+        //if exists and matches
         if (out) {
           //set logged in, need cookie?
-          setbtnColor(theme.palette.success.main);
           userCookie.set('userAuthed', true, { path: '/', sameSite: 'strict'});
+          //set button styling
+          setbtnColor(theme.palette.success.main);
           setbtnText('Success! Signing in...');
-          console.log("User found, login success.");
           //redirect to profile page
           return <Redirect to="/profile/" />
         }
         else {
-          //incorrect login info
+          //incorrect login info, set button styling to error
           setbtnColor(theme.palette.error.main);
           setbtnText('Incorrect Email or Password. Try Again.');
-          console.log("user not found.");
         }
       })
     }
