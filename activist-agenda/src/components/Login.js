@@ -25,6 +25,9 @@ import {Redirect} from 'react-router-dom';
 //import cookies
 import Cookies from 'universal-cookie';
 
+// ** May be used to help switch between pages, if needed.
+import {useHistory} from 'react-router-dom';
+
 var calls = require('../serverCalls');
 
 // Made using Material-UI SignIn Template
@@ -90,6 +93,9 @@ export default function SignIn(props) {
     username: '',
     password: ''
   });
+
+  //May be needed to switch between pages
+  const history = useHistory();
 
   function resetBtn() {
     if (btn_text !== btn_text_options[0]) {
