@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+//This is the current schema for the user database. Only the username, email, and password are required for an entry.
+
 const userSchema = new mongoose.Schema({
 
   username:{type:String, required:true},
