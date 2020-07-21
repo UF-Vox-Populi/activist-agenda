@@ -23,6 +23,7 @@ Resources:
 
 // Personal components
 import React from 'react';
+import {useState} from 'react';
 import ProtestCard from './ProtestCard';
 import CreateNewProtestCard from './CreateNewProtestCard';
 import ProtestSortButtons from './ProtestSortButtons';
@@ -54,11 +55,16 @@ import PersonIcon from '@material-ui/icons/Person';
 import SearchIcon from '@material-ui/icons/Search';
 import SettingsIcon from '@material-ui/icons/Settings';
 import StarIcon from '@material-ui/icons/Star';
+import Dialog from '@material-ui/core/Dialog';
+
 
 // ** This is needed to route to other pages. May not be necessary depending on how it's handled, but works for connecting components in a pinch.
 import {useHistory} from 'react-router-dom';
 import Login from './Login';
 import Signup from './SignUp';
+import Cookies from 'universal-cookie';
+
+var calls = require('../serverCalls');
 
 /********** USESTYLES **********/
 
@@ -135,6 +141,9 @@ const useStyles = makeStyles((theme) => ({
   },
   // needed for content to be below appbar
   toolbar: theme.mixins.toolbar,
+  btn: {
+    margin: theme.spacing(0, .5, 0)
+  },
 }));
 
 /********** MAIN **********/
@@ -145,9 +154,23 @@ const AppSkeleton = (props) => {
   const { window } = props;
   const history = useHistory(); // ** Needed to switch to another page.
 
+  //Check authedUser cookie and set user state
+  const [user, setUser] = useState('');
+  const cookie = new Cookies();
+
+  // Handles when user is logged in
+  const [loggedIn, setLoggedIn] = React.useState(false); // for logged in abilities
+
+  const handleLoggedIn = () => {
+    setUser(cookie.get('authedUser'));
+    setLoggedIn(true);
+    console.log('User logged in with id: ', user);
+  }
+
+  if (cookie.get('authedUser') && !loggedIn) handleLoggedIn();
+
   const container = window !== undefined ? () => window().document.body : undefined; // for mobile viewing
   const [mobileOpen, setMobileOpen] = React.useState(false); // for mobile viewing
-  const [loggedIn, setLoggedIn] = React.useState(false); // for logged in abilities
   const [selectedNavIndex, setSelectedNavIndex] = React.useState(0); // for left sidebar nav
   const [anchorEl, setAnchorEl] = React.useState(null); // passes location of button that called it
   
@@ -166,10 +189,18 @@ const AppSkeleton = (props) => {
     setAnchorEl(event.currentTarget);
   };
 
-  // Handles when user is logged in
-  const handleloggedIn = () => {
-    setLoggedIn(!loggedIn);
-  }
+  //when button is opened
+  const [open1, setOpen1] = React.useState(false);
+
+  const toggleOpen1 = (val) => {
+    setOpen1(val);
+  };
+
+  const [open2, setOpen2] = React.useState(false);
+
+  const toggleOpen2 = (val) => {
+    setOpen2(val);
+  };
   
   // Related to the avatar menu if logged in
   const [avatarMenuOpen, setAvatarMenuOpen] = React.useState(false);
@@ -288,8 +319,24 @@ const AppSkeleton = (props) => {
               inputProps={{'aria-label': 'search'}}
             />
           </div>
-          <Login/>
-          <Signup/>
+          <Button variant="outlined" className={classes.btn} color="secondary" onClick={() => toggleOpen1(true)}>
+            Login
+          </Button>
+          <Dialog open={open1} onClose={() => toggleOpen1(false)} noValidate>
+            <Login 
+              handleOpen = {toggleOpen1}
+              modal = {true}
+            />
+          </Dialog>
+          <Button variant="outlined" className={classes.btn} color="secondary" onClick={() => toggleOpen2(true)}>
+            Sign up
+          </Button>
+          <Dialog open={open2} onClose={() => toggleOpen2(false)} noValidate>
+            <Signup 
+              handleOpen = {toggleOpen2}
+              modal = {true}
+            />
+          </Dialog>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="drawer">

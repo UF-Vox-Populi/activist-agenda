@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.info.main,
   },
-  form: {
+  grid: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
@@ -57,16 +57,13 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(3, 2, 0),
   },
-  btn: {
-    margin: theme.spacing(0, 1, 0),
-  }
 }));
 
 const emailRegex = RegExp(
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 );
 
-export default function SignUp() {
+export default function SignUp(props) {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -74,23 +71,15 @@ export default function SignUp() {
 
   //Dialog box control
   const [valid, setValid] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
-  
-  const handleClickOpen = () => {
-    setOpen(true);
-  }
-  const handleClose = () => {
-    setOpen(false);
-  } 
 
   //Form data
   const [formData, updateForm] = React.useState({
-    userName: null,
-    firstName: null, 
-    lastName: null, 
-    email: null, 
-    password1: null, 
-    password2: null
+    userName: "",
+    firstName: "", 
+    lastName: "", 
+    email: "", 
+    password1: "", 
+    password2: ""
   });
 
   //Form errors
@@ -127,13 +116,12 @@ export default function SignUp() {
         formErrs.password1 = value.length < 6 ? "minimum 6 characters required" : "";
         break;
       case "password2":
-        formErrs.password2 = (formData.password1 === formData.password2) ? "" : "passwords must match"; 
+        formErrs.password2 = (formData.password1 === value) ? "" : "passwords must match"; 
         break;
       default:
         break;
     }
     //
-    updateForm({[name]: value});
   }
 
   //Handled based on server response
@@ -143,32 +131,29 @@ export default function SignUp() {
     console.log("Testing handleSubmission");
     console.log("Form data\n", formData);
     console.log("Form errors\n", formErrs);
+
+    if (props.modal)
+      props.handleOpen(false);
+    else
+      history.push('/');
   }
 
-  
-
   return (
-    
-    <div>
-      <Button variant="outlined" className={classes.btn} color="secondary" onClick={handleClickOpen}>
-        Sign-Up
-      </Button>
-    <Dialog open={open} onClose={handleClose} noValidate>
       <FormControl>
-        <Container component="main" maxWidth="sm">      
+        <Container component="main" maxWidth="xs">      
             <CssBaseline />
               <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
                   <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                  Sign-up to Speak Out!
+                  Sign up to Speak Out!
                 </Typography>
-                  <Grid container spacing={2}>
+                <Grid className="grid" container spacing={2}>
                   <Grid item xs={12}>
                       <TextField
                         name="userName"
-                        error={formErrs.userName != ""}
+                        error={formErrs.userName !== ""}
                         helperText={formErrs.userName}
                         variant="outlined"
                         required
@@ -202,7 +187,7 @@ export default function SignUp() {
                     <Grid item xs={12}>
                       <TextField
                         variant="outlined"
-                        error={formErrs.email != ""}
+                        error={formErrs.email !== ""}
                         helperText={formErrs.email}
                         required
                         fullWidth
@@ -215,7 +200,7 @@ export default function SignUp() {
                     <Grid item xs={12}>
                       <TextField
                         variant="outlined"
-                        error={formErrs.password1 != ""}
+                        error={formErrs.password1 !== ""}
                         helperText={formErrs.password1}
                         required
                         fullWidth
@@ -229,7 +214,7 @@ export default function SignUp() {
                     <Grid item xs={12}>
                       <TextField
                         variant="outlined"
-                        error={formErrs.password2 != ""}
+                        error={formErrs.password2 !== ""}
                         helperText={formErrs.password2}
                         required
                         fullWidth
@@ -253,7 +238,7 @@ export default function SignUp() {
                     fullWidth
                     variant="contained"
                     className={classes.submit}
-                    disabled={valid}
+                    disabled={!valid}
                     onClick={handleSubmission}
                   >
                     Sign Up
@@ -271,7 +256,5 @@ export default function SignUp() {
               </Box>
             </Container>
         </FormControl>
-    </Dialog>
-  </div>
   );
 }

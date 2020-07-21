@@ -30,8 +30,8 @@ function App() {
         <MuiThemeProvider theme={theme}>
           <Switch>
             <Route exact path="/" component = {AppSkeleton} />
-            <Route path="/signup" component = {SignUp} />
-            <Route path="/login" component = {Login} />
+            <Route path="/signup" render={(props) => <SignUp open={true} modal={false} />} />
+            <Route path="/login" render={(props) => <Login open={true} modal={false} />} />
           </Switch>
         </MuiThemeProvider>
         </header>

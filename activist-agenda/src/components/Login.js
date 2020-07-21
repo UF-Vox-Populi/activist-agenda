@@ -19,7 +19,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Dialog from '@material-ui/core/Dialog';
 
 
 //import Redirect
@@ -66,9 +65,6 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  btn: {
-    margin: theme.spacing(0, 1, 0)
-  },
 }));
 
 
@@ -98,17 +94,8 @@ export default function SignIn(props) {
     username: '',
     password: ''
   });
-
   //Modal button
-  const [open, setOpen] = React.useState(false);
-  
-  const handleClickOpen = () => {
-    setOpen(true);
-  }
-  const handleClose = () => {
-    setOpen(false);
-  } 
-
+ 
   //May be needed to switch between pages
   const history = useHistory();
 
@@ -169,7 +156,10 @@ export default function SignIn(props) {
           setbtnColor(theme.palette.success.main);
           setbtnText(btn_text_options[1]);
           //redirect to home page
-          return <Redirect to="/" />
+          if (props.modal)
+            props.handleOpen(false);
+          else
+            history.push('/');
         }
         else {
           //incorrect login info, set button styling to error
@@ -182,12 +172,7 @@ export default function SignIn(props) {
 
 
   return (
-    <div>
-    <Button variant="outlined" className={classes.btn} color="secondary" onClick={handleClickOpen}>
-        Login
-      </Button>
-    <Dialog open={open} onClose={handleClose} noValidate>
-    <Container component="main" maxWidth="sm">
+    <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -257,7 +242,5 @@ export default function SignIn(props) {
         <Copyright />
       </Box>
     </Container>
-    </Dialog>
-  </div>
   );
 }
