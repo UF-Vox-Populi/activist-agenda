@@ -5,7 +5,7 @@ import Login from './components/Login';
 import SignUp from './components/SignUp';
 import AppSkeleton from './components/AppSkeleton';
 import { MuiThemeProvider } from '@material-ui/core/styles'; // Allows custom color theme
-import theme from './themes/login-theme' //Only draws from the login theme. Can't figure out how to switch to the skeleton theme :/
+import theme from './theme.js' //Only draws from the login theme. Can't figure out how to switch to the skeleton theme :/
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 
 /*
