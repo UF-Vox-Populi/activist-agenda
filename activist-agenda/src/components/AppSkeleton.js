@@ -158,17 +158,22 @@ const AppSkeleton = (props) => {
   const [user, setUser] = useState('');
   const cookie = new Cookies();
 
-  // Handles when user is logged in
+  // Handles when user is logged in, checks for cookie on load
   const [loggedIn, setLoggedIn] = React.useState(false); // for logged in abilities
 
   const handleLoggedIn = () => {
     setUser(cookie.get('authedUser'));
     setLoggedIn(true);
-    console.log('User logged in with id: ', user);
+    console.log('User logged in with id: ', cookie.get('authedUser'));
   }
 
   if (cookie.get('authedUser') && !loggedIn) handleLoggedIn();
 
+  const checkLogin = () => {
+    if (cookie.get('authedUser') && !loggedIn) handleLoggedIn();
+  };
+
+  // States
   const container = window !== undefined ? () => window().document.body : undefined; // for mobile viewing
   const [mobileOpen, setMobileOpen] = React.useState(false); // for mobile viewing
   const [selectedNavIndex, setSelectedNavIndex] = React.useState(0); // for left sidebar nav
@@ -189,7 +194,7 @@ const AppSkeleton = (props) => {
     setAnchorEl(event.currentTarget);
   };
 
-  //when button is opened
+  //when login or signup ckicked, handle open state
   const [open1, setOpen1] = React.useState(false);
 
   const toggleOpen1 = (val) => {
@@ -322,7 +327,8 @@ const AppSkeleton = (props) => {
           <Button variant="outlined" className={classes.btn} color="secondary" onClick={() => toggleOpen1(true)}>
             Login
           </Button>
-          <Dialog open={open1} onClose={() => toggleOpen1(false)} noValidate>
+          <Dialog open={open1} onClose={() => {toggleOpen1(false)
+            checkLogin()}} noValidate>
             <Login 
               handleOpen = {toggleOpen1}
               modal = {true}

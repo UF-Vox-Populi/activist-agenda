@@ -47,10 +47,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.info.main,
   },
-  grid: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -121,7 +117,6 @@ export default function SignUp(props) {
       default:
         break;
     }
-    //
   }
 
   //Handled based on server response
@@ -147,9 +142,9 @@ export default function SignUp(props) {
                   <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                  Sign up to Speak Out!
+                  Sign up to Speak Out!          
                 </Typography>
-                <Grid className="grid" container spacing={2}>
+                <Grid container spacing={2} style = {{marginTop: theme.spacing(1)}}>
                   <Grid item xs={12}>
                       <TextField
                         name="userName"

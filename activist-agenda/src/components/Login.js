@@ -21,12 +21,10 @@ import { useTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 
-//import Redirect
-import {Redirect} from 'react-router-dom';
 //import cookies
 import Cookies from 'universal-cookie';
 
-// ** May be used to help switch between pages, if needed.
+// Used to help switch between pages
 import {useHistory} from 'react-router-dom';
 
 var calls = require('../serverCalls');
@@ -156,10 +154,12 @@ export default function SignIn(props) {
           setbtnColor(theme.palette.success.main);
           setbtnText(btn_text_options[1]);
           //redirect to home page
+          setTimeout(() => {
           if (props.modal)
             props.handleOpen(false);
           else
             history.push('/');
+          },750);
         }
         else {
           //incorrect login info, set button styling to error
