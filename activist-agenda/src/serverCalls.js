@@ -12,7 +12,7 @@ export function checkUser(email, password) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:/userCheck/",
+        url: "http://localhost:5000/userCheck/",
         params: {
             mail: email,
             pass: password
