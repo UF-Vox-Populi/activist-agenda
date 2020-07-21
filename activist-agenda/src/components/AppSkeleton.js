@@ -161,17 +161,16 @@ const AppSkeleton = (props) => {
   // Handles when user is logged in, checks for cookie on load
   const [loggedIn, setLoggedIn] = React.useState(false); // for logged in abilities
 
-  const handleLoggedIn = () => {
-    setUser(cookie.get('authedUser'));
-    setLoggedIn(true);
-    console.log('User logged in with id: ', cookie.get('authedUser'));
-  }
-
-  if (cookie.get('authedUser') && !loggedIn) handleLoggedIn();
-
+  // Changes login state and stores userID in user state if cookie exists
   const checkLogin = () => {
-    if (cookie.get('authedUser') && !loggedIn) handleLoggedIn();
+    if (cookie.get('authedUser') && !loggedIn) {
+      setUser(cookie.get('authedUser'));
+      setLoggedIn(true);
+      console.log('User logged in with id: ', cookie.get('authedUser')); //remove later
+    }
   };
+
+  checkLogin(); //run on startup
 
   // States
   const container = window !== undefined ? () => window().document.body : undefined; // for mobile viewing
