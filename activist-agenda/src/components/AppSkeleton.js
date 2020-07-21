@@ -56,7 +56,9 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import StarIcon from '@material-ui/icons/Star';
 
 // ** This is needed to route to other pages. May not be necessary depending on how it's handled, but works for connecting components in a pinch.
-import {useHistory} from 'react-router-dom'
+import {useHistory} from 'react-router-dom';
+import Login from './Login';
+import Signup from './SignUp';
 
 /********** USESTYLES **********/
 
@@ -286,20 +288,8 @@ const AppSkeleton = (props) => {
               inputProps={{'aria-label': 'search'}}
             />
           </div>
-          <Button
-            ref={anchorRef}
-            color="inherit"
-            onClick={handleAvatarMenuToggle}
-          >
-            Login
-          </Button>
-          <Button
-            ref={anchorRef}
-            color="inherit"
-            onClick={handleAvatarMenuToggle}
-          >
-            Signup
-          </Button>
+          <Login/>
+          <Signup/>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="drawer">

@@ -19,6 +19,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Dialog from '@material-ui/core/Dialog';
+
 
 //import Redirect
 import {Redirect} from 'react-router-dom';
@@ -64,6 +66,9 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  btn: {
+    margin: theme.spacing(0, 1, 0)
+  },
 }));
 
 
@@ -93,6 +98,16 @@ export default function SignIn(props) {
     username: '',
     password: ''
   });
+
+  //Modal button
+  const [open, setOpen] = React.useState(false);
+  
+  const handleClickOpen = () => {
+    setOpen(true);
+  }
+  const handleClose = () => {
+    setOpen(false);
+  } 
 
   //May be needed to switch between pages
   const history = useHistory();
@@ -167,7 +182,12 @@ export default function SignIn(props) {
 
 
   return (
-    <Container component="main" maxWidth="xs">
+    <div>
+    <Button variant="outlined" className={classes.btn} color="secondary" onClick={handleClickOpen}>
+        Login
+      </Button>
+    <Dialog open={open} onClose={handleClose} noValidate>
+    <Container component="main" maxWidth="sm">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -237,5 +257,7 @@ export default function SignIn(props) {
         <Copyright />
       </Box>
     </Container>
+    </Dialog>
+  </div>
   );
 }
