@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { useTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { createMuiTheme } from '@material-ui/core/styles'; 
 import FormControl from '@material-ui/core/FormControl';
 import Container from '@material-ui/core/Container';
@@ -36,30 +36,6 @@ function Copyright() {
   );
 }
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#F4F1DE',
-    },
-    secondary: {
-      main: '#3D405B',
-    },
-    error: {
-      main: '#A7333F',
-    },
-    warning: {
-      main: '#E07A5F',
-    },
-    info: {
-      main: '#F2CC8F',
-    },
-    success: {
-      main: '#81B29A',
-    }
-  },
-});
-
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -69,14 +45,13 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    backgroundColor: theme.palette.info.main,
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  button: {
+    margin: theme.spacing(3, 2, 0),
   },
 }));
 
@@ -84,29 +59,23 @@ const emailRegex = RegExp(
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 );
 
-export default function SignUp() {
+export default function SignUp(props) {
   const classes = useStyles();
+  const theme = useTheme();
+
   const history = useHistory(); // ** May be used to switch between pages, if needed.
 
   //Dialog box control
-  const [open, setOpen] = React.useState(false);
   const [valid, setValid] = React.useState(false);
-  
-  const handleClickOpen = () => {
-    setOpen(true);
-  }
-  const handleClose = () => {
-    setOpen(false);
-  } 
 
   //Form data
   const [formData, updateForm] = React.useState({
-    userName: null,
-    firstName: null, 
-    lastName: null, 
-    email: null, 
-    password1: null, 
-    password2: null
+    userName: "",
+    firstName: "", 
+    lastName: "", 
+    email: "", 
+    password1: "", 
+    password2: ""
   });
 
   //Form errors
@@ -143,13 +112,11 @@ export default function SignUp() {
         formErrs.password1 = value.length < 6 ? "minimum 6 characters required" : "";
         break;
       case "password2":
-        formErrs.password2 = (formData.password1 === formData.password2) ? "" : "passwords must match"; 
+        formErrs.password2 = (formData.password1 === value) ? "" : "passwords must match"; 
         break;
       default:
         break;
     }
-    //
-    updateForm({[name]: value});
   }
 
   //Handled based on server response
@@ -159,15 +126,14 @@ export default function SignUp() {
     console.log("Testing handleSubmission");
     console.log("Form data\n", formData);
     console.log("Form errors\n", formErrs);
+
+    if (props.modal)
+      props.handleOpen(false);
+    else
+      history.push('/');
   }
 
   return (
-    <ThemeProvider theme={theme}>
-    <div>
-      <Button variant="contained" color="secondary" onClick={handleClickOpen}>
-        Sign-Up Here!
-      </Button>
-    <Dialog open={open} onClose={handleClose} noValidate>
       <FormControl>
         <Container component="main" maxWidth="xs">      
             <CssBaseline />
@@ -176,14 +142,13 @@ export default function SignUp() {
                   <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                  Sign up to speak out
+                  Sign up to Speak Out!          
                 </Typography>
-                  <Grid container spacing={2}>
+                <Grid container spacing={2} style = {{marginTop: theme.spacing(1)}}>
                   <Grid item xs={12}>
                       <TextField
-                        color="secondary"
                         name="userName"
-                        error={formErrs.userName != ""}
+                        error={formErrs.userName !== ""}
                         helperText={formErrs.userName}
                         variant="outlined"
                         required
@@ -196,7 +161,6 @@ export default function SignUp() {
                     </Grid>
                     <Grid item xs={6}>
                       <TextField
-                        color="secondary"
                         name="firstName"
                         variant="outlined"
                         fullWidth
@@ -208,7 +172,6 @@ export default function SignUp() {
                     <Grid item xs={6}>
                       <TextField
                         variant="outlined"
-                        color="secondary"
                         fullWidth
                         id="lastName"
                         label="Last Name"
@@ -219,8 +182,7 @@ export default function SignUp() {
                     <Grid item xs={12}>
                       <TextField
                         variant="outlined"
-                        color="secondary"
-                        error={formErrs.email != ""}
+                        error={formErrs.email !== ""}
                         helperText={formErrs.email}
                         required
                         fullWidth
@@ -233,8 +195,7 @@ export default function SignUp() {
                     <Grid item xs={12}>
                       <TextField
                         variant="outlined"
-                        color="secondary"
-                        error={formErrs.password1 != ""}
+                        error={formErrs.password1 !== ""}
                         helperText={formErrs.password1}
                         required
                         fullWidth
@@ -248,8 +209,7 @@ export default function SignUp() {
                     <Grid item xs={12}>
                       <TextField
                         variant="outlined"
-                        color="secondary"
-                        error={formErrs.password2 != ""}
+                        error={formErrs.password2 !== ""}
                         helperText={formErrs.password2}
                         required
                         fullWidth
@@ -262,25 +222,25 @@ export default function SignUp() {
                     </Grid>
                     <Grid item xs={12}>
                       <FormControlLabel
-                        control={<Checkbox value="allowExtraEmails" color="secondary" />}
+                        control={<Checkbox value="allowExtraEmails" color="primary" />}
                         label="I want to receive inspiration and updates via email."
                       />
                     </Grid>
                   </Grid>
                   <Button
                     type="submit"
+                    color="primary"
                     fullWidth
                     variant="contained"
-                    color="secondary"
                     className={classes.submit}
-                    disabled={valid}
+                    disabled={!valid}
                     onClick={handleSubmission}
                   >
                     Sign Up
                   </Button>
                   <Grid container justify="flex-end">
                     <Grid item>
-                      <Link href="/login" variant="body2" color="Secondary">
+                      <Link href="/login" variant="body2" color="primary">
                         Already have an account? Login
                       </Link>
                     </Grid>
@@ -291,8 +251,5 @@ export default function SignUp() {
               </Box>
             </Container>
         </FormControl>
-    </Dialog>
-  </div>
-  </ThemeProvider>
   );
 }
