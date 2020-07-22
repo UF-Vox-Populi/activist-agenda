@@ -21,6 +21,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { white } from 'material-ui/styles/colors';
 import {useHistory} from 'react-router-dom'; // ** Needed to switch between pages. May not be necessary if connected a different way.
+var calls = require('./../serverCalls'); // ** To check username and email.
 
 
 function Copyright() {
@@ -28,7 +29,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Vox-Popuili
+        Vox-Populi
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -70,12 +71,12 @@ export default function SignUp(props) {
 
   //Form data
   const [formData, updateForm] = React.useState({
-    userName: "",
-    firstName: "", 
-    lastName: "", 
-    email: "", 
-    password1: "", 
-    password2: ""
+    userName: null,
+    firstName: null, 
+    lastName: null, 
+    email: null, 
+    password1: null, 
+    password2: null
   });
 
   //Form errors
@@ -98,39 +99,90 @@ export default function SignUp(props) {
     //Now confirm that there is both a valid data entry AND there is no error
     switch(name) {
       case "userName":
-        formErrs.userName = value.length < 2 ? "minimum 2 characters required" : "";
+        updateForm({...formData, userName: value});
+        formErrs.userName = value.length < 2 ? "Minimum 2 characters required" : "";
+        calls.checkUsername(value).then(data => { // ** Checks if the username is already in the database.
+          if (data) {
+            formErrs.userName = "Sorry, that username is taken.";
+          }
+        });
         break;
       case "firstName":
+        updateForm({...formData, firstName: value});
         break;
       case "lastName":
+        updateForm({...formData, lastName: value});
         break;
       case "email":
-        formErrs.email = emailRegex.test(value)
-        ? "" : "'invalid email address";
+        updateForm({...formData, email: value});
+        formErrs.email = emailRegex.test(value) ? "" : "'Invalid email address";
+        calls.checkEmail(value).then(data => { // ** Checks if the email is already in the database.
+          if (data) {
+            formErrs.email = "Sorry, that email is already in use.";
+          }
+        });
         break;
       case "password1":
-        formErrs.password1 = value.length < 6 ? "minimum 6 characters required" : "";
+        updateForm({...formData, password1: value});
+        formErrs.password1 = value.length < 6 ? "Minimum 6 characters required" : "";
         break;
       case "password2":
-        formErrs.password2 = (formData.password1 === value) ? "" : "passwords must match"; 
+        updateForm({...formData, password2: value});
+        formErrs.password2 = (formData.password1 == value) ? "" : "Passwords must match"; 
         break;
       default:
         break;
+    }
+
+    // ** Updates whether the submit button should be clickable or not.
+    if (
+      formErrs.userName == "" &&
+      formErrs.firstName == "" &&
+      formErrs.lastName == "" &&
+      formErrs.password1 == "" &&
+      formErrs.password2 == "" &&
+      formErrs.email == "" && 
+      formData.userName != null &&
+      formData.userName != "" &&
+      formData.email != null &&
+      formData.email != "" &&
+      formData.password1 != null &&
+      formData.password1 != "" &&
+      formData.password2 != null &&
+      formData.password2 != ""
+    ) {
+      setValid(true);
+    } else {
+      setValid(false);
     }
   }
 
   //Handled based on server response
   const handleSubmission = (evt) => {
+    handleChange(evt);
     evt.preventDefault();
     //Should be done when error free aka button has already been enabled
     console.log("Testing handleSubmission");
     console.log("Form data\n", formData);
     console.log("Form errors\n", formErrs);
 
-    if (props.modal)
+    if (
+      formErrs.userName == "" &&
+      formErrs.firstName == "" &&
+      formErrs.lastName == "" &&
+      formErrs.password1 == "" &&
+      formErrs.password2 == "" &&
+      formErrs.email == ""
+    ) {
+      calls.addUser(formData.userName, formData.password1, formData.email, formData.firstName, formData.lastName).then(data => {
+        history.push("/login");
+      })
+    }
+
+    /*if (props.modal)
       props.handleOpen(false);
     else
-      history.push('/');
+      history.push('/');*/
   }
 
   return (
@@ -142,9 +194,9 @@ export default function SignUp(props) {
                   <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                  Sign up to Speak Out!          
+                  Sign Up to Speak Out!          
                 </Typography>
-                <Grid container spacing={2} style = {{marginTop: theme.spacing(1)}}>
+                  <Grid container spacing={2} style = {{marginTop: theme.spacing(1)}}>
                   <Grid item xs={12}>
                       <TextField
                         name="userName"
