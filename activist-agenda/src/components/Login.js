@@ -110,7 +110,7 @@ export default function SignIn(props) {
   //Handlers
   const handleUsername = (event) => {
     updateUser({
-      username: event.target.value,
+      username: (event.target.value).toLowerCase(),
       password: user.password});
     //reset button
     resetBtn();
@@ -231,7 +231,7 @@ export default function SignIn(props) {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/signup/" variant="body2">
+              <Link onClick={() => (props.modal) ? props.handleOpen(false, true) : history.push("/signup")} variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

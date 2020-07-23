@@ -196,14 +196,16 @@ const AppSkeleton = (props) => {
   //when login or signup ckicked, handle open state
   const [open1, setOpen1] = React.useState(false);
 
-  const toggleOpen1 = (val) => {
+  const toggleOpen1 = (val, toggle) => {
     setOpen1(val);
+    if (toggle) toggleOpen2(true);
   };
 
   const [open2, setOpen2] = React.useState(false);
 
-  const toggleOpen2 = (val) => {
+  const toggleOpen2 = (val, signed) => {
     setOpen2(val);
+    if (signed) toggleOpen1(true);
   };
   
   // Related to the avatar menu if logged in
