@@ -64,28 +64,33 @@ app.get("/", (req, res) => {
 });
   
 //Checks if a user is in the database. False if no, True if yes.
-// Does this really need to check PW? Yes it is I think I see the connection from login.js->serverCall now
+// Called on login attempt
 app.get("/userCheck", (req, res) => {
 
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true}); //Far as I can tell, you have to reconnect each time.
-    /*
-    bcrypt.compare(myPlaintextPassword, hash, function(err, result) {
-        // result == true https://www.npmjs.com/package/bcrypt
-    });
-    */
-    User.find({email: req.query.mail, password: req.query.pass}, function (err, docs) {
+
+    User.find({email: req.query.mail}, function (err, docs) {
         if (err) return handleError(err,res); //This will return it to the Express server, which you can read on your terminal.
 
         if (JSON.stringify(docs) === '[]') { //Basically checks if it's empty.
+            console.log('empty docs: \n');
             res.send(false);
         }
-        else res.send(true);
+        else 
+            bcrypt.compare(req.query.pass, docs[password], function(err, result) {
+                if (result)
+                    res.send(true);
+                else
+                    res.send(false);
+            });
+
     })
 
 });
 
+
 //Retrieves a user's information from the database.
-//
+// When is this used?
 app.get("/userGet", (req, res) => {
 
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -134,26 +139,20 @@ app.get("/emailCheck", (req, res) => {
 app.get("/addUser", (req, res) => {
 
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
-    /* Hashed Pass -- 7/23 03:00
-        bcrypt.genSalt(saltRounds, function(err, salt) {
-            bcrypt.hash(req.query.pass, salt, function(err,hash){
+    //Hashed Pass -- 7/23 03:00
+            bcrypt.hash(req.query.pass, saltRounds, function(err,hash){
                 //store hash in PW DB
                 var newEntry = new User({username: req.query.user, password: hash, email: req.query.address, firstName: req.query.first, lastName: req.query.last})
-
+                newEntry.save((err) => {
+                    if (err) {
+                        res.send(false);
+                        handleError(err,res);
+                    } else {
+                        res.send(true);
+                        console.log('hash: ', hash);
+                    }
+                });
             });
-        });
-
-    */
-    var newEntry = new User({username: req.query.user, password: req.query.pass, email: req.query.address, firstName: req.query.first, lastName: req.query.last})
-    newEntry.save((err) => {
-        if (err) {
-            res.send(false);
-            handleError(err,res);
-        } else {
-            res.send(true);
-        }
-    });
-    
 });
 
 //Reads the given email and returns the corresponding entry's id.

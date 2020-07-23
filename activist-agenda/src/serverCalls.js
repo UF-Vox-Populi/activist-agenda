@@ -8,6 +8,7 @@ NOTE: Need to adjust urls to an input from the config file.
 */
 
 //Checks if a user exists based on their email and password.
+//Called on login attempt
 export function checkUser(email, password) {
 
     let reqs = {
