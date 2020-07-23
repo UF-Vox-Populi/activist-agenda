@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,17 +10,12 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import { createMuiTheme } from '@material-ui/core/styles'; 
+import { useTheme, makeStyles} from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import Container from '@material-ui/core/Container';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { white } from 'material-ui/styles/colors';
+
 import {useHistory} from 'react-router-dom'; // ** Needed to switch between pages. May not be necessary if connected a different way.
+var calls = require('./../serverCalls'); // ** To check username and email.
 
 
 function Copyright() {
@@ -28,37 +23,13 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Vox-Popuili
+        Vox-Populi
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
   );
 }
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#F4F1DE',
-    },
-    secondary: {
-      main: '#3D405B',
-    },
-    error: {
-      main: '#A7333F',
-    },
-    warning: {
-      main: '#E07A5F',
-    },
-    info: {
-      main: '#F2CC8F',
-    },
-    success: {
-      main: '#81B29A',
-    }
-  },
-});
-
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -69,35 +40,28 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    backgroundColor: theme.palette.info.main,
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  button: {
+    margin: theme.spacing(3, 2, 0),
+  },
 }));
 
 const emailRegex = RegExp(
-  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
 );
 
-export default function SignUp() {
+export default function SignUp(props) {
   const classes = useStyles();
+  const theme = useTheme();
+
   const history = useHistory(); // ** May be used to switch between pages, if needed.
 
   //Dialog box control
-  const [open, setOpen] = React.useState(false);
   const [valid, setValid] = React.useState(false);
-  
-  const handleClickOpen = () => {
-    setOpen(true);
-  }
-  const handleClose = () => {
-    setOpen(false);
-  } 
 
   //Form data
   const [formData, updateForm] = React.useState({
@@ -112,13 +76,10 @@ export default function SignUp() {
   //Form errors
   const [formErrs, updateErrs] = React.useState({
     userName: "",
-    firstName: "", 
-    lastName: "", 
     email: "", 
     password1: "", 
     password2: ""
   });
-
 
   //Not too sure why i needed prev state...oh well
   const handleChange = (evt) => {
@@ -129,45 +90,92 @@ export default function SignUp() {
     //Now confirm that there is both a valid data entry AND there is no error
     switch(name) {
       case "userName":
-        formErrs.userName = value.length < 2 ? "minimum 2 characters required" : "";
+        updateForm({...formData, userName: value});
+        formErrs.userName = value.length < 2 ? "Minimum 2 characters required" : "";
+        calls.checkUsername(value).then(data => { // ** Checks if the username is already in the database.
+          if (data) {
+            formErrs.userName = "Sorry, that username is taken.";
+          }
+        });
         break;
       case "firstName":
+        updateForm({...formData, firstName: value});
         break;
       case "lastName":
+        updateForm({...formData, lastName: value});
         break;
       case "email":
-        formErrs.email = emailRegex.test(value)
-        ? "" : "'invalid email address";
+        updateForm({...formData, email: value.toLowerCase()});
+        formErrs.email = emailRegex.test(value) ? "" : "'Invalid email address";
+        calls.checkEmail(value.toLowerCase()).then(data => { // ** Checks if the email is already in the database.
+          if (data) {
+            formErrs.email = "Sorry, that email is already in use.";
+          }
+        });
         break;
       case "password1":
-        formErrs.password1 = value.length < 6 ? "minimum 6 characters required" : "";
+        updateForm({...formData, password1: value});
+        formErrs.password1 = value.length < 6 ? "Minimum 6 characters required" : "";
+        //needs to recheck that password2 matches if one changes
+        formErrs.password2 = (formData.password2 === value) ? "" : "Passwords must match"; 
         break;
       case "password2":
-        formErrs.password2 = (formData.password1 === formData.password2) ? "" : "passwords must match"; 
+        updateForm({...formData, password2: value});
+        formErrs.password2 = (formData.password1 === value) ? "" : "Passwords must match"; 
         break;
       default:
         break;
     }
-    //
-    updateForm({[name]: value});
+
+    // ** Updates whether the submit button should be clickable or not.
   }
+
+  //runs when the form states change, ensuring that the values are set before validating
+  React.useEffect(() => {      
+      if (
+        !formErrs.userName &&
+        !formErrs.password1 &&
+        !formErrs.password2 &&
+        !formErrs.email &&
+        formData.userName  &&
+        formData.email &&
+        formData.password1 &&
+        formData.password2
+      ) {
+        setValid(true);
+      } else {
+        setValid(false);
+      }
+  }, [formData,formErrs]);
 
   //Handled based on server response
   const handleSubmission = (evt) => {
+    handleChange(evt);
     evt.preventDefault();
     //Should be done when error free aka button has already been enabled
     console.log("Testing handleSubmission");
     console.log("Form data\n", formData);
     console.log("Form errors\n", formErrs);
+
+    //since submit button will only be available when there are no errors, this may be redundant
+    if (
+      !formErrs.userName &&
+      !formErrs.password1 &&
+      !formErrs.password2 &&
+      !formErrs.email
+    ) {
+      calls.addUser(formData.userName, formData.password1, formData.email, formData.firstName, formData.lastName).then(data => {
+        if (props.modal)
+          props.handleOpen(false, true);
+        else
+          history.push('/login');
+      })
+    }
+
+    
   }
 
   return (
-    <ThemeProvider theme={theme}>
-    <div>
-      <Button variant="contained" color="secondary" onClick={handleClickOpen}>
-        Sign-Up Here!
-      </Button>
-    <Dialog open={open} onClose={handleClose} noValidate>
       <FormControl>
         <Container component="main" maxWidth="xs">      
             <CssBaseline />
@@ -176,14 +184,13 @@ export default function SignUp() {
                   <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                  Sign up to speak out
+                  Sign Up to Speak Out!          
                 </Typography>
-                  <Grid container spacing={2}>
+                  <Grid container spacing={2} style = {{marginTop: theme.spacing(1)}}>
                   <Grid item xs={12}>
                       <TextField
-                        color="secondary"
                         name="userName"
-                        error={formErrs.userName != ""}
+                        error={formErrs.userName !== ""}
                         helperText={formErrs.userName}
                         variant="outlined"
                         required
@@ -196,7 +203,6 @@ export default function SignUp() {
                     </Grid>
                     <Grid item xs={6}>
                       <TextField
-                        color="secondary"
                         name="firstName"
                         variant="outlined"
                         fullWidth
@@ -208,7 +214,6 @@ export default function SignUp() {
                     <Grid item xs={6}>
                       <TextField
                         variant="outlined"
-                        color="secondary"
                         fullWidth
                         id="lastName"
                         label="Last Name"
@@ -219,8 +224,7 @@ export default function SignUp() {
                     <Grid item xs={12}>
                       <TextField
                         variant="outlined"
-                        color="secondary"
-                        error={formErrs.email != ""}
+                        error={formErrs.email !== ""}
                         helperText={formErrs.email}
                         required
                         fullWidth
@@ -233,8 +237,7 @@ export default function SignUp() {
                     <Grid item xs={12}>
                       <TextField
                         variant="outlined"
-                        color="secondary"
-                        error={formErrs.password1 != ""}
+                        error={formErrs.password1 !== ""}
                         helperText={formErrs.password1}
                         required
                         fullWidth
@@ -248,8 +251,7 @@ export default function SignUp() {
                     <Grid item xs={12}>
                       <TextField
                         variant="outlined"
-                        color="secondary"
-                        error={formErrs.password2 != ""}
+                        error={formErrs.password2 !== ""}
                         helperText={formErrs.password2}
                         required
                         fullWidth
@@ -262,25 +264,25 @@ export default function SignUp() {
                     </Grid>
                     <Grid item xs={12}>
                       <FormControlLabel
-                        control={<Checkbox value="allowExtraEmails" color="secondary" />}
+                        control={<Checkbox value="allowExtraEmails" color="primary" />}
                         label="I want to receive inspiration and updates via email."
                       />
                     </Grid>
                   </Grid>
                   <Button
                     type="submit"
+                    color="primary"
                     fullWidth
                     variant="contained"
-                    color="secondary"
                     className={classes.submit}
-                    disabled={valid}
+                    disabled={!valid}
                     onClick={handleSubmission}
                   >
                     Sign Up
                   </Button>
                   <Grid container justify="flex-end">
                     <Grid item>
-                      <Link href="/login" variant="body2" color="Secondary">
+                      <Link onClick={() => (props.modal) ? props.handleOpen(false, true) : history.push("/login")} variant="body2" color="primary">
                         Already have an account? Login
                       </Link>
                     </Grid>
@@ -291,8 +293,5 @@ export default function SignUp() {
               </Box>
             </Container>
         </FormControl>
-    </Dialog>
-  </div>
-  </ThemeProvider>
   );
 }

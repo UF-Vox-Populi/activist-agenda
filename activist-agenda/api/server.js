@@ -8,6 +8,13 @@ import * as fs from 'fs';
 //Connects to the mongo database as soon as the server starts up.
 mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
+function handleError(err,res) {
+    if (res)
+        res.send(err);
+    else
+        throw err;
+}
+
 //Deletes all entries. Basically a reset, just used for testing purposes at the moment.
 User.deleteMany({}, (err) => {
     if (err) throw err;
@@ -61,9 +68,9 @@ app.get("/userCheck", (req, res) => {
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true}); //Far as I can tell, you have to reconnect each time.
 
     User.find({email: req.query.mail, password: req.query.pass}, function (err, docs) {
-        if (err) return handleError(err); //This will return it to the Express server, which you can read on your terminal.
+        if (err) return handleError(err,res); //This will return it to the Express server, which you can read on your terminal.
 
-        if (JSON.stringify(docs) == '[]') { //Basically checks if it's empty.
+        if (JSON.stringify(docs) === '[]') { //Basically checks if it's empty.
             res.send(false);
         }
         else res.send(true);
@@ -77,7 +84,7 @@ app.get("/userGet", (req, res) => {
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
     User.findOne({username: req.query.user, password: req.query.pass}, function (err, docs) {
-        if (err) return handleError(err);
+        if (err) return handleError(err,res);
 
         res.send(docs); //Just the regular mongoose commands package the info, which can then be sent back.
     })
@@ -88,11 +95,11 @@ app.get("/userGet", (req, res) => {
 app.get("/usernameCheck", (req, res) => {
 
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    // find is case insensitive
+    User.find({username: {$regex:req.query.user,$options: 'i'}}, function (err, docs) {
+        if (err) return handleError(err,res);
 
-    User.find({username: req.query.user}, function (err, docs) {
-        if (err) return handleError(err);
-
-        if (JSON.stringify(docs) == '[]') {
+        if (JSON.stringify(docs) === '[]') {
             res.send(false);
         }
         else res.send(true);
@@ -104,11 +111,11 @@ app.get("/usernameCheck", (req, res) => {
 app.get("/emailCheck", (req, res) => {
 
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    //email is stored as lower case already, but case insensitive just in case
+    User.find({email: {$regex:req.query.address,$options: 'i'}}, function (err, docs) {
+        if (err) return handleError(err,res);
 
-    User.find({email: req.query.address}, function (err, docs) {
-        if (err) return handleError(err);
-
-        if (JSON.stringify(docs) == '[]') {
+        if (JSON.stringify(docs) === '[]') {
             res.send(false);
         }
         else res.send(true);
@@ -125,7 +132,7 @@ app.get("/addUser", (req, res) => {
     newEntry.save((err) => {
         if (err) {
             res.send(false);
-            handleError(err);
+            handleError(err,res);
         } else {
             res.send(true);
         }
@@ -137,7 +144,7 @@ app.get("/addUser", (req, res) => {
 app.get("/userIDGet", (req, res) => {
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
     User.findOne({email: req.query.email}, function (err, docs) {
-        if (err) return handleError(err);
+        if (err) return handleError(err,res);
         res.send(docs._id);
     })
 });

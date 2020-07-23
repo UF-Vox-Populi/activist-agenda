@@ -13,7 +13,7 @@
 /build
 
 # security
-/config/config.js
+/api/config/config.js
 
 # misc
 .DS_Store
