@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,16 +10,10 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { useTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import { createMuiTheme } from '@material-ui/core/styles'; 
+import { useTheme, makeStyles} from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import Container from '@material-ui/core/Container';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { white } from 'material-ui/styles/colors';
+
 import {useHistory} from 'react-router-dom'; // ** Needed to switch between pages. May not be necessary if connected a different way.
 var calls = require('./../serverCalls'); // ** To check username and email.
 
@@ -57,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const emailRegex = RegExp(
-  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
 );
 
 export default function SignUp(props) {
@@ -82,13 +76,10 @@ export default function SignUp(props) {
   //Form errors
   const [formErrs, updateErrs] = React.useState({
     userName: "",
-    firstName: "", 
-    lastName: "", 
     email: "", 
     password1: "", 
     password2: ""
   });
-
 
   //Not too sure why i needed prev state...oh well
   const handleChange = (evt) => {
@@ -114,9 +105,9 @@ export default function SignUp(props) {
         updateForm({...formData, lastName: value});
         break;
       case "email":
-        updateForm({...formData, email: value});
+        updateForm({...formData, email: value.toLowerCase()});
         formErrs.email = emailRegex.test(value) ? "" : "'Invalid email address";
-        calls.checkEmail(value).then(data => { // ** Checks if the email is already in the database.
+        calls.checkEmail(value.toLowerCase()).then(data => { // ** Checks if the email is already in the database.
           if (data) {
             formErrs.email = "Sorry, that email is already in use.";
           }
@@ -125,37 +116,37 @@ export default function SignUp(props) {
       case "password1":
         updateForm({...formData, password1: value});
         formErrs.password1 = value.length < 6 ? "Minimum 6 characters required" : "";
+        //needs to recheck that password2 matches if one changes
+        formErrs.password2 = (formData.password2 === value) ? "" : "Passwords must match"; 
         break;
       case "password2":
         updateForm({...formData, password2: value});
-        formErrs.password2 = (formData.password1 == value) ? "" : "Passwords must match"; 
+        formErrs.password2 = (formData.password1 === value) ? "" : "Passwords must match"; 
         break;
       default:
         break;
     }
 
     // ** Updates whether the submit button should be clickable or not.
-    if (
-      formErrs.userName == "" &&
-      formErrs.firstName == "" &&
-      formErrs.lastName == "" &&
-      formErrs.password1 == "" &&
-      formErrs.password2 == "" &&
-      formErrs.email == "" && 
-      formData.userName != null &&
-      formData.userName != "" &&
-      formData.email != null &&
-      formData.email != "" &&
-      formData.password1 != null &&
-      formData.password1 != "" &&
-      formData.password2 != null &&
-      formData.password2 != ""
-    ) {
-      setValid(true);
-    } else {
-      setValid(false);
-    }
   }
+
+  //runs when the form states change, ensuring that the values are set before validating
+  React.useEffect(() => {      
+      if (
+        !formErrs.userName &&
+        !formErrs.password1 &&
+        !formErrs.password2 &&
+        !formErrs.email &&
+        formData.userName  &&
+        formData.email &&
+        formData.password1 &&
+        formData.password2
+      ) {
+        setValid(true);
+      } else {
+        setValid(false);
+      }
+  }, [formData,formErrs]);
 
   //Handled based on server response
   const handleSubmission = (evt) => {
@@ -166,23 +157,22 @@ export default function SignUp(props) {
     console.log("Form data\n", formData);
     console.log("Form errors\n", formErrs);
 
+    //since submit button will only be available when there are no errors, this may be redundant
     if (
-      formErrs.userName == "" &&
-      formErrs.firstName == "" &&
-      formErrs.lastName == "" &&
-      formErrs.password1 == "" &&
-      formErrs.password2 == "" &&
-      formErrs.email == ""
+      !formErrs.userName &&
+      !formErrs.password1 &&
+      !formErrs.password2 &&
+      !formErrs.email
     ) {
       calls.addUser(formData.userName, formData.password1, formData.email, formData.firstName, formData.lastName).then(data => {
-        history.push("/login");
+        if (props.modal)
+          props.handleOpen(false, true);
+        else
+          history.push('/login');
       })
     }
 
-    /*if (props.modal)
-      props.handleOpen(false);
-    else
-      history.push('/');*/
+    
   }
 
   return (
@@ -292,7 +282,7 @@ export default function SignUp(props) {
                   </Button>
                   <Grid container justify="flex-end">
                     <Grid item>
-                      <Link href="/login" variant="body2" color="primary">
+                      <Link onClick={() => (props.modal) ? props.handleOpen(false, true) : history.push("/login")} variant="body2" color="primary">
                         Already have an account? Login
                       </Link>
                     </Grid>
