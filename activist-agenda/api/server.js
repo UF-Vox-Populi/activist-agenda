@@ -3,8 +3,9 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import config from './config/config.js';
 import User from './database/UserSchema.js';
+import bcrypt from 'bcrypt';
 import * as fs from 'fs';
-
+const saltRounds = 3;
 //Connects to the mongo database as soon as the server starts up.
 mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -63,10 +64,15 @@ app.get("/", (req, res) => {
 });
   
 //Checks if a user is in the database. False if no, True if yes.
+// Does this really need to check PW? Yes it is I think I see the connection from login.js->serverCall now
 app.get("/userCheck", (req, res) => {
 
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true}); //Far as I can tell, you have to reconnect each time.
-
+    /*
+    bcrypt.compare(myPlaintextPassword, hash, function(err, result) {
+        // result == true https://www.npmjs.com/package/bcrypt
+    });
+    */
     User.find({email: req.query.mail, password: req.query.pass}, function (err, docs) {
         if (err) return handleError(err,res); //This will return it to the Express server, which you can read on your terminal.
 
@@ -79,6 +85,7 @@ app.get("/userCheck", (req, res) => {
 });
 
 //Retrieves a user's information from the database.
+//
 app.get("/userGet", (req, res) => {
 
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -127,7 +134,16 @@ app.get("/emailCheck", (req, res) => {
 app.get("/addUser", (req, res) => {
 
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    /* Hashed Pass -- 7/23 03:00
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(req.query.pass, salt, function(err,hash){
+                //store hash in PW DB
+                var newEntry = new User({username: req.query.user, password: hash, email: req.query.address, firstName: req.query.first, lastName: req.query.last})
 
+            });
+        });
+
+    */
     var newEntry = new User({username: req.query.user, password: req.query.pass, email: req.query.address, firstName: req.query.first, lastName: req.query.last})
     newEntry.save((err) => {
         if (err) {
