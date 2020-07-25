@@ -4,6 +4,8 @@ import 'fontsource-roboto';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import AppSkeleton from './components/AppSkeleton';
+import UserProfile from './components/UserProfile';
+import EditProfile from './components/EditProfile';
 import { MuiThemeProvider } from '@material-ui/core/styles'; // Allows custom color theme
 import theme from './theme.js' //Only draws from the login theme. Can't figure out how to switch to the skeleton theme :/
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
@@ -32,6 +34,8 @@ function App() {
             <Route exact path="/" component = {AppSkeleton} />
             <Route path="/signup" render={(props) => <SignUp open={true} modal={false} />} />
             <Route path="/login" render={(props) => <Login open={true} modal={false} />} />
+            <Route path="/userprofile" component = {UserProfile} />
+            <Route path="/editprofile" component = {EditProfile} />
           </Switch>
         </MuiThemeProvider>
         </header>
