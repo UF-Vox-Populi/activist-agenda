@@ -126,12 +126,3 @@ export default class Event extends Component  {
     );
   }
 }
-/*
-<Marker
-              longitude= {this.state.userLocation.long}
-              latitude={this.state.userLocation.lat}
-            >
-              <img src= "/parade.svg" alt="" />
-              <div>Center here</div>
-            </Marker>
-*/
