@@ -68,7 +68,7 @@ var calls = require('../serverCalls');
 
 /********** USESTYLES **********/
 
-const navDrawerWidth = 250;
+const navDrawerWidth = 300;
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -233,7 +233,11 @@ const AppSkeleton = (props) => {
   // Data for the menu drawer
   const drawer = (
     <div>
-      <div className={classes.toolbar}/>
+      <div className={classes.toolbar}>
+        <Typography className={classes.appNameFlex} color="primary" align="center">
+          <br/><img src="logo-circle.png" width="128px" height="128px" />
+        </Typography>
+      </div>
       <Divider />
       <List component="nav" aria-label="main nav items">
         <ListItem
@@ -336,7 +340,7 @@ const AppSkeleton = (props) => {
             />
           </Dialog>
           <Button variant="outlined" className={classes.btn} color="secondary" onClick={() => toggleOpen2(true)}>
-            Sign up
+            SignUp
           </Button>
           <Dialog open={open2} onClose={() => toggleOpen2(false)} noValidate>
             <Signup 
