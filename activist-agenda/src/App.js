@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import 'fontsource-roboto';
 import Login from './components/Login';
+import Events from './components/Events';
 import SignUp from './components/SignUp';
 import AppSkeleton from './components/AppSkeleton';
 import { MuiThemeProvider } from '@material-ui/core/styles'; // Allows custom color theme
@@ -32,6 +33,7 @@ function App() {
             <Route exact path="/" component = {AppSkeleton} />
             <Route path="/signup" component = {SignUp} />
             <Route path="/login" component = {Login} />
+            <Route path="/events" component = {Events} />
           </Switch>
         </MuiThemeProvider>
         </header>

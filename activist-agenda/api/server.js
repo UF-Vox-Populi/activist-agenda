@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import config from './config/config.js';
 import User from './database/UserSchema.js';
+import Event from './database/EventSchema.js';
 import * as fs from 'fs';
 
 //Connects to the mongo database as soon as the server starts up.
@@ -23,6 +24,30 @@ fs.readFile('./database/FillerUsers.json', 'utf8', (err, data) => {
         thing.save(function (err) {
             if (err) {
               return handleError(err);
+            }
+        })
+    }, () => {
+        mongoose.connection.close();
+    });
+});
+
+fs.readFile('./database/fillerEvents.json', 'utf8', (err, data) => {
+    mongoose.connect("mongodb://127.0.0.1:27017/UserDB", {useNewUrlParser: true, useUnifiedTopology: true});
+    
+    //Reset
+    Event.deleteMany({}, (err) => {
+        if (err) throw err;
+    });
+    
+    console.log("Filling EventDB")
+    if (err) throw err;
+    let eventData = JSON.parse(data);
+
+    eventData.entries.forEach(element => {
+        var thing = new Event({summary:element.summary, address:element.address, coordinates:element.coordinates, date:element.date, description:element.description});
+        thing.save(function (err) {
+            if (err) {
+              throw err;
             }
         })
     }, () => {
@@ -141,6 +166,14 @@ app.get("/userIDGet", (req, res) => {
         res.send(docs._id);
     })
 });
+
+app.get("/getEvents", (req, res) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    Event.find( function(err, docs) {
+        if (err) return handleError(err);
+        res.send(docs);
+    })
+})
 
 //Basically sets the server up to listen for any inputs from serverCalls.js and the like.
 app.listen(config.port, () => console.log(`App now listening on port ${config.port}`));

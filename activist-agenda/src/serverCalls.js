@@ -111,3 +111,14 @@ export function getUserIDbyEmail(email) {
         return res.data;
     })
 }
+
+export function getEvents() { //might want to filter from here
+    let reqs = {
+        method: 'GET',
+        url: "http://localhost:5000/getEvents/",
+        // params could be filtering data
+    }
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+}

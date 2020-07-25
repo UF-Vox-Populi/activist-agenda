@@ -1,0 +1,34 @@
+{
+    "entries": [
+        {
+            "summary": "March on City Hall",
+            "address": "200 E University Ave, Gainesville, FL 32601",
+            "coordinates": {
+                "latitude": 29.652639,
+                "longitude": -82.323189
+            },
+            "date": "2020-08-01",
+            "description": "I can't just sit here, it's time for action!"
+        },
+        {
+            "summary": "Take the power pack",
+            "address": "301 SE 4th Ave, Gainesville, FL 32601",
+            "coordinates": {
+                "latitude": 29.647869,
+                "longitude": -82.321953
+            },
+            "date": "2020-08-02",
+            "description": "I will restore the working man to his rightful glory. I will dismantle this oppressive establishment board by board!"
+        },
+        {
+            "summary": "Get more supplies",
+            "address": "3101 Clark Butler Blvd, Gainesville, FL 32608",
+            "coordinates": {
+                "latitude": 29.625490,
+                "longitude": -82.381410
+            },
+            "date": "2020-08-03",
+            "description": " I will saw the tables of tyranny in half. Gnaw at the ankles of big business!"
+        }
+    ]
+}
