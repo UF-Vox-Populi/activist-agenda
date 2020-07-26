@@ -176,7 +176,6 @@ export default function SignUp(props) {
   }
 
   return (
-      <FormControl>
         <Container component="main" maxWidth="xs">      
             <CssBaseline />
               <div className={classes.paper}>
@@ -292,6 +291,5 @@ export default function SignUp(props) {
                 <Copyright />
               </Box>
             </Container>
-        </FormControl>
   );
 }

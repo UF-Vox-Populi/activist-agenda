@@ -1,0 +1,24 @@
+{
+    "posts": [
+        {
+            "poster": "PosterMan",
+            "icon": "none",
+            "title": "Test Post",
+            "donationLink": "www.google.com",
+            "organizationLink": "www.google.com",
+            "description": "Checking if posts work, la la la~",
+            "time": "2014-01-22T14:56:59.301Z",
+            "location": "32607"
+        },
+        {
+            "poster": "PosterMan2",
+            "icon": "none",
+            "title": "Test Post 2",
+            "donationLink": "www.yahoo.com",
+            "organizationLink": "www.yahoo.com",
+            "description": "Checking if posts work too~",
+            "time": "2014-01-22T14:56:59.301Z",
+            "location": "32607"
+        }
+    ]
+}

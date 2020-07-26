@@ -73,7 +73,7 @@ export default function SignIn(props) {
   //use theme styling
   const classes = useStyles();
   
-  const btn_text_options = ['Sign In', 'Success! Signing in...', 'Incorrect Email or Password. Try Again.'];
+  const btn_text_options = ['Log In', 'Success! Logging in...', 'Incorrect Email or Password. Try Again.'];
   
   //stores states for button color and text
   const [btn_color, setbtnColor] = useState('');
@@ -179,7 +179,7 @@ export default function SignIn(props) {
           <LockOutlinedIcon />
         </Avatar>
         <Typography color="textPrimary" component="h1" variant="h5">
-          Sign in
+          Log in
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
