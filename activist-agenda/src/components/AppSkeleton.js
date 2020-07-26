@@ -23,10 +23,10 @@ Resources:
 
 // Personal components
 import React from 'react';
-import {useState} from 'react';
+import ContentCreationCard from './ContentCreationCard'
 import ProtestCard from './ProtestCard';
-import CreateNewProtestCard from './CreateNewProtestCard';
 import ProtestSortButtons from './ProtestSortButtons';
+import {useState} from 'react';
 
 // Material-UI components
 import AppBar from '@material-ui/core/AppBar';
@@ -57,7 +57,6 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import StarIcon from '@material-ui/icons/Star';
 import Dialog from '@material-ui/core/Dialog';
 
-
 // ** This is needed to route to other pages. May not be necessary depending on how it's handled, but works for connecting components in a pinch.
 import {useHistory} from 'react-router-dom';
 import Login from './Login';
@@ -68,7 +67,7 @@ var calls = require('../serverCalls');
 
 /********** USESTYLES **********/
 
-const navDrawerWidth = 300;
+const navDrawerWidth = 275;
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -385,10 +384,8 @@ const AppSkeleton = (props) => {
         <div className={classes.toolbar}/>
         <Typography paragraph>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={12} md={8} align="center">
-              <ProtestSortButtons />
-            </Grid>
-            <Grid item xs={12} sm={12} md={8}><CreateNewProtestCard /></Grid>
+            <Grid item xs={12} sm={12} md={8} align="center"><ProtestSortButtons /></Grid>
+            <Grid item xs={12} sm={12} md={8}><ContentCreationCard /></Grid>
             <Grid item xs={12} sm={12} md={8}><ProtestCard /></Grid>
             <Grid item xs={12} sm={12} md={8}><ProtestCard /></Grid>
             <Grid item xs={12} sm={12} md={8}><ProtestCard /></Grid>

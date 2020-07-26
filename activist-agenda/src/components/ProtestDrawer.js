@@ -2,27 +2,35 @@ import React from 'react';
 import clsx from 'clsx';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles((theme) => ({
   list: {
-    width: 400,
+    width: "400px",
   },
   fullList: {
     width: 'auto',
   },
-  root: {
+  calendarCardStyle: {
     flexGrow: 1,
     display: 'flex',
     flexWrap: 'wrap',
     '& > *': {
-      margin: theme.spacing(1),
+      margin: theme.spacing(2),
       width: theme.spacing(45),
-      height: theme.spacing(25),
+      height: theme.spacing(30),
+    },
+  },
+  mapCardStyle: {
+    flexGrow: 1,
+    display: 'flex',
+    flexWrap: 'wrap',
+    '& > *': {
+      margin: theme.spacing(2),
+      width: theme.spacing(45),
+      height: theme.spacing(45),
     },
   },
 }));
@@ -55,11 +63,18 @@ const ProtestDrawer = () => {
         direction="column"
         justify="center"
         alignItems="center"
-        className={classes.root}
+        className={classes.calendarCardStyle}
       >
-        <Paper variant="outlined" />
-        <Paper variant="outlined" />
-        <Paper variant="outlined" />
+        <Card variant="outlined" />
+      </Grid>
+      <Grid 
+        container 
+        direction="column"
+        justify="center"
+        alignItems="center"
+        className={classes.mapCardStyle}
+      >
+        <Card variant="outlined" />
       </Grid>
     </div>
   );
@@ -68,7 +83,7 @@ const ProtestDrawer = () => {
     <div>
       {['right'].map((anchor) => (
         <React.Fragment key={anchor}>
-          <Button onClick={togglePostDrawer(anchor, true)}>{anchor}</Button>
+          <Button onClick={togglePostDrawer(anchor, true)}>Calendar & Map</Button>
           <Drawer 
             anchor={anchor} 
             open={state[anchor]} 

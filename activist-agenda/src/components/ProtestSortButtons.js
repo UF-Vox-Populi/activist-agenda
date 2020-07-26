@@ -27,14 +27,14 @@ const ProtestSortButtons = () => {
                 aria-label="sort by"
                 size="small"
             >
-                <ToggleButton value="date" aria-label="sort by date">
-                    <DateRangeIcon fontSize="small" color="primary" />Date
+                <ToggleButton value="Upcoming" aria-label="sort by upcoming">
+                    <DateRangeIcon fontSize="small" color="primary"/>Upcoming
                 </ToggleButton>
                 <ToggleButton value="location" aria-label="sort by location">
-                    <LocationOnIcon fontSize="small" color="primary" />Location
+                    <LocationOnIcon fontSize="small" color="primary"/>Location
                 </ToggleButton>
                 <ToggleButton value="top" aria-label="sort by top">
-                    <WhatshotIcon fontSize="small" color="primary" />Top
+                    <WhatshotIcon fontSize="small" color="primary"/>Top
                 </ToggleButton>
             </ToggleButtonGroup>
         </div>
