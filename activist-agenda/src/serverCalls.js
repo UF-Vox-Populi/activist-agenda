@@ -111,3 +111,131 @@ export function getUserIDbyEmail(email) {
         return res.data;
     })
 }
+
+//Changes an entry's username
+export function changeUsername(_id, username) {
+
+    let reqs = {
+        method: 'GET',
+        url: "http://localhost:5000/usernameChange/",
+        params: {
+            user: username,
+            id: _id
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+//Changes an entry's password
+export function changePassword(_id, password) {
+
+    let reqs = {
+        method: 'GET',
+        url: "http://localhost:5000/passwordChange/",
+        params: {
+            pass: password,
+            id: _id
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+//Changes an entry's email
+export function changeEmail(_id, email) {
+
+    let reqs = {
+        method: 'GET',
+        url: "http://localhost:5000/emailChange/",
+        params: {
+            mail: email,
+            id: _id
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+//Changes an entry's first name
+export function changeFirstName(_id, firstName) {
+
+    let reqs = {
+        method: 'GET',
+        url: "http://localhost:5000/firstChange/",
+        params: {
+            first: firstName,
+            id: _id
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+//Changes an entry's last name
+export function changeLastName(_id, lastName) {
+
+    let reqs = {
+        method: 'GET',
+        url: "http://localhost:5000/lastChange/",
+        params: {
+            last: lastName,
+            id: _id
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+//Adds a post to the database
+export function addPost(poster, icon, title, description, time, location, donationLink, organizationLink) {
+
+    let reqs = {
+        method: 'GET',
+        url: "http://localhost:5000/addPost/",
+        params: {
+            poste: poster,
+            ico: icon,
+            titl: title,
+            desc: description,
+            tim: time,
+            loc: location,
+            donation: donationLink,
+            organization: organizationLink
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+//Retrieves all posts from the database
+export function getAllPosts() {
+
+    let reqs = {
+        method: 'GET',
+        url: "http://localhost:5000/getAllPosts/",
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
