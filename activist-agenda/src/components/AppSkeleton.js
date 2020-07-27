@@ -32,6 +32,7 @@ import NewsCard from './NewsCard';
 
 // Material-UI components
 import AppBar from '@material-ui/core/AppBar';
+import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
@@ -189,15 +190,10 @@ const AppSkeleton = (props) => {
     setSelectedNavIndex(index);
     if (index == 3) {
       newNews();
-    }
+    };
   };
 
-  // Handles component anchoring
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  //when login or signup ckicked, handle open state
+  //login form
   const [open1, setOpen1] = React.useState(false);
 
   const toggleOpen1 = (val, toggle) => {
@@ -205,35 +201,76 @@ const AppSkeleton = (props) => {
     if (toggle) toggleOpen2(true);
   };
 
+  //signup form
   const [open2, setOpen2] = React.useState(false);
 
   const toggleOpen2 = (val, signed) => {
     setOpen2(val);
     if (signed) toggleOpen1(true);
   };
+
+  // Header buttons (either login/signup or avatar)
+  function HeaderButtons() {
+    if (!loggedIn) {
+      return (
+        <>
+          <Button variant="outlined" className={classes.btn} color="secondary" onClick={() => toggleOpen1(true)}>
+            Login
+          </Button>
+          <Dialog open={open1} onClose={() => {toggleOpen1(false)
+            checkLogin()}} noValidate>
+            <Login 
+              handleOpen = {toggleOpen1}
+              modal = {true}
+            />
+          </Dialog>
+          <Button variant="outlined" className={classes.btn} color="secondary" onClick={() => toggleOpen2(true)}>
+            SignUp
+          </Button>
+          <Dialog open={open2} onClose={() => toggleOpen2(false)} noValidate>
+            <Signup 
+              handleOpen = {toggleOpen2}
+              modal = {true}
+            />
+          </Dialog>
+        </>
+      )
+    }
+    else {
+      return (
+        <IconButton size="small">
+            <Avatar />
+        </IconButton>
+      )
+    }
+  };
+
+  // Display more nav menu items when logged in
+  function UserDrawerListItems() {
+    if (loggedIn) {
+      return (
+        <List component="nav" aria-label="secondary nav items">
+          <ListItem
+            button
+            selected={selectedNavIndex === 4}
+            onClick={(event) => handleListItemClick(event, 4)}
+          >
+            <ListItemIcon><PersonIcon /></ListItemIcon>
+            <ListItemText primary="Profile"/>
+          </ListItem>
+          <ListItem
+            button
+            selected={selectedNavIndex === 5}
+            onClick={(event) => handleListItemClick(event, 5)}
+          >
+            <ListItemIcon><SettingsIcon /></ListItemIcon>
+            <ListItemText primary="Settings"/>
+          </ListItem>
+        </List>
+      )
+    };
+  };
   
-  // Related to the avatar menu if logged in
-  const [avatarMenuOpen, setAvatarMenuOpen] = React.useState(false);
-  const handleAvatarMenuToggle = () => {
-    setAvatarMenuOpen((prevOpen) => !prevOpen);
-  };
-
-  // Anchor the avatar menu
-  const anchorRef = React.useRef(null);
-  const handleAvatarMenuClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target))
-      return;
-      setAvatarMenuOpen(false);
-  };
-
-  // Return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(avatarMenuOpen);
-  React.useEffect(() => {
-    if (prevOpen.current === true && avatarMenuOpen === false)
-      anchorRef.current.focus();
-    prevOpen.current = avatarMenuOpen;
-  }, [avatarMenuOpen]);
-
   // Data for the menu drawer
   const drawer = (
     <div>
@@ -278,24 +315,7 @@ const AppSkeleton = (props) => {
         </ListItem>
       </List>
       <Divider />
-      <List component="nav" aria-label="secondary nav items">
-        <ListItem
-          button
-          selected={selectedNavIndex === 4}
-          onClick={(event) => handleListItemClick(event, 4)}
-        >
-          <ListItemIcon><PersonIcon /></ListItemIcon>
-          <ListItemText primary="Profile"/>
-        </ListItem>
-        <ListItem
-          button
-          selected={selectedNavIndex === 5}
-          onClick={(event) => handleListItemClick(event, 5)}
-        >
-          <ListItemIcon><SettingsIcon /></ListItemIcon>
-          <ListItemText primary="Settings"/>
-        </ListItem>
-      </List>
+      {UserDrawerListItems()}
       <Divider />
       <Typography variant="h8" align="center">
         <p><i>© Vox-Populi 2020</i></p>
@@ -371,10 +391,12 @@ const AppSkeleton = (props) => {
   const protests = (
     <Grid container spacing={3}>
       <Grid item xs={12} sm={12} md={8} align="center"><ProtestSortButtons /></Grid>
-      <Grid item xs={12} sm={12} md={8}><ContentCreationCard /></Grid>
-      <Grid item xs={12} sm={12} md={8}><ProtestCard /></Grid>
-      <Grid item xs={12} sm={12} md={8}><ProtestCard /></Grid>
-      <Grid item xs={12} sm={12} md={8}><ProtestCard /></Grid>
+      <Grid item xs={12} sm={12} md={8}>{loggedIn ? <ContentCreationCard /> : <Divider /> }</Grid>
+      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}/></Grid>
+      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}/></Grid>
+      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}/></Grid>
+      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}/></Grid>
+      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}/></Grid>
     </Grid>
   );
 
@@ -399,8 +421,8 @@ const AppSkeleton = (props) => {
         return news;
       default:
         return protests;
-    }
-  }
+    };
+  };
 
   return (
     <div className={classes.root}>
@@ -432,29 +454,10 @@ const AppSkeleton = (props) => {
               inputProps={{'aria-label': 'search'}}
             />
           </div>
-          <Button variant="outlined" className={classes.btn} color="secondary" onClick={() => toggleOpen1(true)}>
-            Login
-          </Button>
-          <Dialog open={open1} onClose={() => {toggleOpen1(false)
-            checkLogin()}} noValidate>
-            <Login 
-              handleOpen = {toggleOpen1}
-              modal = {true}
-            />
-          </Dialog>
-          <Button variant="outlined" className={classes.btn} color="secondary" onClick={() => toggleOpen2(true)}>
-            SignUp
-          </Button>
-          <Dialog open={open2} onClose={() => toggleOpen2(false)} noValidate>
-            <Signup 
-              handleOpen = {toggleOpen2}
-              modal = {true}
-            />
-          </Dialog>
+          {HeaderButtons()}
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="drawer">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
             container={container}

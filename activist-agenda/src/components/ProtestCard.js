@@ -36,20 +36,32 @@ const ProtestCard = (props) => {
         <Grid item>
             <Card className={classes.cardStyle}>
                 {/*<CardActionArea>*/}
-                    <CardHeader
-                        avatar={
-                            <IconButton size="small">
-                                <Avatar src={avatarSrc}/>
-                            </IconButton>
-                        }
-                        action={
-                            <IconButton aria-label="flag">
-                                <EmojiFlagsIcon />
-                            </IconButton>
-                        }
-                        title="Title"
-                        subheader="User"
-                    />
+                    {
+                        props.displayLoggedInBtns 
+                        ? <CardHeader
+                            avatar={
+                                <IconButton size="small">
+                                    <Avatar src={avatarSrc}/>
+                                </IconButton>
+                            }
+                            action={
+                                <IconButton aria-label="flag">
+                                    <EmojiFlagsIcon />
+                                </IconButton>
+                            }
+                            title="Title"
+                            subheader="User"
+                        />
+                        : <CardHeader
+                            avatar={
+                                <IconButton size="small">
+                                    <Avatar src={avatarSrc}/>
+                                </IconButton>
+                            }
+                            title="Title"
+                            subheader="User"
+                        />
+                    }
                     <Divider />
                     <CardContent>
                         <Typography className={classes.pos} color="textSecondary">
@@ -65,12 +77,15 @@ const ProtestCard = (props) => {
                             <b>Supporters: #</b>
                         </Typography>
                         <Typography>
-                            <FormControlLabel
-                                control={<Checkbox style={{ color: theme.palette.error.main }} icon={<FavoriteBorder />} 
-                                checkedIcon={<Favorite />} 
-                                name="checkedH" />}
-                                label="I SUPPORT THIS" 
+                            {props.displayLoggedInBtns 
+                            ? <FormControlLabel
+                                    control={<Checkbox style={{ color: theme.palette.error.main }} icon={<FavoriteBorder />} 
+                                    checkedIcon={<Favorite />} 
+                                    name="checkedH" />}
+                                    label="I SUPPORT THIS" 
                             />
+                            : null
+                            }
                         </Typography>
                     </CardContent>
                     <Divider/>
