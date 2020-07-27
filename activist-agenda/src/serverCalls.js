@@ -121,6 +121,7 @@ export function getEvents() { //might want to filter from here
     return Axios(reqs).then(res => {
         return res.data;
     })
+}
 //Changes an entry's username
 export function changeUsername(_id, username) {
 

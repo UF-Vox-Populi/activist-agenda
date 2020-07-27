@@ -53,8 +53,19 @@ fs.readFile('./database/fillerEvents.json', 'utf8', (err, data) => {
 
     eventData.entries.forEach(element => {
         var thing = new Event({summary:element.summary, address:element.address, coordinates:element.coordinates, date:element.date, description:element.description});
-mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    thing.save(function (err) {
+            if (err) {
+              throw err;
+            }
+        })
+    }, () => {
+        mongoose.connection.close();
+    });
+});
+    
+
 fs.readFile('./database/FillerPosts.json', 'utf8', (err, data) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
     if (err) throw err;
     let postData = JSON.parse(data);
 
@@ -196,6 +207,9 @@ app.get("/getEvents", (req, res) => {
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
     Event.find( function(err, docs) {
         if (err) return handleError(err);
+        res.send(docs);
+    })
+});
 //Edit functions send true if they worked and false if they don't
 //Edits user's username
 app.get("/usernameChange", (req, res) => {
