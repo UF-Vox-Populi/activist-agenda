@@ -6,62 +6,95 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import Checkbox from '@material-ui/core/Checkbox';
 import Divider from '@material-ui/core/Divider';
 import EmojiFlagsIcon from '@material-ui/icons/EmojiFlags';
+import Favorite from '@material-ui/icons/Favorite';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
+import Link from '@material-ui/core/Link';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
-    // Nothing here for now
+    cardStyle: {
+        backgroundColor: '#ffffff',
+        display: 'block',
+        transitionDuration: '0.3s',
+    },
 });
 
 const ProtestCard = (props) => {
     const classes = useStyles();
+    const theme = useTheme();
     const { avatarSrc, host, date, protestTitle, protestLocation, description, protestorCount } = props;
 
-    const cardStyle = {
-        backgroundColor: '#ffffff',
-        display: 'block',
-        // width: '400vm',
-        // height: '300vm',
-        transitionDuration: '0.3s'
-    };
-
     return (
-        <Card style={cardStyle}>
-            <CardActionArea>
-                <CardHeader
-                    avatar={
-                        <IconButton size="small">
-                            <Avatar src={avatarSrc}/>
-                        </IconButton>
+        <Grid item>
+            <Card className={classes.cardStyle}>
+                {/*<CardActionArea>*/}
+                    {
+                        props.displayLoggedInBtns 
+                        ? <CardHeader
+                            avatar={
+                                <IconButton size="small">
+                                    <Avatar src={avatarSrc}/>
+                                </IconButton>
+                            }
+                            action={
+                                <IconButton aria-label="flag">
+                                    <EmojiFlagsIcon />
+                                </IconButton>
+                            }
+                            title="Title"
+                            subheader="User"
+                        />
+                        : <CardHeader
+                            avatar={
+                                <IconButton size="small">
+                                    <Avatar src={avatarSrc}/>
+                                </IconButton>
+                            }
+                            title="Title"
+                            subheader="User"
+                        />
                     }
-                    action={
-                        <IconButton aria-label="settings">
-                            <EmojiFlagsIcon />
-                        </IconButton>
-                    }
-                    title="Protest Title"
-                    subheader="Host (Individual/Org)"
-                />
-                <Divider />
-                <CardContent>
-                    <Typography className={classes.pos} color="textSecondary">
-                        Location | Date at Time
-                    </Typography>
-                    <Typography variant="body2" component="p">
-                        Some short description with a character count<br/>
-                    </Typography>
-                    <Typography variant="body2" component="p">
-                        <br/><i>(Supporters: <b>#</b>)</i>
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-            <CardActions>
-                <ProtestDrawer />
-            </CardActions>
-        </Card>
+                    <Divider />
+                    <CardContent>
+                        <Typography className={classes.pos} color="textSecondary">
+                            Location | Date
+                        </Typography>
+                        <Typography variant="body1" component="p">
+                            Description<br/>
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                            <br/>Link(s): <Link href="https://gofundme.com">Donation</Link> | <Link href="https://change.org">Petition</Link>
+                        </Typography>
+                        <Typography variant="body2">
+                            <b>Supporters: #</b>
+                        </Typography>
+                        <Typography>
+                            {props.displayLoggedInBtns 
+                            ? <FormControlLabel
+                                    control={<Checkbox style={{ color: theme.palette.error.main }} icon={<FavoriteBorder />} 
+                                    checkedIcon={<Favorite />} 
+                                    name="checkedH" />}
+                                    label="I SUPPORT THIS" 
+                            />
+                            : null
+                            }
+                        </Typography>
+                    </CardContent>
+                    <Divider/>
+                {/*</CardActionArea>*/}
+                <CardActions>
+                    <ProtestDrawer />
+                </CardActions>
+            </Card>
+        </Grid>
     );
 };
 

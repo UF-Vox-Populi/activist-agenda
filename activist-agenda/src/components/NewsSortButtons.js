@@ -10,7 +10,9 @@ const useStyles = makeStyles((theme) => ({
     // Nothing here for now
 }));
 
-const ProtestSortButtons = () => {
+//Determines how the news posts are sorted. Will need additional working later.
+
+const NewsSortButtons = () => {
     const classes = useStyles();
     const [sortBy, setSortBy] = React.useState('');
   
@@ -27,18 +29,15 @@ const ProtestSortButtons = () => {
                 aria-label="sort by"
                 size="small"
             >
-                <ToggleButton value="Upcoming" aria-label="sort by upcoming">
-                    <DateRangeIcon fontSize="small" color="primary"/>Upcoming
+                <ToggleButton value="sortBy=publishedAt" aria-label="sort by latest">
+                    <DateRangeIcon fontSize="small" color="primary"/>Latest
                 </ToggleButton>
-                <ToggleButton value="location" aria-label="sort by location">
-                    <LocationOnIcon fontSize="small" color="primary"/>Location
-                </ToggleButton>
-                <ToggleButton value="top" aria-label="sort by top">
-                    <WhatshotIcon fontSize="small" color="primary"/>Top
+                <ToggleButton value="sortBy=popularity" aria-label="sort by popular">
+                    <WhatshotIcon fontSize="small" color="primary"/>Popular
                 </ToggleButton>
             </ToggleButtonGroup>
         </div>
     );
 };
 
-export default ProtestSortButtons;
+export default NewsSortButtons;

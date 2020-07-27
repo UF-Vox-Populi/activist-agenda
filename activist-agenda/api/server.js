@@ -4,6 +4,7 @@ import cors from 'cors';
 import config from './config/config.js';
 import User from './database/UserSchema.js';
 import Event from './database/EventSchema.js';
+import Post from './database/PostSchema.js';
 import * as fs from 'fs';
 
 //Connects to the mongo database as soon as the server starts up.
@@ -52,6 +53,22 @@ fs.readFile('./database/fillerEvents.json', 'utf8', (err, data) => {
 
     eventData.entries.forEach(element => {
         var thing = new Event({summary:element.summary, address:element.address, coordinates:element.coordinates, date:element.date, description:element.description});
+mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+fs.readFile('./database/FillerPosts.json', 'utf8', (err, data) => {
+    if (err) throw err;
+    let postData = JSON.parse(data);
+
+    postData.posts.forEach(element => {
+        var thing = new Post({
+            poster: element.poster,
+            icon: element.icon,
+            title: element.title,
+            donationLink: element.donationLink,
+            organizationLink: element.organizationLink,
+            description: element.description,
+            time: element.time,
+            location: element.location
+        });
         thing.save(function (err) {
             if (err) {
               throw err;
@@ -61,6 +78,7 @@ fs.readFile('./database/fillerEvents.json', 'utf8', (err, data) => {
         mongoose.connection.close();
     });
 });
+
 
 //This is needed to run the Express app.
 const app = express();
@@ -178,9 +196,106 @@ app.get("/getEvents", (req, res) => {
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
     Event.find( function(err, docs) {
         if (err) return handleError(err);
+//Edit functions send true if they worked and false if they don't
+//Edits user's username
+app.get("/usernameChange", (req, res) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.updateOne({ _id: req.query.id }, { username: req.query.user }, function (err) {
+        if (err) {
+            res.send(false);
+            throw err;
+        }
+        res.send(true);
+    })
+});
+
+//Edits user's password
+app.get("/passwordChange", (req, res) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.updateOne({ _id: req.query.id }, { password: req.query.pass }, function (err) {
+        if (err) {
+            res.send(false);
+            throw err;
+        }
+        res.send(true);
+    })
+});
+
+//Edits user's email
+app.get("/emailChange", (req, res) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.updateOne({ _id: req.query.id }, { email: req.query.mail }, function (err) {
+        if (err) {
+            res.send(false);
+            throw err;
+        }
+        res.send(true);
+    })
+});
+
+//Edits user's first name
+app.get("/firstChange", (req, res) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.updateOne({ _id: req.query.id }, { firstName: req.query.first }, function (err) {
+        if (err) {
+            res.send(false);
+            throw err;
+        }
+        res.send(true);
+    })
+});
+
+//Edits user's last name
+app.get("/lastChange", (req, res) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.updateOne({ _id: req.query.id }, { lastName: req.query.last }, function (err) {
+        if (err) {
+            res.send(false);
+            throw err;
+        }
+        res.send(true);
+    })
+});
+
+//Stores a post into the database
+app.get("/addPost", (req, res) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    var newEntry = new Post({
+        poster: req.query.poste,
+        icon: req.query.ico,
+        title: req.query.titl,
+        description: req.query.desc,
+        time: req.query.tim,
+        location: req.query.loc,
+        donationLink: req.query.donation,
+        organizationLink: req.query.organization
+    })
+    newEntry.save((err) => {
+        if (err) {
+            res.send(false);
+            handleError(err,res);
+        } else {
+            res.send(true);
+        }
+    });
+})
+
+//Retrieves posts from the database. For now it just gets all of them.
+app.get("/getAllPosts", (req, res) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    Post.find({}, function (err, docs) {
+        if (err) throw err;
         res.send(docs);
     })
 })
+
 
 //Basically sets the server up to listen for any inputs from serverCalls.js and the like.
 app.listen(config.port, () => console.log(`App now listening on port ${config.port}`));
