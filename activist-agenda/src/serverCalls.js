@@ -239,3 +239,30 @@ export function getAllPosts() {
     })
 
 }
+
+
+//Retrieves news in json format
+export function getNews(tags) {
+
+    let searchWords = 'q=';
+    var x;
+
+    for (x = 0; x < tags.length; x++) {
+        searchWords +=  '+' + tags[x];
+    }
+    
+    console.log(searchWords);
+
+    var url = 'http://newsapi.org/v2/everything?' +
+        searchWords + '&' +
+        'sortBy=publishedAt&' +
+        'language=en&' +
+        'apiKey=8d3338893f324fa3934af0ce26e695ca';
+
+    var req = new Request(url);
+
+    return fetch(req).then(function(response) {
+        return response.json();
+    })
+
+}

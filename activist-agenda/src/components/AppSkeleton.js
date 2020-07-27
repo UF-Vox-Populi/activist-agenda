@@ -27,6 +27,8 @@ import ContentCreationCard from './ContentCreationCard'
 import ProtestCard from './ProtestCard';
 import ProtestSortButtons from './ProtestSortButtons';
 import {useState} from 'react';
+import NewsSortButtons from './NewsSortButtons';
+import NewsCard from './NewsCard';
 
 // Material-UI components
 import AppBar from '@material-ui/core/AppBar';
@@ -185,6 +187,9 @@ const AppSkeleton = (props) => {
   // Controls which menu list option should stay highlighted
   const handleListItemClick = (event, index) => {
     setSelectedNavIndex(index);
+    if (index == 3) {
+      newNews();
+    }
   };
 
   // Handles component anchoring
@@ -298,6 +303,105 @@ const AppSkeleton = (props) => {
     </div>
   );
 
+  //Sets up a blank json that the news api can pull things into.
+  const [articles, setArticles] = useState({
+    articles: [
+      {
+        title: '',
+        author: '',
+        urlToImage: '',
+        description: '',
+        url: '',
+        source: {
+          name: ''
+        }
+      },
+      {
+        title: '',
+        author: '',
+        urlToImage: '',
+        description: '',
+        url: '',
+        source: {
+          name: ''
+        }
+      },
+      {
+        title: '',
+        author: '',
+        urlToImage: '',
+        description: '',
+        url: '',
+        source: {
+          name: ''
+        }
+      },
+      {
+        title: '',
+        author: '',
+        urlToImage: '',
+        description: '',
+        url: '',
+        source: {
+          name: ''
+        }
+      },
+      {
+        title: '',
+        author: '',
+        urlToImage: '',
+        description: '',
+        url: '',
+        source: {
+          name: ''
+        }
+      }
+    ]
+  });
+
+  //Gets articles on the latest BLM and protest related articles.
+  const newNews = () => {
+    calls.getNews(['blacklivesmatter', 'protest']).then(out => {
+      setArticles(out);
+      console.log(out);
+    })
+  }
+
+  //Sets the protest cards
+  const protests = (
+    <Grid container spacing={3}>
+      <Grid item xs={12} sm={12} md={8} align="center"><ProtestSortButtons /></Grid>
+      <Grid item xs={12} sm={12} md={8}><ContentCreationCard /></Grid>
+      <Grid item xs={12} sm={12} md={8}><ProtestCard /></Grid>
+      <Grid item xs={12} sm={12} md={8}><ProtestCard /></Grid>
+      <Grid item xs={12} sm={12} md={8}><ProtestCard /></Grid>
+    </Grid>
+  );
+
+  //Sets the news cards
+  const news = (
+    <Grid container spacing={3}>
+      <Grid item xs={12} sm={12} md={8} align="center"><NewsSortButtons /></Grid>
+      <Grid item xs={12} sm={12} md={8}><NewsCard title={articles.articles[0].title} author={articles.articles[0].author} avatarSrc={articles.articles[0].urlToImage} desc={articles.articles[0].description} source={articles.articles[0].source.name} url={articles.articles[0].url} /></Grid>
+      <Grid item xs={12} sm={12} md={8}><NewsCard title={articles.articles[1].title} author={articles.articles[1].author} avatarSrc={articles.articles[1].urlToImage} desc={articles.articles[1].description} source={articles.articles[1].source.name} url={articles.articles[1].url}/></Grid>
+      <Grid item xs={12} sm={12} md={8}><NewsCard title={articles.articles[2].title} author={articles.articles[2].author} avatarSrc={articles.articles[2].urlToImage} desc={articles.articles[2].description} source={articles.articles[2].source.name} url={articles.articles[2].url}/></Grid>
+      <Grid item xs={12} sm={12} md={8}><NewsCard title={articles.articles[3].title} author={articles.articles[3].author} avatarSrc={articles.articles[3].urlToImage} desc={articles.articles[3].description} source={articles.articles[3].source.name} url={articles.articles[3].url}/></Grid>
+      <Grid item xs={12} sm={12} md={8}><NewsCard title={articles.articles[4].title} author={articles.articles[4].author} avatarSrc={articles.articles[4].urlToImage} desc={articles.articles[4].description} source={articles.articles[4].source.name} url={articles.articles[4].url}/></Grid>
+    </Grid>
+  )
+
+  //Sets which set of cards it displays, protests or news.
+  const selectNav = () => {
+    switch(selectedNavIndex) {
+      case 0:
+        return protests;
+      case 3:
+        return news;
+      default:
+        return protests;
+    }
+  }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -383,13 +487,7 @@ const AppSkeleton = (props) => {
       <main className={classes.content}>
         <div className={classes.toolbar}/>
         <Typography paragraph>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={12} md={8} align="center"><ProtestSortButtons /></Grid>
-            <Grid item xs={12} sm={12} md={8}><ContentCreationCard /></Grid>
-            <Grid item xs={12} sm={12} md={8}><ProtestCard /></Grid>
-            <Grid item xs={12} sm={12} md={8}><ProtestCard /></Grid>
-            <Grid item xs={12} sm={12} md={8}><ProtestCard /></Grid>
-          </Grid>
+          {selectNav()}
         </Typography>
       </main>
     </div>
