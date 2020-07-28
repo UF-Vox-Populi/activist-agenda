@@ -188,8 +188,16 @@ const AppSkeleton = (props) => {
   // Controls which menu list option should stay highlighted
   const handleListItemClick = (event, index) => {
     setSelectedNavIndex(index);
-    if (index == 3) {
-      newNews();
+    switch (index) {
+      case 3:
+        newNews();
+      case 4:
+        if (loggedIn) {
+          history.push("/userprofile");
+        } else {
+          history.push("/login");
+        }
+          
     };
   };
 
@@ -208,6 +216,12 @@ const AppSkeleton = (props) => {
     setOpen2(val);
     if (signed) toggleOpen1(true);
   };
+
+  // Removes the cookie and logs the user out
+  const logOut = () => {
+    cookie.remove('authedUser');
+    history.push('/login');
+  }
 
   // Header buttons (either login/signup or avatar)
   function HeaderButtons() {
@@ -238,9 +252,14 @@ const AppSkeleton = (props) => {
     }
     else {
       return (
-        <IconButton size="small">
+        <div>
+        <Button variant="outlined" className={classes.btn} color="secondary" onClick={logOut}>
+          Log Out
+        </Button>
+        <IconButton size="small" onClick={goToProfile}>
             <Avatar />
         </IconButton>
+        </div>
       )
     }
   };
@@ -423,6 +442,11 @@ const AppSkeleton = (props) => {
         return protests;
     };
   };
+
+  //Moves to the user profile upon the avatar button being clicked
+  const goToProfile = () => {
+    history.push("/userprofile");
+  }
 
   return (
     <div className={classes.root}>

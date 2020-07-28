@@ -5,35 +5,50 @@
             "email": "laurence.mullen@ufl.edu",
             "password": "password",
             "firstName": "Laurence",
-            "lastName": "Mullen"
+            "lastName": "Mullen",
+            "bio": "Put your bio here!",
+            "location": "Gainesville, FL",
+            "organizer": true
         },
         {
             "username": "nicoleajoy",
             "email": "nicoleajoy@ufl.edu",
             "password": "password",
             "firstName": "Nicole",
-            "lastName": "Ajoy"
+            "lastName": "Ajoy",
+            "bio": "Put your bio here!",
+            "location": "Gainesville, FL",
+            "organizer": true
         },
         {
             "username": "OverlordPenguin",
             "email": "johngray@ufl.edu",
             "password": "password",
             "firstName": "John",
-            "lastName": "Gray"
+            "lastName": "Gray",
+            "bio": "Put your bio here!",
+            "location": "Gainesville, FL",
+            "organizer": true
         },
         {
             "username": "tysonf",
             "email": "tysonfreeman10@gmail.com",
             "password": "password",
             "firstName": "Tyson",
-            "lastName": "Freeman"
+            "lastName": "Freeman",
+            "bio": "Put your bio here!",
+            "location": "Gainesville, FL",
+            "organizer": true
         },
         {
             "username": "XavierJEsteve",
             "email": "xesteve@ufl.edu",
             "password": "password",
             "firstName": "Xavier",
-            "lastName": "Esteve"
+            "lastName": "Esteve",
+            "bio": "Put your bio here!",
+            "location": "Gainesville, FL",
+            "organizer": true
         }
     ]
 }

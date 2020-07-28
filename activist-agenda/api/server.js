@@ -28,7 +28,7 @@ fs.readFile('./database/FillerUsers.json', 'utf8', (err, data) => {
     let userData = JSON.parse(data);
 
     userData.entries.forEach(element => {
-        var thing = new User({username:element.username, email:element.email, password:element.password, firstName:element.firstName, lastName:element.lastName});
+        var thing = new User({username:element.username, email:element.email, password:element.password, firstName:element.firstName, lastName:element.lastName, bio:element.bio, location:element.location, organizer:element.organizer});
         thing.save(function (err) {
             if (err) {
               return handleError(err);
@@ -137,7 +137,7 @@ app.get("/userGet", (req, res) => {
 
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-    User.findOne({username: req.query.user, password: req.query.pass}, function (err, docs) {
+    User.findOne({_id: req.query.id}, function (err, docs) {
         if (err) return handleError(err,res);
 
         res.send(docs); //Just the regular mongoose commands package the info, which can then be sent back.
@@ -268,6 +268,32 @@ app.get("/lastChange", (req, res) => {
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
     User.updateOne({ _id: req.query.id }, { lastName: req.query.last }, function (err) {
+        if (err) {
+            res.send(false);
+            throw err;
+        }
+        res.send(true);
+    })
+});
+
+//Edits user's bio
+app.get("/bioChange", (req, res) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.updateOne({ _id: req.query.id }, { bio: req.query.biography }, function (err) {
+        if (err) {
+            res.send(false);
+            throw err;
+        }
+        res.send(true);
+    })
+});
+
+//Edits user's location
+app.get("/locationChange", (req, res) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.updateOne({ _id: req.query.id }, { location: req.query.loc }, function (err) {
         if (err) {
             res.send(false);
             throw err;
