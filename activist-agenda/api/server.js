@@ -22,6 +22,10 @@ User.deleteMany({}, (err) => {
     if (err) throw err;
 });
 
+Post.deleteMany({}, (err) => {
+    if (err) throw err;
+});
+
 //Reads the Filler Users json and puts in all of us for testing purposes.
 fs.readFile('./database/FillerUsers.json', 'utf8', (err, data) => {
     if (err) throw err;
@@ -330,7 +334,7 @@ app.get("/addPost", (req, res) => {
 app.get("/getAllPosts", (req, res) => {
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-    Post.find({}, function (err, docs) {
+    Post.find( function (err, docs) {
         if (err) throw err;
         res.send(docs);
     })

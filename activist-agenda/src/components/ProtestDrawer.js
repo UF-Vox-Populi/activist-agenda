@@ -5,10 +5,11 @@ import Card from '@material-ui/core/Card';
 import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
+import Events from './Events';
 
 const useStyles = makeStyles((theme) => ({
   list: {
-    width: "400px",
+    width: "1000px",
   },
   fullList: {
     width: 'auto',
@@ -19,8 +20,8 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
     '& > *': {
       margin: theme.spacing(2),
-      width: theme.spacing(45),
-      height: theme.spacing(30),
+      width: theme.spacing(120),
+      height: theme.spacing(40),
     },
   },
   mapCardStyle: {
@@ -29,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
     '& > *': {
       margin: theme.spacing(2),
-      width: theme.spacing(45),
-      height: theme.spacing(45),
+      width: theme.spacing(120),
+      height: theme.spacing(70),
     },
   },
 }));
@@ -74,7 +75,9 @@ const ProtestDrawer = () => {
         alignItems="center"
         className={classes.mapCardStyle}
       >
-        <Card variant="outlined" />
+        <Card variant="outlined">
+          <Events />
+        </Card>
       </Grid>
     </div>
   );

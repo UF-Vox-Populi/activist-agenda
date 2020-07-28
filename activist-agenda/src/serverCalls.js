@@ -300,7 +300,7 @@ export function getNews(tags) {
 
     var url = 'http://newsapi.org/v2/everything?' +
         searchWords + '&' +
-        'sortBy=publishedAt&' +
+        'sortBy=popularity&' +
         'language=en&' +
         'apiKey=8d3338893f324fa3934af0ce26e695ca';
 

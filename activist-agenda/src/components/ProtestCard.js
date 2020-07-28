@@ -30,7 +30,7 @@ const useStyles = makeStyles({
 const ProtestCard = (props) => {
     const classes = useStyles();
     const theme = useTheme();
-    const { avatarSrc, host, date, protestTitle, protestLocation, description, protestorCount } = props;
+    const { avatarSrc, host, date, protestTitle, protestLocation, description, donLink, orgLink, protestorCount } = props;
 
     return (
         <Grid item>
@@ -49,8 +49,8 @@ const ProtestCard = (props) => {
                                     <EmojiFlagsIcon />
                                 </IconButton>
                             }
-                            title="Title"
-                            subheader="User"
+                            title={protestTitle}
+                            subheader={host}
                         />
                         : <CardHeader
                             avatar={
@@ -58,17 +58,17 @@ const ProtestCard = (props) => {
                                     <Avatar src={avatarSrc}/>
                                 </IconButton>
                             }
-                            title="Title"
-                            subheader="User"
+                            title={protestTitle}
+                            subheader={host}
                         />
                     }
                     <Divider />
                     <CardContent>
                         <Typography className={classes.pos} color="textSecondary">
-                            Location | Date
+                            {protestLocation} | {date}
                         </Typography>
                         <Typography variant="body1" component="p">
-                            Description<br/>
+                            {description}<br/>
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
                             <br/>Link(s): <Link href="https://gofundme.com">Donation</Link> | <Link href="https://change.org">Petition</Link>

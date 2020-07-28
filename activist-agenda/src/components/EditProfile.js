@@ -91,6 +91,22 @@ const EditProfile = (props) => {
         history.push('/');
     }
 
+    /*
+    
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    name="Username"
+                                    variant="outlined"
+                                    fullWidth
+                                    id="userName"
+                                    label="Username"
+                                    autoFocus
+                                    onChange={(event) => setUsername(event.target.value)}
+                                />
+                            </Grid>
+                            */
+
     return (
         <div className={classes.paper}>
             <FormControl>
@@ -121,17 +137,6 @@ const EditProfile = (props) => {
                                     label="Last Name"
                                     autoFocus
                                     onChange={(event) => setLast(event.target.value)}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    name="Username"
-                                    variant="outlined"
-                                    fullWidth
-                                    id="userName"
-                                    label="Username"
-                                    autoFocus
-                                    onChange={(event) => setUsername(event.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={12}>

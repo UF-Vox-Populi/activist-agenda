@@ -11,7 +11,7 @@
             "description": "I can't just sit here, it's time for action!"
         },
         {
-            "summary": "Take the power pack",
+            "summary": "Take the power back",
             "address": "301 SE 4th Ave, Gainesville, FL 32601",
             "coordinates": {
                 "latitude": 29.647869,
@@ -28,7 +28,7 @@
                 "longitude": -82.381410
             },
             "date": "2020-08-03",
-            "description": " I will saw the tables of tyranny in half. Gnaw at the ankles of big business!"
+            "description": "I will saw the tables of tyranny in half. Gnaw at the ankles of big business!"
         }
     ]
 }
