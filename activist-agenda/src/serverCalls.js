@@ -301,7 +301,7 @@ export function getNews(tags) {
     
     console.log(searchWords);
 
-    var url = 'https://newsapi.org/v2/everything?' +
+    var url = 'http://newsapi.org/v2/everything?' +
         searchWords + '&' +
         'sortBy=popularity&' +
         'language=en&' +
