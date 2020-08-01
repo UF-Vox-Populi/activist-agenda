@@ -8,11 +8,14 @@ NOTE: Need to adjust urls to an input from the config file.
 */
 
 //Checks if a user exists based on their email and password.
+
+const baseUrl = process.env.BASE_URL || "http://localhost:5000";
+
 export function checkUser(email, password) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/userCheck/",
+        url: baseUrl+"/api/userCheck/",
         params: {
             mail: email,
             pass: password
@@ -30,7 +33,7 @@ export function getUser(_id) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/userGet/",
+        url: baseUrl+"/api/userGet/",
         params: {
             id: _id
         }
@@ -47,7 +50,7 @@ export function checkUsername(username) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/usernameCheck/",
+        url: baseUrl+"/api/usernameCheck/",
         params: {
             user: username
         }
@@ -64,7 +67,7 @@ export function checkEmail(email) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/emailCheck/",
+        url: baseUrl+"/api/emailCheck/",
         params: {
             address: email
         }
@@ -81,7 +84,7 @@ export function addUser(username, password, email, firstName, lastName) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/addUser/",
+        url: baseUrl+"/api/addUser/",
         params: {
             user: username,
             pass: password,
@@ -101,7 +104,7 @@ export function addUser(username, password, email, firstName, lastName) {
 export function getUserIDbyEmail(email) {
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/userIDGet/",
+        url: baseUrl+"/api/userIDGet/",
         params: {
             email: email
         }
@@ -114,7 +117,7 @@ export function getUserIDbyEmail(email) {
 export function getEvents() { //might want to filter from here
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/getEvents/",
+        url: baseUrl+"/api/getEvents/",
         // params could be filtering data
     }
     return Axios(reqs).then(res => {
@@ -126,7 +129,7 @@ export function changeUsername(_id, username) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/usernameChange/",
+        url: baseUrl+"/api/usernameChange/",
         params: {
             user: username,
             id: _id
@@ -144,7 +147,7 @@ export function changePassword(_id, password) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/passwordChange/",
+        url: baseUrl+"/api/passwordChange/",
         params: {
             pass: password,
             id: _id
@@ -162,7 +165,7 @@ export function changeEmail(_id, email) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/emailChange/",
+        url: baseUrl+"/api/emailChange/",
         params: {
             mail: email,
             id: _id
@@ -180,7 +183,7 @@ export function changeFirstName(_id, firstName) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/firstChange/",
+        url: baseUrl+"/api/firstChange/",
         params: {
             first: firstName,
             id: _id
@@ -198,7 +201,7 @@ export function changeLastName(_id, lastName) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/lastChange/",
+        url: baseUrl+"/api/lastChange/",
         params: {
             last: lastName,
             id: _id
@@ -216,7 +219,7 @@ export function changeBio(_id, bio) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/bioChange/",
+        url: baseUrl+"/api/bioChange/",
         params: {
             biography: bio,
             id: _id
@@ -234,7 +237,7 @@ export function changeLocation(_id, location) {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/locationChange/",
+        url: baseUrl+"/api/locationChange/",
         params: {
             loc: location,
             id: _id
@@ -252,7 +255,7 @@ export function addPost(poster, icon, title, description, time, location, donati
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/addPost/",
+        url: baseUrl+"/api/addPost/",
         params: {
             poste: poster,
             ico: icon,
@@ -276,7 +279,7 @@ export function getAllPosts() {
 
     let reqs = {
         method: 'GET',
-        url: "http://localhost:5000/getAllPosts/",
+        url: baseUrl+"/api/getAllPosts/",
     }
     
     return Axios(reqs).then(res => {
