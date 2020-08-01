@@ -9,7 +9,7 @@ NOTE: Need to adjust urls to an input from the config file.
 
 //Checks if a user exists based on their email and password.
 
-const baseUrl = process.env.BASE_URL || "http://localhost:5000";
+const baseUrl = "https://activist-agenda.herokuapp.com";
 
 export function checkUser(email, password) {
 
@@ -301,7 +301,7 @@ export function getNews(tags) {
     
     console.log(searchWords);
 
-    var url = 'http://newsapi.org/v2/everything?' +
+    var url = 'https://newsapi.org/v2/everything?' +
         searchWords + '&' +
         'sortBy=popularity&' +
         'language=en&' +
