@@ -26,14 +26,13 @@ export function checkUser(email, password) {
 }
 
 //Gets a user's info from their username and password
-export function getUser(username, password) {
+export function getUser(_id) {
 
     let reqs = {
         method: 'GET',
         url: "http://localhost:5000/userGet/",
         params: {
-            user: username,
-            pass: password
+            id: _id
         }
     }
     
@@ -121,6 +120,7 @@ export function getEvents() { //might want to filter from here
     return Axios(reqs).then(res => {
         return res.data;
     })
+}
 //Changes an entry's username
 export function changeUsername(_id, username) {
 
@@ -211,6 +211,42 @@ export function changeLastName(_id, lastName) {
 
 }
 
+//Changes an entry's bio
+export function changeBio(_id, bio) {
+
+    let reqs = {
+        method: 'GET',
+        url: "http://localhost:5000/bioChange/",
+        params: {
+            biography: bio,
+            id: _id
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+//Changes an entry's location
+export function changeLocation(_id, location) {
+
+    let reqs = {
+        method: 'GET',
+        url: "http://localhost:5000/locationChange/",
+        params: {
+            loc: location,
+            id: _id
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
 //Adds a post to the database
 export function addPost(poster, icon, title, description, time, location, donationLink, organizationLink) {
 
@@ -264,7 +300,7 @@ export function getNews(tags) {
 
     var url = 'http://newsapi.org/v2/everything?' +
         searchWords + '&' +
-        'sortBy=publishedAt&' +
+        'sortBy=popularity&' +
         'language=en&' +
         'apiKey=8d3338893f324fa3934af0ce26e695ca';
 

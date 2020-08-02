@@ -20,6 +20,8 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import TextField from '@material-ui/core/TextField';
 
+var calls = require('../serverCalls');
+
 const useStyles = makeStyles({
     // Nothing here for now
 });
@@ -72,9 +74,55 @@ function CreationSelectDropdown() {
       description: ""
     });
 
+    const [protestVals, setProVals] = React.useState({
+        title: '',
+        location: '',
+        date: '',
+        donURL: '',
+        orgURL: '',
+        description: ''
+    })
+
     const handleDescriptionChange = description => event => {
         setValues({ ...values, [description]: event.target.value });
     };
+
+    const handleProtestChange = (num, event) => {
+        switch (num) {
+            case 0:
+                setProVals({ ...protestVals, title: event.target.value })
+                break;
+            case 1:
+                setProVals({ ...protestVals, location: event.target.value })
+                break;
+            case 2:
+                setProVals({ ...protestVals, date: event.target.value })
+                break;
+            case 3:
+                setProVals({ ...protestVals, donURL: event.target.value })
+                break;
+            case 4:
+                setProVals({ ...protestVals, orgURL: event.target.value })
+                break;
+            case 5:
+                setProVals({ ...protestVals, description: event.target.value })
+                break;
+        
+        }
+    }
+
+    const handlePost = () => {
+        if (
+            protestVals.title != '' &&
+            protestVals.location != '' &&
+            protestVals.date != '' &&
+            protestVals.description != ''
+            ) {
+                console.log(protestVals);
+                calls.addPost('OverlordPenguin', '', protestVals.title, protestVals.description, protestVals.date, protestVals.location, '', '');
+                handleDialogueClose();
+            }
+    }
 
     function handleDialogue () {
         // Selected DONATION option from menu
@@ -207,6 +255,7 @@ function CreationSelectDropdown() {
                         type="text"
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => handleProtestChange(0, e)}
                     />
                     <TextField
                         required
@@ -216,14 +265,17 @@ function CreationSelectDropdown() {
                         type="text"
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => handleProtestChange(1, e)}
                     />
                     <TextField
                         required
                         margin="dense"
                         id="date and time"
+                        label="Date"
                         type="datetime-local"
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => handleProtestChange(2, e)}
                     />
                     <TextField
                         margin="dense"
@@ -233,6 +285,7 @@ function CreationSelectDropdown() {
                         type="url"
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => handleProtestChange(3, e)}
                     />
                     <TextField
                         margin="dense"
@@ -242,6 +295,7 @@ function CreationSelectDropdown() {
                         type="url"
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => handleProtestChange(4, e)}
                     />
                     <TextField
                         multiline 
@@ -251,19 +305,16 @@ function CreationSelectDropdown() {
                         id="description"
                         label="Description"
                         type="text"
-                        inputProps={{maxlength: CHARACTER_LIMIT}}
-                        value={values.description}
-                        helperText={`${values.description.length}/${CHARACTER_LIMIT}`}
-                        onChange={handleDescriptionChange("description")}
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => handleProtestChange(5, e)}
                     />
                     </DialogContent>
                     <DialogActions>
                     <Button onClick={handleDialogueClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleDialogueClose} color="primary">
+                    <Button onClick={handlePost} color="primary">
                         Post
                     </Button>
                     </DialogActions>

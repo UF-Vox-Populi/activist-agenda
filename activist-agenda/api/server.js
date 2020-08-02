@@ -22,13 +22,17 @@ User.deleteMany({}, (err) => {
     if (err) throw err;
 });
 
+Post.deleteMany({}, (err) => {
+    if (err) throw err;
+});
+
 //Reads the Filler Users json and puts in all of us for testing purposes.
 fs.readFile('./database/FillerUsers.json', 'utf8', (err, data) => {
     if (err) throw err;
     let userData = JSON.parse(data);
 
     userData.entries.forEach(element => {
-        var thing = new User({username:element.username, email:element.email, password:element.password, firstName:element.firstName, lastName:element.lastName});
+        var thing = new User({username:element.username, email:element.email, password:element.password, firstName:element.firstName, lastName:element.lastName, bio:element.bio, location:element.location, organizer:element.organizer});
         thing.save(function (err) {
             if (err) {
               return handleError(err);
@@ -53,8 +57,19 @@ fs.readFile('./database/fillerEvents.json', 'utf8', (err, data) => {
 
     eventData.entries.forEach(element => {
         var thing = new Event({summary:element.summary, address:element.address, coordinates:element.coordinates, date:element.date, description:element.description});
-mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    thing.save(function (err) {
+            if (err) {
+              throw err;
+            }
+        })
+    }, () => {
+        mongoose.connection.close();
+    });
+});
+    
+
 fs.readFile('./database/FillerPosts.json', 'utf8', (err, data) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
     if (err) throw err;
     let postData = JSON.parse(data);
 
@@ -126,7 +141,7 @@ app.get("/userGet", (req, res) => {
 
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-    User.findOne({username: req.query.user, password: req.query.pass}, function (err, docs) {
+    User.findOne({_id: req.query.id}, function (err, docs) {
         if (err) return handleError(err,res);
 
         res.send(docs); //Just the regular mongoose commands package the info, which can then be sent back.
@@ -196,6 +211,9 @@ app.get("/getEvents", (req, res) => {
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
     Event.find( function(err, docs) {
         if (err) return handleError(err);
+        res.send(docs);
+    })
+});
 //Edit functions send true if they worked and false if they don't
 //Edits user's username
 app.get("/usernameChange", (req, res) => {
@@ -262,6 +280,32 @@ app.get("/lastChange", (req, res) => {
     })
 });
 
+//Edits user's bio
+app.get("/bioChange", (req, res) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.updateOne({ _id: req.query.id }, { bio: req.query.biography }, function (err) {
+        if (err) {
+            res.send(false);
+            throw err;
+        }
+        res.send(true);
+    })
+});
+
+//Edits user's location
+app.get("/locationChange", (req, res) => {
+    mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.updateOne({ _id: req.query.id }, { location: req.query.loc }, function (err) {
+        if (err) {
+            res.send(false);
+            throw err;
+        }
+        res.send(true);
+    })
+});
+
 //Stores a post into the database
 app.get("/addPost", (req, res) => {
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -290,7 +334,7 @@ app.get("/addPost", (req, res) => {
 app.get("/getAllPosts", (req, res) => {
     mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-    Post.find({}, function (err, docs) {
+    Post.find( function (err, docs) {
         if (err) throw err;
         res.send(docs);
     })

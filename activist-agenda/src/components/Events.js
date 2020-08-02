@@ -41,7 +41,7 @@ class Markers extends PureComponent {
                         longitude={entry.coordinates.longitude} 
                         latitude={entry.coordinates.latitude}
                 >
-                  <img src="/parade.svg" alt="" />
+                  <img src="/parade.svg" alt=""  width="30px" height="30px"/>
                 </Marker>
       )
   }

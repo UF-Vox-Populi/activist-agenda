@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -15,6 +15,11 @@ import TextField from '@material-ui/core/TextField';
 
 import theme from '../theme.js';
 import { height } from '@material-ui/system';
+
+import {useHistory} from 'react-router-dom';
+import Cookies from 'universal-cookie';
+
+var calls = require('../serverCalls');
 
 
 const palette = theme.palette;
@@ -38,6 +43,69 @@ const EditProfile = (props) => {
 
     const classes = useStyles();
     const { window } = props;
+    const cookie = new Cookies();
+    const history = useHistory();
+
+    const [first, setFirst] = useState('');
+    const [last, setLast] = useState('');
+    const [username, setUsername] = useState('');
+    const [bio, setBio] = useState('');
+    const [location, setLocation] = useState('');
+
+    const alterFirstName = () => {
+        if (first != '') {
+            calls.changeFirstName(cookie.get('authedUser'), first);
+        }
+    }
+
+    const alterLastName = () => {
+        if (last != '') {
+            calls.changeLastName(cookie.get('authedUser'), last);
+        }
+    }
+
+    const alterUsername = () => {
+        if (username != '') {
+            calls.changeUsername(cookie.get('authedUser'), username);
+        }
+    }
+
+    const alterBio = () => {
+        if (bio != '') {
+            calls.changeBio(cookie.get('authedUser'), bio);
+        }
+    }
+
+    const alterLocation = () => {
+        if (location != '') {
+            calls.changeLocation(cookie.get('authedUser'), location);
+        }
+    }
+
+    const handleSubmit = () => {
+        alterFirstName();
+        alterLastName();
+        alterUsername();
+        alterBio();
+        alterLocation();
+        history.push('/');
+    }
+
+    /*
+    
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    name="Username"
+                                    variant="outlined"
+                                    fullWidth
+                                    id="userName"
+                                    label="Username"
+                                    autoFocus
+                                    onChange={(event) => setUsername(event.target.value)}
+                                />
+                            </Grid>
+                            */
 
     return (
         <div className={classes.paper}>
@@ -51,23 +119,24 @@ const EditProfile = (props) => {
                         <Grid container spacing={2} style = {{marginTop: theme.spacing(1)}}>
                             <Grid item xs={12}>
                                 <TextField
-                                    name="Name"
+                                    name="First Name"
                                     variant="outlined"
                                     fullWidth
                                     id="userName"
-                                    label="Name"
+                                    label="First Name"
                                     autoFocus
+                                    onChange={(event) => setFirst(event.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                    name="Username"
+                                    name="Last Name"
                                     variant="outlined"
-                                    required
                                     fullWidth
                                     id="userName"
-                                    label="Username"
+                                    label="Last Name"
                                     autoFocus
+                                    onChange={(event) => setLast(event.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -79,6 +148,7 @@ const EditProfile = (props) => {
                                     label="Bio"
                                     autoFocus
                                     className={classes.bioField}
+                                    onChange={(event) => setBio(event.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -89,6 +159,7 @@ const EditProfile = (props) => {
                                     id="userName"
                                     label="Location"
                                     autoFocus
+                                    onChange={(event) => setLocation(event.target.value)}
                                 />
                             </Grid>
                         </Grid>
@@ -98,6 +169,7 @@ const EditProfile = (props) => {
                         fullWidth
                         variant="contained"
                         className={classes.submitButton}
+                        onClick={handleSubmit}
                         >
                         Submit
                     </Button>

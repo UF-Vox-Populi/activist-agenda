@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Avatar } from '@material-ui/core';
@@ -10,6 +10,10 @@ import Button from '@material-ui/core/Button';
 
 import theme from '../theme.js';
 import { height } from '@material-ui/system';
+
+import {useHistory} from 'react-router-dom';
+import Cookies from 'universal-cookie';
+var calls = require('../serverCalls');
 
 const palette = theme.palette;
 
@@ -64,6 +68,44 @@ const UserProfile = (props) => {
 
     const classes = useStyles();
     const { window } = props;
+    const history = useHistory();
+
+    const goToEdit = () => {
+        history.push("/editprofile");
+    }
+
+    const goHome = () => {
+        history.push("/");
+    }
+
+    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
+    const [bio, setBio] = useState('');
+    const [location, setLocation] = useState('');
+
+    //Check authedUser cookie and set user state
+    const [user, setUser] = useState('');
+    const cookie = new Cookies();
+
+    // Handles when user is logged in, checks for cookie on load
+    const [loggedIn, setLoggedIn] = React.useState(false); // for logged in abilities
+
+    // Changes login state and stores userID in user state if cookie exists
+    const checkLogin = () => {
+        if (cookie.get('authedUser') && !loggedIn) {
+            setUser(cookie.get('authedUser'));
+            setLoggedIn(true);
+            console.log('User logged in with id: ', cookie.get('authedUser')); //remove later
+            calls.getUser(cookie.get('authedUser')).then(out => {
+                setName(out.firstName + ' ' + out.lastName);
+                setUsername(out.username);
+                setBio(out.bio);
+                setLocation(out.location);
+            })
+        }
+    };
+
+    checkLogin(); //run on startup
 
     return (
         <div className={classes.root}>
@@ -77,10 +119,10 @@ const UserProfile = (props) => {
             
             {/* Username and Name Section */}
                 <Grid item className={classes.nameSection}>
-                    <Typography variant='h6'>Name</Typography>
+                    <Typography variant='h6'>{name}</Typography>
                 </Grid>
                 <Grid item className={classes.nameSection}>
-                    <Typography variant='h8'>@username</Typography>
+                    <Typography variant='h8'>{username}</Typography>
                 </Grid>
             {/* Follow Info Section */}
                 <Grid container container direction='column' className={classes.followInfoSection}>
@@ -96,19 +138,24 @@ const UserProfile = (props) => {
 
             {/* Bio Section */}
             <Grid container container direction='column' className={classes.bioSection}>
-                <Typography variant='h8'>This is a bio.</Typography>
+                <Typography variant='h8'>{bio}</Typography>
             </Grid>
 
             {/* Location Section */}
             <Grid container container direction='column' className={classes.bioSection}>
-                <Typography variant='h8'>Location</Typography>
+                <Typography variant='h8'>{location}</Typography>
             </Grid>
 
             {/* Edit, Fullow, Unfollow Button Section */}
 
-            <Button variant='contained' className={classes.editFollowUnfollowButton}>
-                Edit Profile
+            <div>
+            <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={goHome}>
+                Back
             </Button>
+            <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={goToEdit}>
+                Edit
+            </Button>
+            </div>
 
             </Grid>
 
