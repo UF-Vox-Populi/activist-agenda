@@ -351,10 +351,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Uncomment for local build
-// app.use(express.static(path.join(__dirname, 'activist-agenda/build')));
-// app.get('/*', (req, res) => {    
-//     res.sendFile(path.join(__dirname, 'activist-agenda/build/index.html'));  
-// })
+app.use(express.static(path.join(__dirname, 'activist-agenda/build')));
+app.get('/*', (req, res) => {    
+    res.sendFile(path.join(__dirname, 'activist-agenda/build/index.html'));  
+})
 
 //Basically sets the server up to listen for any inputs from serverCalls.js and the like.
 app.listen(port, () => console.log(`App now listening on port ${port}`));
