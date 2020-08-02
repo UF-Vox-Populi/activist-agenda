@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.1.0",
+  "description": "Activist Agenda main project package.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-all": "concurrently \"npm install\" \"npm install --prefix activist-agenda\"",
+    "start": "node server/server.js",
+    "server": "nodemon server/server.js",
+    "client": "npm start --prefix activist-agenda",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false && npm install && npm install --prefix activist-agenda && npm run build --prefix activist-agenda"
+  },
+  "author": "Camtist & Laurence-RM",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^5.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.23",
+    "nodemon": "^2.0.4"
+  }
+}
