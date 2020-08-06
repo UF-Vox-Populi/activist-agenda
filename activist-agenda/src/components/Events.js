@@ -17,11 +17,11 @@ import { useTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { List } from 'material-ui';
 
-import ReactMapGL, { Marker } from 'react-map-gl';
+import ReactMapGL, { Marker, FlyToInterpolator } from 'react-map-gl';
 
 import '../App.css';
+import { deepOrange300 } from 'material-ui/styles/colors';
 var calls = require('../serverCalls');
-//https://developers.google.com/calendar
 
 /* TODO:
 * Make API environment variable
@@ -60,8 +60,8 @@ export default class Event extends Component  {
         zoom: 10,
       },
       userLocation: {
-        lat: 29.6703882,
-        long: -82.339592
+        lat: '',
+        long: ''
       },
       events: []
     };
@@ -70,6 +70,7 @@ export default class Event extends Component  {
   //On Start..
   componentDidMount() {
     this.updateEvents();
+    this.setUserLocation();
   }
   
   //Fetches event list from server
@@ -91,31 +92,35 @@ export default class Event extends Component  {
         lat: position.coords.latitude,
         long: position.coords.longitude
       };
-      
-      let newViewPort = {
-        height: "100vh",
-        width: "100vw",
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        zoom: 12
-      }
       this.setState({
-        viewPort: newViewPort,
         userLocation: setUserLocation
       });
     });
   };
 
+  goToUser = () => {
+    const viewPort = {
+      ...this.state.viewPort,
+      latitude:  this.state.userLocation.lat,
+      longitude:  this.state.userLocation.long,
+      zoom: 12,
+      transitionDuration: 3000,
+      transitionInterpolator: new FlyToInterpolator(),
+    };
+    this.setState({viewPort});
+  }
+
+
   render () {
     return (
       <div>
-        <button onClick={this.setUserLocation}> My Location  </button>
+        <button onClick={this.goToUser}> My Location  </button>
         <button onClick={this.updateEvents}> Refresh Events  </button>
 
         <div>
           <ReactMapGL
               {...this.state.viewPort}
-              mapStyle="mapbox://styles/voxpopuli-352/ckd16dte314f71iob421cmt2f"
+              mapStyle="mapbox://styles/mapbox/streets-v11"
               mapboxApiAccessToken="pk.eyJ1Ijoidm94cG9wdWxpLTM1MiIsImEiOiJja2QxMjl0eHUwazFhMnJxdnlkZXdzbmN5In0.mDtjHH85xMmT7VbMhBBsEw"
               onViewportChange= { viewPort => this.setState({viewPort})}
           >

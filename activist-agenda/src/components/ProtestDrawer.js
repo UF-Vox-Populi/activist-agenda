@@ -6,6 +6,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Events from './Events';
+import Calendar from './Calendar';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -66,7 +67,9 @@ const ProtestDrawer = () => {
         alignItems="center"
         className={classes.calendarCardStyle}
       >
-        <Card variant="outlined" />
+        <Card variant="outlined">
+          <Calendar/>
+        </Card>
       </Grid>
       <Grid 
         container 

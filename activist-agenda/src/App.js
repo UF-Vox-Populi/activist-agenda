@@ -3,6 +3,7 @@ import './App.css';
 import 'fontsource-roboto';
 import Login from './components/Login';
 import Events from './components/Events';
+import EventCalendar from './components/Calendar';
 import SignUp from './components/SignUp';
 import AppSkeleton from './components/AppSkeleton';
 import UserProfile from './components/UserProfile';
@@ -38,6 +39,7 @@ function App() {
             <Route path="/events" component = {Events} />
             <Route path="/userprofile" component = {UserProfile} />
             <Route path="/editprofile" component = {EditProfile} />
+            <Route PATH="/calendar" component = {EventCalendar} />
           </Switch>
         </MuiThemeProvider>
         </header>
