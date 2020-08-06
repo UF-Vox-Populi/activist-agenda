@@ -17,10 +17,9 @@ import { useTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { List } from 'material-ui';
 
-import ReactMapGL, { Marker, FlyToInterpolator } from 'react-map-gl';
+import ReactMapGL, { Marker, FlyToInterpolator, Popup } from 'react-map-gl';
 
 import '../App.css';
-import { deepOrange300 } from 'material-ui/styles/colors';
 var calls = require('../serverCalls');
 
 /* TODO:
@@ -47,6 +46,28 @@ class Markers extends PureComponent {
   }
 }
 
+class Popups extends PureComponent {
+  render() {
+    const {data} = this.props;
+    console.log("Pure Popups: ", data)
+    return data.map(
+      entry => 
+        <Marker key={entry._id} 
+            longitude={entry.coordinates.longitude} 
+            latitude={entry.coordinates.latitude}
+            closeButton={true}
+            closeOnClick={false}
+            anchor="top"
+            dynamicPosition
+            offsetTop={-20}
+            >
+              
+        <div>{entry.summary}</div>
+        </Marker>
+    )
+  }
+}
+
 export default class Event extends Component  {
   constructor(props)  {
     super(props);
@@ -63,6 +84,7 @@ export default class Event extends Component  {
         lat: '',
         long: ''
       },
+      showPopup: true,
       events: []
     };
   }
@@ -113,10 +135,6 @@ export default class Event extends Component  {
 
   render () {
     return (
-      <div>
-        <button onClick={this.goToUser}> My Location  </button>
-        <button onClick={this.updateEvents}> Refresh Events  </button>
-
         <div>
           <ReactMapGL
               {...this.state.viewPort}
@@ -124,10 +142,16 @@ export default class Event extends Component  {
               mapboxApiAccessToken="pk.eyJ1Ijoidm94cG9wdWxpLTM1MiIsImEiOiJja2QxMjl0eHUwazFhMnJxdnlkZXdzbmN5In0.mDtjHH85xMmT7VbMhBBsEw"
               onViewportChange= { viewPort => this.setState({viewPort})}
           >
-              <Markers data={this.state.events}/>
+
+            <div style={{position: 'absolute', right: '5vw'}}>
+              
+            </div>
+            <button onClick={this.goToUser}> My Location  </button>
+            <button onClick={this.updateEvents}> Toggle Event Info  </button>
+            <Markers data={this.state.events}/>
+            <Popups data={this.state.events}/>
           </ReactMapGL>
         </div>
-      </div>
     );
   }
 }

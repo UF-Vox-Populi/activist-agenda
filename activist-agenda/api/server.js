@@ -51,7 +51,7 @@ fs.readFile('./database/fillerEvents.json', 'utf8', (err, data) => {
         if (err) throw err;
     });
     
-    //console.log("Filling EventDB")
+    //git add console.log("Filling EventDB")
     if (err) throw err;
     let eventData = JSON.parse(data);
 

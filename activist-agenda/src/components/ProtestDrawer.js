@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       margin: theme.spacing(2),
       width: theme.spacing(120),
-      height: theme.spacing(40),
+      height: theme.spacing(50),
     },
   },
   mapCardStyle: {
@@ -42,6 +42,12 @@ const ProtestDrawer = () => {
   const [state, setState] = React.useState({
     right: false,
   });
+  const [POI,setPOI] = React.useState({
+    coordinates: {
+      latitude: "",
+      longitude: ""
+    }
+  })
 
   const togglePostDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -56,7 +62,7 @@ const ProtestDrawer = () => {
         [classes.fullList]: anchor === 'top' || anchor === 'bottom',
       })}
       role="presentation"
-      onClick={togglePostDrawer(anchor, false)}
+      onClick={togglePostDrawer(anchor, true)}
       onKeyDown={togglePostDrawer(anchor, false)}
       alignItems="stretch"
     >
