@@ -18,8 +18,10 @@ import Container from '@material-ui/core/Container';
 import { List } from 'material-ui';
 
 import ReactMapGL, { Marker, FlyToInterpolator, Popup } from 'react-map-gl';
-
+import EventInfo from './event-info';
 import '../App.css';
+import Events from 'material-ui/utils/events';
+import { MapsTransferWithinAStation } from 'material-ui/svg-icons';
 var calls = require('../serverCalls');
 
 /* TODO:
@@ -33,14 +35,15 @@ var calls = require('../serverCalls');
 
 class Markers extends PureComponent {
   render() {
-    const {data} = this.props;
-    console.log("Pure Markers data:\n", data)
+    const {data, onClick} = this.props;
+    //console.log("Pure Markers data:\n", data)
+    
     return  data.map(
       entry =>  <Marker key={entry._id} 
                         longitude={entry.coordinates.longitude} 
                         latitude={entry.coordinates.latitude}
                 >
-                  <img src="/parade.svg" alt=""  width="30px" height="30px"/>
+                  <img src="/parade.svg" alt=""  width="30px" height="30px" onClick={() => onClick(entry)}/>
                 </Marker>
       )
   }
@@ -49,10 +52,10 @@ class Markers extends PureComponent {
 class Popups extends PureComponent {
   render() {
     const {data} = this.props;
-    console.log("Pure Popups: ", data)
+    //console.log("Pure Popups: ", data)
     return data.map(
       entry => 
-        <Marker key={entry._id} 
+        <Popup key={entry._id} 
             longitude={entry.coordinates.longitude} 
             latitude={entry.coordinates.latitude}
             closeButton={true}
@@ -62,8 +65,8 @@ class Popups extends PureComponent {
             offsetTop={-20}
             >
               
-        <div>{entry.summary}</div>
-        </Marker>
+        <EventInfo info={data}/>
+        </Popup>
     )
   }
 }
@@ -84,13 +87,14 @@ export default class Event extends Component  {
         lat: '',
         long: ''
       },
-      showPopup: true,
+      popupInfo: null,
       events: []
     };
   }
 
   //On Start..
   componentDidMount() {
+    this.goToPOI();
     this.updateEvents();
     this.setUserLocation();
   }
@@ -102,9 +106,10 @@ export default class Event extends Component  {
       this.setState({
         events: eventList
       })
-      console.log("Events fetched\n", eventList);
+      //console.log("Events fetched\n", eventList);
     })
   }
+
 
   //finding user location
   setUserLocation = () => {
@@ -120,6 +125,10 @@ export default class Event extends Component  {
     });
   };
 
+  goToPOI = () => {
+    console.log("POI: ", this.props.focusPoint)
+  }
+
   goToUser = () => {
     const viewPort = {
       ...this.state.viewPort,
@@ -130,6 +139,30 @@ export default class Event extends Component  {
       transitionInterpolator: new FlyToInterpolator(),
     };
     this.setState({viewPort});
+  }
+
+  _onClickMarker = event => {
+    //console.log("You clickeds on: ", event);
+    this.setState({popupInfo: event}, this._renderPopup);
+  }
+
+  _renderPopup() {
+    const {popupInfo} = this.state;
+    console.log("popupInfo: ", popupInfo)
+    return (
+      
+        <Popup
+        tipSize={5}
+        anchor="top"
+        longitude={popupInfo.longitude}
+        latitude={popupInfo.latitude}
+        closeOnClick={false}
+        onClose={() => this.setState({popupInfo: null})}
+        >
+          <div>{popupInfo.summary}</div>
+        </Popup>
+      
+    )
   }
 
 
@@ -144,12 +177,12 @@ export default class Event extends Component  {
           >
 
             <div style={{position: 'absolute', right: '5vw'}}>
-              
+              <button onClick={this.goToUser}> My Location  </button>
+              <button onClick={this.updateEvents}> Toggle Event Info  </button>
             </div>
-            <button onClick={this.goToUser}> My Location  </button>
-            <button onClick={this.updateEvents}> Toggle Event Info  </button>
-            <Markers data={this.state.events}/>
-            <Popups data={this.state.events}/>
+            
+            <Markers data={this.state.events} onClick={this._onClickMarker}/>
+            {this._renderPopup}
           </ReactMapGL>
         </div>
     );

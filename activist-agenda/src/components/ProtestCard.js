@@ -91,7 +91,7 @@ const ProtestCard = (props) => {
                     <Divider/>
                 {/*</CardActionArea>*/}
                 <CardActions>
-                    <ProtestDrawer />
+                    <ProtestDrawer POI={protestLocation}/>
                 </CardActions>
             </Card>
         </Grid>

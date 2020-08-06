@@ -36,7 +36,7 @@ export default class EventCalendar extends Component {
                     })
                 );
         this.setState({events:fixed});
-        console.log(fixed);
+        //console.log(fixed);
     }
 
     onView = (props) =>  {
@@ -52,11 +52,11 @@ export default class EventCalendar extends Component {
                     defaultDate={new Date()}
                     defaultView={Views.month}
                     events={this.state.events}
-                    style={{height: "100vh" }}
+                    style={{height: '400px' }}
                     view={this.state.view}
-                    onView={console.log("views")}//this.setState.view
+                    onView={event => this.setState({view : event})}//this.setState.view
                     selectable='true'
-                    onSelectEvent={event => console.log(event.coordinates)}
+                    onSelectEvent={event => console.log(event)}
                     popup
                 />
             </div>
