@@ -19,6 +19,7 @@
     "concurrently": "^5.2.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mailgun-js": "^0.22.0",
     "mongoose": "^5.9.23",
     "nodemon": "^2.0.4"
   }
