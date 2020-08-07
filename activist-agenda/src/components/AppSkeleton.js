@@ -474,6 +474,11 @@ const AppSkeleton = (props) => {
       <Grid item xs={12} sm={12} md={7} align="center"><ProtestSortButtons/></Grid>
       <Grid item xs={12} sm={12} md={7}>{loggedIn ? <ContentCreationCard/> : <Divider/>}</Grid>
       <Grid item xs={12} sm={12} md={7}><InfScroll/></Grid>
+      {/*
+      <Grid item xs={12} sm={12} md={7}><ProtestCard displayLoggedInBtns={loggedIn} protestTitle={posts[posts.length-1].title} host={posts[posts.length-1].poster} protestLocation={posts[posts.length-1].location} date={posts[posts.length-1].time.substring(0,10)} description={posts[posts.length-1].description} donLink={posts[posts.length-1].donationLink} orgLink={posts[posts.length-1].organizationLink}/></Grid>
+      <Grid item xs={12} sm={12} md={7}><ProtestCard displayLoggedInBtns={loggedIn} protestTitle={posts[posts.length-2].title} host={posts[posts.length-2].poster} protestLocation={posts[posts.length-2].location} date={posts[posts.length-2].time.substring(0,10)} description={posts[posts.length-2].description} donLink={posts[posts.length-2].donationLink} orgLink={posts[posts.length-2].organizationLink}/></Grid>
+      <Grid item xs={12} sm={12} md={7}><ProtestCard displayLoggedInBtns={loggedIn} protestTitle={posts[posts.length-3].title} host={posts[posts.length-3].poster} protestLocation={posts[posts.length-3].location} date={posts[posts.length-3].time.substring(0,10)} description={posts[posts.length-3].description} donLink={posts[posts.length-3].donationLink} orgLink={posts[posts.length-3].organizationLink}/></Grid>
+      */}
     </Grid>
   );
 

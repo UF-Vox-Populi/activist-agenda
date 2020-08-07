@@ -1,48 +1,56 @@
-import React from "react";
-import { render } from "react-dom";
+import React, { useState } from "react";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import InfiniteScroll from "react-infinite-scroll-component";
 import ProtestCard from "./ProtestCard";
 
-export default class InfScroll extends React.Component {
-    state = {
-        items: Array.from({ length: 5 }),
-        hasMore: true
-    };
+// Just an array of ProtestCard components with length of 7
+const cards = [
+    <ProtestCard/>,
+    <ProtestCard/>,
+    <ProtestCard/>,
+    <ProtestCard/>,
+    <ProtestCard/>,
+    <ProtestCard/>,
+    <ProtestCard/>
+]
 
-    fetchMoreData = () => {
-        if (this.state.items.length >= 20) {
-            this.setState({ hasMore: false });
+const InfScroll = () => {
+    const [posts, setPosts] = useState(Array.from({ length: 5 }));
+    const [hasMore, setHasMore] = useState(true);
+
+    /*
+    const [posts, setPosts] = useState(cards);
+    const [loadedPosts, setLoadedPosts] = useState([]);
+    const [hasMore, setHasMore] = useState(false);
+    const [lastPostIndex, setLastPostIndex] = useState(0);
+    */
+
+    const loadMorePosts = () => {
+        if (posts.length >= 20) {
+            setHasMore(false);
             return;
         }
 
-        // Fake async api call like which sends 20 more records in .5 secs
         setTimeout(() => {
-        this.setState({
-            items: this.state.items.concat(Array.from({ length: 5 }))
-        });
-        }, 500);
+            setPosts(posts.concat(Array.from({ length: 5 })));
+            setHasMore(true);
+        }, 2000);
     };
 
-    render() {
-        return (
+    return (
         <div>
             <InfiniteScroll
-                dataLength={this.state.items.length}
-                next={this.fetchMoreData}
-                hasMore={this.state.hasMore}
-                scrollThreshold={0.9}
-                loader={<h4>Loading...</h4>}
-                endMessage={
-                    <p style={{ textAlign: "center" }}>
-                        <b>No more posts!</b>
-                    </p>
-                }
+                dataLength={posts.length}
+                next={loadMorePosts}
+                hasMore={hasMore}
+                scrollThreshold={0.8}
+                loader={<p style={{ textAlign: "center" }}><CircularProgress/></p>}
+                endMessage={<p style={{ textAlign: "center" }}>Loaded all posts!</p>}
             >
-            {this.state.items.map((i, index) => (
-                <ProtestCard/>
-            ))}
+                {posts.map((index) => (<ProtestCard/>))}
             </InfiniteScroll>
         </div>
-        );
-    }
+    );
 }
+
+export default InfScroll;
