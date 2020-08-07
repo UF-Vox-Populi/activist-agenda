@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
   lastName:{type:String},
   bio:{type:String},
   location:{type:String},
-  organizer:{type:Boolean}
+  zip:{type:mongoose.Number},
+  authLevel:{type:mongoose.Number}
 });
 
 export default mongoose.model('users', userSchema);

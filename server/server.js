@@ -20,22 +20,23 @@ function handleError(err,res) {
         throw err;
 }
 
+/*
 //Deletes all entries. Basically a reset, just used for testing purposes at the moment.
 User.deleteMany({}, (err) => {
     if (err) throw err;
 });
-
+*/
 Post.deleteMany({}, (err) => {
     if (err) throw err;
 });
-
+/*
 //Reads the Filler Users json and puts in all of us for testing purposes.
 fs.readFile('server/database/FillerUsers.json', 'utf8', (err, data) => {
     if (err) throw err;
     let userData = JSON.parse(data);
 
     userData.entries.forEach(element => {
-        var thing = new User({username:element.username, email:element.email, password:element.password, firstName:element.firstName, lastName:element.lastName, bio:element.bio, location:element.location, organizer:element.organizer});
+        var thing = new User({username:element.username, email:element.email, password:element.password, firstName:element.firstName, lastName:element.lastName, bio:element.bio, location:element.location, organizer:element.organizer, authLevel:element.authLevel});
         thing.save(function (err) {
             if (err) {
               return handleError(err);
@@ -45,7 +46,7 @@ fs.readFile('server/database/FillerUsers.json', 'utf8', (err, data) => {
         mongoose.connection.close();
     });
 });
-
+*/
 fs.readFile('server/database/fillerEvents.json', 'utf8', (err, data) => {
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
     
@@ -79,13 +80,14 @@ fs.readFile('server/database/FillerPosts.json', 'utf8', (err, data) => {
     postData.posts.forEach(element => {
         var thing = new Post({
             poster: element.poster,
+            posterID: element.posterID,
             icon: element.icon,
             title: element.title,
             donationLink: element.donationLink,
             organizationLink: element.organizationLink,
             description: element.description,
             time: element.time,
-            location: element.location
+            address: element.address
         });
         thing.save(function (err) {
             if (err) {
@@ -96,7 +98,6 @@ fs.readFile('server/database/FillerPosts.json', 'utf8', (err, data) => {
         mongoose.connection.close();
     });
 });
-
 
 //This is needed to run the Express app.
 const app = express();
@@ -308,17 +309,31 @@ app.get("/api/locationChange", (req, res) => {
     })
 });
 
+//Edits user's auth level
+app.get("/api/authChange", (req, res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.updateOne({ _id: req.query.id }, { authLevel: req.query.auth }, function (err) {
+        if (err) {
+            res.send(false);
+            throw err;
+        }
+        res.send(true);
+    })
+});
+
 //Stores a post into the database
 app.get("/api/addPost", (req, res) => {
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
     var newEntry = new Post({
         poster: req.query.poste,
+        posterID: req.query.posteID,
         icon: req.query.ico,
         title: req.query.titl,
         description: req.query.desc,
         time: req.query.tim,
-        location: req.query.loc,
+        address: req.query.location,
         donationLink: req.query.donation,
         organizationLink: req.query.organization
     })

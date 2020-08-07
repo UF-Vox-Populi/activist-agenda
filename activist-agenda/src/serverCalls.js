@@ -28,7 +28,7 @@ export function checkUser(email, password) {
 
 }
 
-//Gets a user's info from their username and password
+//Gets a user's info from their id number
 export function getUser(_id) {
 
     let reqs = {
@@ -250,19 +250,38 @@ export function changeLocation(_id, location) {
 
 }
 
+//Changes a user's auth level
+export function changeAuth(_id, newAuth) {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/authChange/",
+        params: {
+            auth: newAuth,
+            id: _id
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
 //Adds a post to the database
-export function addPost(poster, icon, title, description, time, location, donationLink, organizationLink) {
+export function addPost(poster, posterID, icon, title, address, time, description, donationLink, organizationLink) {
 
     let reqs = {
         method: 'GET',
         url: baseUrl+"/api/addPost/",
         params: {
             poste: poster,
+            posteID: posterID,
             ico: icon,
             titl: title,
-            desc: description,
+            location: address,
             tim: time,
-            loc: location,
+            desc: description,
             donation: donationLink,
             organization: organizationLink
         }
@@ -298,8 +317,6 @@ export function getNews(tags) {
     for (x = 0; x < tags.length; x++) {
         searchWords +=  '+' + tags[x];
     }
-    
-    console.log(searchWords);
 
     var url = 'http://newsapi.org/v2/everything?' +
         searchWords + '&' +

@@ -19,6 +19,7 @@ import MenuList from '@material-ui/core/MenuList';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import TextField from '@material-ui/core/TextField';
+import Cookies from 'universal-cookie';
 
 var calls = require('../serverCalls');
 
@@ -33,6 +34,7 @@ function CreationSelectDropdown() {
     const [selectedIndex, setSelectedIndex] = React.useState(2); // protest option by default
     const [open, setOpen] = React.useState(false); // determines if the dropdown menu is open
     const anchorRef = React.useRef(null); // anchors the dropdown menu right below the button
+    const cookie = new Cookies(); // For getting user info when putting down a post
 
     const handleClick = () => {
         console.info(`You clicked ${options[selectedIndex]}`);
@@ -118,8 +120,9 @@ function CreationSelectDropdown() {
             protestVals.date != '' &&
             protestVals.description != ''
             ) {
-                console.log(protestVals);
-                calls.addPost('OverlordPenguin', '', protestVals.title, protestVals.description, protestVals.date, protestVals.location, '', '');
+                calls.getUser(cookie.get('authedUser')).then(out => {
+                    calls.addPost(out.username, cookie.get('authedUser'), '', protestVals.title, protestVals.location, protestVals.date, protestVals.description, protestVals.donURL, protestVals.orgURL);
+                })
                 handleDialogueClose();
             }
     }

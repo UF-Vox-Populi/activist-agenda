@@ -36,7 +36,7 @@ function App() {
             <Route path="/signup" render={(props) => <SignUp open={true} modal={false} />} />
             <Route path="/login" render={(props) => <Login open={true} modal={false} />} />
             <Route path="/events" component = {Events} />
-            <Route path="/userprofile" component = {UserProfile} />
+            <Route path="/userprofile/:profID" component = {UserProfile} />
             <Route path="/editprofile" component = {EditProfile} />
           </Switch>
         </MuiThemeProvider>

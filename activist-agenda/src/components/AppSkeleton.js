@@ -180,7 +180,6 @@ const AppSkeleton = (props) => {
     if (cookie.get('authedUser') && !loggedIn) {
       setUser(cookie.get('authedUser'));
       setLoggedIn(true);
-      console.log('User logged in with id: ', cookie.get('authedUser')); //remove later
     }
   };
 
@@ -209,7 +208,7 @@ const AppSkeleton = (props) => {
         break;
       case 4:
         if (loggedIn) {
-          history.push("/userprofile");
+          history.push("/userprofile/" + user);
         } else {
           history.push("/login");
         }
@@ -418,30 +417,33 @@ const AppSkeleton = (props) => {
   const [posts, setPosts] = useState([
       {
         poster: '',
+        posterID: '',
         title: '',
         donationLink: '',
         organizationLink: '',
         description: '',
         time: '',
-        location: ''
+        address: ''
       },
       {
         poster: '',
+        posterID: '',
         title: '',
         donationLink: '',
         organizationLink: '',
         description: '',
         time: '',
-        location: ''
+        address: ''
       },
       {
         poster: '',
+        posterID: '',
         title: '',
         donationLink: '',
         organizationLink: '',
         description: '',
         time: '',
-        location: ''
+        address: ''
       }
     ]
   );
@@ -472,9 +474,9 @@ const AppSkeleton = (props) => {
     <Grid container spacing={3}>
       <Grid item xs={12} sm={12} md={8} align="center"><ProtestSortButtons /></Grid>
       <Grid item xs={12} sm={12} md={8}>{loggedIn ? <ContentCreationCard /> : <Divider /> }</Grid>
-      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}  protestTitle={posts[posts.length-1].title} host={posts[posts.length-1].poster} protestLocation={posts[posts.length-1].location} date={posts[posts.length-1].time.substring(0,10)} description={posts[posts.length-1].description} donLink={posts[posts.length-1].donationLink} orgLink={posts[posts.length-1].organizationLink}/></Grid>
-      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}  protestTitle={posts[posts.length-2].title} host={posts[posts.length-2].poster} protestLocation={posts[posts.length-2].location} date={posts[posts.length-2].time.substring(0,10)} description={posts[posts.length-2].description} donLink={posts[posts.length-2].donationLink} orgLink={posts[posts.length-2].organizationLink}/></Grid>
-      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}  protestTitle={posts[posts.length-3].title} host={posts[posts.length-3].poster} protestLocation={posts[posts.length-3].location} date={posts[posts.length-3].time.substring(0,10)} description={posts[posts.length-3].description} donLink={posts[posts.length-3].donationLink} orgLink={posts[posts.length-3].organizationLink}/></Grid>
+      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}  id={posts[posts.length-1].posterID} protestTitle={posts[posts.length-1].title} host={posts[posts.length-1].poster} protestLocation={posts[posts.length-1].address} date={posts[posts.length-1].time.substring(0,10)} description={posts[posts.length-1].description} donLink={posts[posts.length-1].donationLink} orgLink={posts[posts.length-1].organizationLink}/></Grid>
+      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}  id={posts[posts.length-2].posterID} protestTitle={posts[posts.length-2].title} host={posts[posts.length-2].poster} protestLocation={posts[posts.length-2].address} date={posts[posts.length-2].time.substring(0,10)} description={posts[posts.length-2].description} donLink={posts[posts.length-2].donationLink} orgLink={posts[posts.length-2].organizationLink}/></Grid>
+      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}  id={posts[posts.length-3].posterID} protestTitle={posts[posts.length-3].title} host={posts[posts.length-3].poster} protestLocation={posts[posts.length-3].address} date={posts[posts.length-3].time.substring(0,10)} description={posts[posts.length-3].description} donLink={posts[posts.length-3].donationLink} orgLink={posts[posts.length-3].organizationLink}/></Grid>
     </Grid>
   );
 
@@ -504,7 +506,7 @@ const AppSkeleton = (props) => {
 
   //Moves to the user profile upon the avatar button being clicked
   const goToProfile = () => {
-    history.push("/userprofile");
+    history.push("/userprofile/" + user);
   }
 
   //newPosts();

@@ -27,10 +27,15 @@ const useStyles = makeStyles({
     },
 });
 
+const makeProfLink = (id) => {
+    return "/userprofile/" + id;
+}
+
 const ProtestCard = (props) => {
     const classes = useStyles();
     const theme = useTheme();
-    const { avatarSrc, host, date, protestTitle, protestLocation, description, donLink, orgLink, protestorCount } = props;
+    const { avatarSrc, id, host, date, protestTitle, protestLocation, description, donLink, orgLink, protestorCount } = props;
+    const profLink = makeProfLink(id);
 
     return (
         <Grid item>
@@ -50,7 +55,11 @@ const ProtestCard = (props) => {
                                 </IconButton>
                             }
                             title={protestTitle}
-                            subheader={host}
+                            subheader={
+                                <Link href={profLink}>
+                                {host}
+                                </Link>
+                            }
                         />
                         : <CardHeader
                             avatar={
