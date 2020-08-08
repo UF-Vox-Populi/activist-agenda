@@ -87,7 +87,8 @@ fs.readFile('server/database/FillerPosts.json', 'utf8', (err, data) => {
             organizationLink: element.organizationLink,
             description: element.description,
             time: element.time,
-            address: element.address
+            address: element.address,
+            isEvent: element.isEvent
         });
         thing.save(function (err) {
             if (err) {

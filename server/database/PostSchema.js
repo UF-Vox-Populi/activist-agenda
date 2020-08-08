@@ -23,7 +23,7 @@ const postSchema = new mongoose.Schema({
 
   supporters: [String],
 
-  isEvent: Boolean
+  isEvent: {type:Boolean}
   
 });
 
