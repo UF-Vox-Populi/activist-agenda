@@ -21,6 +21,20 @@ import Popper from '@material-ui/core/Popper';
 import TextField from '@material-ui/core/TextField';
 import Cookies from 'universal-cookie';
 
+const NodeGeocoder = require('node-geocoder');
+//https://www.npmjs.com/package/node-geocoder
+
+const geoOptions = {
+  provider: 'opencage',
+ 
+  // Optional depending on the providers
+  //fetch: customFetchImplementation,
+  apiKey: 'da669438ed354fae88c82aed45a90e20', // for Mapquest, -->OpenCage<--, Google Premier
+  formatter: null // 'gpx', 'string', ...
+};
+ 
+const geocoder = NodeGeocoder(geoOptions);
+
 var calls = require('../serverCalls');
 
 const useStyles = makeStyles({
@@ -134,7 +148,7 @@ function CreationSelectDropdown() {
         }
     }
 
-    /*const checkLocation = () => {
+    const checkLocation = () => {
         addressValidator.validate(protestVals.location, addressValidator.match.streetAddress, function(err, exact, inexact){
             if (exact == []) {
                 console.log("wrong");
@@ -142,7 +156,7 @@ function CreationSelectDropdown() {
                 console.log(exact);
             }
         })
-    }*/
+    }
 
     const handlePnDSubmit = () => {
         if (
