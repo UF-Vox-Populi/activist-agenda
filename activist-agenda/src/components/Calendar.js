@@ -22,6 +22,19 @@ export default class EventCalendar extends Component {
     componentDidMount() {
         this.translateEvents(entries);// set initial
     }
+
+    //Get events from DB
+    /*updateEvents = () => {
+        calls.getEvents().then(eventList => {
+          //Set state of event array
+          this.setState({
+            events: eventList
+          })
+          //console.log("Events fetched\n", eventList);
+        })
+      }
+    */
+
     //For retrieving any array with matching value types, and translating it into new keys. Will need geocoding for and date parsing 
     translateEvents = (props) => {
 
@@ -40,7 +53,7 @@ export default class EventCalendar extends Component {
     }
 
     onView = (props) =>  {
-        this.setState.view(props);
+        this.setState({view : props});
     }
 
 
