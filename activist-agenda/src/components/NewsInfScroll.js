@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InfiniteScroll from "react-infinite-scroll-component";
 import NewsCard from "./NewsCard";
+const NewsAPI = require('newsapi');
 
 var calls = require('../serverCalls');
 
@@ -10,8 +11,14 @@ const InfScroll = () => {
     const [posts, setPosts] = useState([]);
     const [hasMore, setHasMore] = useState(true);
 
+    const newsapi = new NewsAPI('8d3338893f324fa3934af0ce26e695ca', { corsProxyUrl: 'https://cors-anywhere.herokuapp.com/' });
+
     useEffect(() => {
-        calls.getNews(['blacklivesmatter', 'protest']).then(out => {
+        newsapi.v2.everything({
+            q: 'blacklivesmatter',
+            language: 'en',
+            sortBy: 'popularity'
+          }).then(out => {
             let newPosts = [];
 
             console.log(out);

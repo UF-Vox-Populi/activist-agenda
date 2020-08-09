@@ -20,7 +20,6 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import TextField from '@material-ui/core/TextField';
 import Cookies from 'universal-cookie';
-import addressValidator from 'address-validator';
 
 var calls = require('../serverCalls');
 
@@ -117,7 +116,7 @@ function CreationSelectDropdown() {
                 break;
             case 1:
                 setProVals({ ...protestVals, location: event.target.value })
-                checkLocation();
+                //checkLocation();
                 break;
             case 2:
                 setProVals({ ...protestVals, date: event.target.value })
@@ -135,16 +134,15 @@ function CreationSelectDropdown() {
         }
     }
 
-    const checkLocation = () => {
+    /*const checkLocation = () => {
         addressValidator.validate(protestVals.location, addressValidator.match.streetAddress, function(err, exact, inexact){
             if (exact == []) {
                 console.log("wrong");
-                console.log(address);
             } else {
                 console.log(exact);
             }
         })
-    }
+    }*/
 
     const handlePnDSubmit = () => {
         if (
