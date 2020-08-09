@@ -269,12 +269,13 @@ export function changeAuth(_id, newAuth) {
 }
 
 //Adds a post to the database
-export function addPost(poster, posterID, icon, title, address, time, description, donationLink, organizationLink) {
+export function addPost(isEvent, poster, posterID, icon, title, address, time, description, donationLink, organizationLink) {
 
     let reqs = {
         method: 'GET',
         url: baseUrl+"/api/addPost/",
         params: {
+            event: isEvent,
             poste: poster,
             posteID: posterID,
             ico: icon,

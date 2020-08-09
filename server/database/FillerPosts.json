@@ -9,13 +9,14 @@
             "organizationLink": "www.google.com",
             "description": "I will saw the tables of tyranny in half. Gnaw at the ankles of big business!",
             "time": "2020-08-03T14:56:59.301Z",
-            "address": "200 E University Ave, Gainesville, FL 32601",
+            "address": "3101 Clark Butler Blvd, Gainesville, FL 32608",
             "coordinates": {
-                "latitude": 29.652639,
-                "longitude": -82.323189
+                "latitude": 29.625490,
+                "longitude": -82.381410
             },
             "date": "2020-08-01",
-            "isEvent": true
+            "isEvent": true,
+            "supporters": ["0", "1"]
         },
         {
             "poster": "Poster2",
@@ -32,7 +33,8 @@
                 "longitude": -82.321953
             },
             "date": "2020-08-02",
-            "isEvent": true
+            "isEvent": true,
+            "supporters": ["0", "1", "2"]
         },
         {
             "poster": "Poster3",
@@ -49,7 +51,8 @@
                 "longitude": -82.323189
             },
             "date": "2020-08-01",
-            "isEvent": true
+            "isEvent": true,
+            "supporters": ["0"]
         },
         {
             "poster": "Poster1",
@@ -66,7 +69,8 @@
                 "longitude": -82.323189
             },
             "date": "2020-08-01",
-            "isEvent": false
+            "isEvent": false,
+            "supporters": ["0", "1"]
         },
         {
             "poster": "Poster2",
@@ -83,7 +87,8 @@
                 "longitude": -82.323189
             },
             "date": "2020-08-01",
-            "isEvent": false
+            "isEvent": false,
+            "supporters": ["0", "1"]
         },
         {
             "poster": "Poster3",
@@ -100,7 +105,8 @@
                 "longitude": -82.323189
             },
             "date": "2020-08-01",
-            "isEvent": false
+            "isEvent": false,
+            "supporters": ["0", "1"]
         }
     ]
 }

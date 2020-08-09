@@ -88,7 +88,12 @@ fs.readFile('server/database/FillerPosts.json', 'utf8', (err, data) => {
             description: element.description,
             time: element.time,
             address: element.address,
-            isEvent: element.isEvent
+            coordinates: {
+                latitude: element.coordinates.latitude,
+                longitude: element.coordinates.longitude
+            },
+            isEvent: element.isEvent,
+            supporters: element.supporters
         });
         thing.save(function (err) {
             if (err) {
@@ -190,7 +195,7 @@ app.get("/api/addUser", (req, res) => {
 
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-    var newEntry = new User({username: req.query.user, password: req.query.pass, email: req.query.address, firstName: req.query.first, lastName: req.query.last})
+    var newEntry = new User({username: req.query.user, password: req.query.pass, email: req.query.address, firstName: req.query.first, lastName: req.query.last, authLevel: 0})
     newEntry.save((err) => {
         if (err) {
             res.send(false);
@@ -328,6 +333,7 @@ app.get("/api/addPost", (req, res) => {
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
     var newEntry = new Post({
+        isEvent: req.query.event,
         poster: req.query.poste,
         posterID: req.query.posteID,
         icon: req.query.ico,
@@ -336,7 +342,8 @@ app.get("/api/addPost", (req, res) => {
         time: req.query.tim,
         address: req.query.location,
         donationLink: req.query.donation,
-        organizationLink: req.query.organization
+        organizationLink: req.query.organization,
+        supporters: [req.query.posteID]
     })
     newEntry.save((err) => {
         if (err) {

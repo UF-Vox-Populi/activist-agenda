@@ -20,6 +20,7 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import TextField from '@material-ui/core/TextField';
 import Cookies from 'universal-cookie';
+import addressValidator from 'address-validator';
 
 var calls = require('../serverCalls');
 
@@ -76,6 +77,12 @@ function CreationSelectDropdown() {
       description: ""
     });
 
+    const [pndVals, setPnDVals] = React.useState({
+        title: '',
+        link: '',
+        desc: ''
+    })
+
     const [protestVals, setProVals] = React.useState({
         title: '',
         location: '',
@@ -89,6 +96,20 @@ function CreationSelectDropdown() {
         setValues({ ...values, [description]: event.target.value });
     };
 
+    const handlePnDChange = (num, event) => {
+        switch (num) {
+            case 0:
+                setPnDVals({ ...pndVals, title: event.target.value })
+                break;
+            case 1:
+                setPnDVals({ ...pndVals, link: event.target.value })
+                break;
+            case 2:
+                setPnDVals({ ...pndVals, desc: event.target.value })
+                break;
+        }
+    }
+
     const handleProtestChange = (num, event) => {
         switch (num) {
             case 0:
@@ -96,6 +117,7 @@ function CreationSelectDropdown() {
                 break;
             case 1:
                 setProVals({ ...protestVals, location: event.target.value })
+                checkLocation();
                 break;
             case 2:
                 setProVals({ ...protestVals, date: event.target.value })
@@ -113,6 +135,30 @@ function CreationSelectDropdown() {
         }
     }
 
+    const checkLocation = () => {
+        addressValidator.validate(protestVals.location, addressValidator.match.streetAddress, function(err, exact, inexact){
+            if (exact == []) {
+                console.log("wrong");
+                console.log(address);
+            } else {
+                console.log(exact);
+            }
+        })
+    }
+
+    const handlePnDSubmit = () => {
+        if (
+            pndVals.title != '' &&
+            pndVals.link != '' &&
+            pndVals.desc != ''
+        ) {
+            calls.getUser(cookie.get('authedUser')).then(out => {
+                calls.addPost(false, out.username, cookie.get('authedUser'), '', pndVals.title, '', '', pndVals.desc, pndVals.link);
+            })
+            handleDialogueClose();
+        }
+    }
+
     const handlePost = () => {
         if (
             protestVals.title != '' &&
@@ -121,7 +167,7 @@ function CreationSelectDropdown() {
             protestVals.description != ''
             ) {
                 calls.getUser(cookie.get('authedUser')).then(out => {
-                    calls.addPost(out.username, cookie.get('authedUser'), '', protestVals.title, protestVals.location, protestVals.date, protestVals.description, protestVals.donURL, protestVals.orgURL);
+                    calls.addPost(true, out.username, cookie.get('authedUser'), '', protestVals.title, protestVals.location, protestVals.date, protestVals.description, protestVals.donURL, protestVals.orgURL);
                 })
                 handleDialogueClose();
             }
@@ -146,6 +192,7 @@ function CreationSelectDropdown() {
                         type="text"
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => handlePnDChange(0, e)}
                     />
                     <TextField
                         required
@@ -156,6 +203,7 @@ function CreationSelectDropdown() {
                         helperText="e.g. https://www.gofundme.com/"
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => handlePnDChange(1, e)}
                     />
                     <TextField
                         multiline 
@@ -171,13 +219,14 @@ function CreationSelectDropdown() {
                         onChange={handleDescriptionChange("description")}
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => handlePnDChange(2, e)}
                     />
                     </DialogContent>
                     <DialogActions>
                     <Button onClick={handleDialogueClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleDialogueClose} color="primary">
+                    <Button onClick={handlePnDSubmit} color="primary">
                         Post
                     </Button>
                     </DialogActions>
@@ -202,6 +251,7 @@ function CreationSelectDropdown() {
                         type="text"
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => handlePnDChange(0, e)}
                     />
                     <TextField
                         required
@@ -212,6 +262,7 @@ function CreationSelectDropdown() {
                         type="link"
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => handlePnDChange(1, e)}
                     />
                     <TextField
                         multiline 
@@ -222,18 +273,17 @@ function CreationSelectDropdown() {
                         label="Description"
                         type="text"
                         inputProps={{ maxlength: CHARACTER_LIMIT }}
-                        value={values.description}
                         helperText={`${values.description.length}/${CHARACTER_LIMIT}`}
-                        onChange={handleDescriptionChange("description")}
                         variant="outlined"
                         fullWidth
+                        onChange={(e) => handlePnDChange(2, e)}
                     />
                     </DialogContent>
                     <DialogActions>
                     <Button onClick={handleDialogueClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleDialogueClose} color="primary">
+                    <Button onClick={handlePnDSubmit} color="primary">
                         Post
                     </Button>
                     </DialogActions>

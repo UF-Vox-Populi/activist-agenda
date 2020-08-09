@@ -6,6 +6,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Events from './Events';
+import Calendar from './Calendar';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       margin: theme.spacing(2),
       width: theme.spacing(120),
-      height: theme.spacing(40),
+      height: theme.spacing(50),
     },
   },
   mapCardStyle: {
@@ -31,16 +32,17 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       margin: theme.spacing(2),
       width: theme.spacing(120),
-      height: theme.spacing(70),
+      height: theme.spacing(50),
     },
   },
 }));
 
-const ProtestDrawer = () => {
+const ProtestDrawer = (props) => {
   const classes = useStyles();
   const [state, setState] = React.useState({
     right: false,
   });
+  const {POI} = props.POI;
 
   const togglePostDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -55,7 +57,7 @@ const ProtestDrawer = () => {
         [classes.fullList]: anchor === 'top' || anchor === 'bottom',
       })}
       role="presentation"
-      onClick={togglePostDrawer(anchor, false)}
+      onClick={togglePostDrawer(anchor, true)}
       onKeyDown={togglePostDrawer(anchor, false)}
       alignItems="stretch"
     >
@@ -66,7 +68,9 @@ const ProtestDrawer = () => {
         alignItems="center"
         className={classes.calendarCardStyle}
       >
-        <Card variant="outlined" />
+        <Card variant="outlined">
+          <Calendar/>
+        </Card>
       </Grid>
       <Grid 
         container 
@@ -76,7 +80,7 @@ const ProtestDrawer = () => {
         className={classes.mapCardStyle}
       >
         <Card variant="outlined">
-          <Events />
+          <Events focusPoint={POI}/>
         </Card>
       </Grid>
     </div>

@@ -86,7 +86,7 @@ const ProtestCard = (props) => {
                             {description}<br/>
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                            <br/>Link(s): <Link href="https://gofundme.com">Donation</Link> | <Link href="https://change.org">Petition</Link>
+                            <br/>Link(s): <Link href={donLink}>Donation</Link> | <Link href={orgLink}>Petition</Link>
                         </Typography>
                         <Typography variant="body2">
                             <b>Supporters: #</b>
@@ -106,7 +106,7 @@ const ProtestCard = (props) => {
                     <Divider/>
                 {/*</CardActionArea>*/}
                 <CardActions>
-                    <ProtestDrawer />
+                    <ProtestDrawer POI={protestLocation}/>
                 </CardActions>
             </Card>
         </Grid>
