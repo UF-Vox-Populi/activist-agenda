@@ -348,11 +348,41 @@ app.get("/api/addPost", (req, res) => {
     });
 })
 
+//Retrieves organizers from the database. For now it just gets all of them.
+app.get("/api/getAllOrgs", (req, res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.find( {authLevel: 1}, function (err, docs) {
+        if (err) throw err;
+        res.send(docs);
+    })
+})
+
 //Retrieves posts from the database. For now it just gets all of them.
 app.get("/api/getAllPosts", (req, res) => {
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
     Post.find( function (err, docs) {
+        if (err) throw err;
+        res.send(docs);
+    })
+})
+
+//Retrieves posts from the database. For now it just gets all of them.
+app.get("/api/getEventPosts", (req, res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    Post.find( {isEvent: true}, function (err, docs) {
+        if (err) throw err;
+        res.send(docs);
+    })
+})
+
+//Retrieves posts from the database. For now it just gets all of them.
+app.get("/api/getOtherPosts", (req, res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    Post.find( {isEvent: false}, function (err, docs) {
         if (err) throw err;
         res.send(docs);
     })

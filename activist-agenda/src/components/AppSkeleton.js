@@ -24,12 +24,13 @@ Resources:
 // Personal components
 import React from 'react';
 import ContentCreationCard from './ContentCreationCard'
-import ProtestCard from './ProtestCard';
 import ProtestInfScroll from './ProtestInfScroll.js';
 import ProtestSortButtons from './ProtestSortButtons';
 import {useState} from 'react';
+import NewsInfScroll from './NewsInfScroll.js';
 import NewsSortButtons from './NewsSortButtons';
-import NewsCard from './NewsCard';
+import OrgInfScroll from './OrgInfScroll.js';
+import PnDInfScroll from './PnDInfScroll.js';
 
 // Material-UI components
 import AppBar from '@material-ui/core/AppBar';
@@ -488,11 +489,27 @@ const AppSkeleton = (props) => {
   const news = (
     <Grid container spacing={3}>
       <Grid item xs={12} sm={12} md={7} align="center"><NewsSortButtons /></Grid>
+      <Grid item xs={12} sm={12} md={7}><NewsInfScroll/></Grid>
+      {/*}
       <Grid item xs={12} sm={12} md={7}><NewsCard title={articles.articles[0].title} author={articles.articles[0].author} avatarSrc={articles.articles[0].urlToImage} desc={articles.articles[0].description} source={articles.articles[0].source.name} url={articles.articles[0].url} /></Grid>
       <Grid item xs={12} sm={12} md={7}><NewsCard title={articles.articles[1].title} author={articles.articles[1].author} avatarSrc={articles.articles[1].urlToImage} desc={articles.articles[1].description} source={articles.articles[1].source.name} url={articles.articles[1].url}/></Grid>
       <Grid item xs={12} sm={12} md={7}><NewsCard title={articles.articles[2].title} author={articles.articles[2].author} avatarSrc={articles.articles[2].urlToImage} desc={articles.articles[2].description} source={articles.articles[2].source.name} url={articles.articles[2].url}/></Grid>
       <Grid item xs={12} sm={12} md={7}><NewsCard title={articles.articles[3].title} author={articles.articles[3].author} avatarSrc={articles.articles[3].urlToImage} desc={articles.articles[3].description} source={articles.articles[3].source.name} url={articles.articles[3].url}/></Grid>
       <Grid item xs={12} sm={12} md={7}><NewsCard title={articles.articles[4].title} author={articles.articles[4].author} avatarSrc={articles.articles[4].urlToImage} desc={articles.articles[4].description} source={articles.articles[4].source.name} url={articles.articles[4].url}/></Grid>
+      */}
+      </Grid>
+  )
+
+  const orgs = (
+    <Grid container spacing={3}>
+      <Grid item xs={12} sm={12} md={7}><OrgInfScroll/></Grid>
+    </Grid>
+  )
+
+  const PnD = (
+    <Grid container spacing={3}>
+    <Grid item xs={12} sm={12} md={7}>{loggedIn ? <ContentCreationCard /> : <Divider /> }</Grid>
+      <Grid item xs={12} sm={12} md={7}><PnDInfScroll/></Grid>
     </Grid>
   )
 
@@ -501,6 +518,10 @@ const AppSkeleton = (props) => {
     switch(selectedNavIndex) {
       case 0:
         return protests;
+      case 1:
+        return orgs;
+      case 2:
+        return PnD;
       case 3:
         return news;
       default:

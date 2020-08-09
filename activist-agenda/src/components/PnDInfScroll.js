@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InfiniteScroll from "react-infinite-scroll-component";
-import ProtestCard from "./ProtestCard";
+import PnDCard from "./PnDCard";
 
 var calls = require('../serverCalls');
 
@@ -11,19 +11,16 @@ const InfScroll = () => {
     const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
-        calls.getEventPosts().then(out => {
+        calls.getOtherPosts().then(out => {
             let newPosts = [];
 
             for (var x = 0; x < out.length; x++) {
-                newPosts.push(<ProtestCard 
+                newPosts.push(<PnDCard 
                     id={out[x].posterID} 
                     protestTitle={out[x].title} 
                     host={out[x].poster} 
-                    protestLocation={out[x].address} 
-                    date={out[x].time.substring(0,10)} 
                     description={out[x].description} 
                     donLink={out[x].donationLink} 
-                    orgLink={out[x].organizationLink} 
                     />)
             }
 

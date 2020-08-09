@@ -293,12 +293,53 @@ export function addPost(poster, posterID, icon, title, address, time, descriptio
 
 }
 
+//Retrieves Organizers
+export function getAllOrgs() {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/getAllOrgs/",
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
 //Retrieves all posts from the database
 export function getAllPosts() {
 
     let reqs = {
         method: 'GET',
         url: baseUrl+"/api/getAllPosts/",
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+//Retrieves all posts from the database
+export function getEventPosts() {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/getEventPosts/",
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+export function getOtherPosts() {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/getOtherPosts/",
     }
     
     return Axios(reqs).then(res => {

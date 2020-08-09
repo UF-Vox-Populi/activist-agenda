@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ProtestDrawer from './ProtestDrawer';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
@@ -28,65 +28,31 @@ const useStyles = makeStyles({
     },
 });
 
-const makeProfLink = (id) => {
-    return "/userprofile/" + id;
-}
+//Cards for news articles. Currently only holds the title, author, description, icon image, and source link.
 
-const ProtestCard = (props) => {
+const OrgCard = (props) => {
     const classes = useStyles();
     const theme = useTheme();
-    const { avatarSrc, id, host, date, protestTitle, protestLocation, description, donLink, orgLink, protestorCount } = props;
-    const profLink = makeProfLink(id);
+    const { avatarSrc, author, desc, location } = props;
     const cookie = new Cookies();
 
     return (
         <Grid item>
             <Card className={classes.cardStyle}>
                 {/*<CardActionArea>*/}
-                    {
-                        cookie.get('authedUser') 
-                        ? <CardHeader
-                            avatar={
-                                <IconButton size="small">
-                                    <Avatar src={avatarSrc}/>
-                                </IconButton>
-                            }
-                            action={
-                                <IconButton aria-label="flag">
-                                    <EmojiFlagsIcon />
-                                </IconButton>
-                            }
-                            title={protestTitle}
-                            subheader={
-                                <Link href={profLink}>
-                                {host}
-                                </Link>
-                            }
-                        />
-                        : <CardHeader
-                            avatar={
-                                <IconButton size="small">
-                                    <Avatar src={avatarSrc}/>
-                                </IconButton>
-                            }
-                            title={protestTitle}
-                            subheader={
-                                <Link href={profLink}>
-                                {host}
-                                </Link>
-                            }
-                        />
-                    }
+                    <CardHeader
+                        avatar={
+                            <IconButton size="small">
+                                <Avatar src={avatarSrc}/>
+                            </IconButton>
+                        }
+                        title={author}
+                        subheader={location}
+                    />
                     <Divider />
                     <CardContent>
-                        <Typography className={classes.pos} color="textSecondary">
-                            {protestLocation} | {date}
-                        </Typography>
                         <Typography variant="body1" component="p">
-                            {description}<br/>
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                            <br/>Link(s): <Link href="https://gofundme.com">Donation</Link> | <Link href="https://change.org">Petition</Link>
+                            {desc}<br/>
                         </Typography>
                         <Typography variant="body2">
                             <b>Supporters: #</b>
@@ -105,12 +71,9 @@ const ProtestCard = (props) => {
                     </CardContent>
                     <Divider/>
                 {/*</CardActionArea>*/}
-                <CardActions>
-                    <ProtestDrawer />
-                </CardActions>
             </Card>
         </Grid>
     );
 };
 
-export default ProtestCard;
+export default OrgCard;

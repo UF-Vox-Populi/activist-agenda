@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InfiniteScroll from "react-infinite-scroll-component";
-import ProtestCard from "./ProtestCard";
+import OrgCard from "./OrgCard";
 
 var calls = require('../serverCalls');
 
@@ -11,19 +11,17 @@ const InfScroll = () => {
     const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
-        calls.getEventPosts().then(out => {
+        calls.getAllOrgs().then(out => {
             let newPosts = [];
 
+            console.log(out);
+
             for (var x = 0; x < out.length; x++) {
-                newPosts.push(<ProtestCard 
-                    id={out[x].posterID} 
-                    protestTitle={out[x].title} 
-                    host={out[x].poster} 
-                    protestLocation={out[x].address} 
-                    date={out[x].time.substring(0,10)} 
-                    description={out[x].description} 
-                    donLink={out[x].donationLink} 
-                    orgLink={out[x].organizationLink} 
+                newPosts.push(<OrgCard 
+                    author={out[x].username} 
+                    avatarSrc={""} 
+                    desc={out[x].bio} 
+                    location={out[x].location} 
                     />)
             }
 
@@ -33,10 +31,12 @@ const InfScroll = () => {
 
             setPosts(posts.concat(newPosts));
             setDisplayed(displayed.concat(newPosts.slice(0, 5)));
-        })
+        });
     }, []);
 
     const loadMorePosts = () => {
+
+        console.log("check");
 
         setTimeout(() => {
             if (displayed.length >= posts.length - 5) {
@@ -44,6 +44,8 @@ const InfScroll = () => {
             }
         
             setDisplayed(displayed.concat(posts.slice(displayed.length, displayed.length + 5)));
+
+            console.log(hasMore);
         }, 2000);
 
     };
@@ -56,7 +58,7 @@ const InfScroll = () => {
                 hasMore={hasMore}
                 scrollThreshold={0.8}
                 loader={<p style={{ textAlign: "center" }}><CircularProgress/></p>}
-                endMessage={<p style={{ textAlign: "center" }}>Loaded all posts!</p>}
+                endMessage={<p style={{ textAlign: "center" }}>Loaded all organizers!</p>}
             >
                 {displayed}
             </InfiniteScroll>

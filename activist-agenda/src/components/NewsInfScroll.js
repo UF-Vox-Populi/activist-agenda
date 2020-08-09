@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InfiniteScroll from "react-infinite-scroll-component";
-import ProtestCard from "./ProtestCard";
+import NewsCard from "./NewsCard";
 
 var calls = require('../serverCalls');
 
@@ -11,20 +11,19 @@ const InfScroll = () => {
     const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
-        calls.getEventPosts().then(out => {
+        calls.getNews(['blacklivesmatter', 'protest']).then(out => {
             let newPosts = [];
 
-            for (var x = 0; x < out.length; x++) {
-                newPosts.push(<ProtestCard 
-                    id={out[x].posterID} 
-                    protestTitle={out[x].title} 
-                    host={out[x].poster} 
-                    protestLocation={out[x].address} 
-                    date={out[x].time.substring(0,10)} 
-                    description={out[x].description} 
-                    donLink={out[x].donationLink} 
-                    orgLink={out[x].organizationLink} 
-                    />)
+            console.log(out);
+
+            for (var x = 0; x < out.articles.length; x++) {
+                newPosts.push(<NewsCard 
+                    title={out.articles[x].title} 
+                    author={out.articles[x].author} 
+                    avatarSrc={out.articles[x].urlToImage} 
+                    desc={out.articles[x].description} 
+                    source={out.articles[x].source.name} 
+                    url={out.articles[x].url} />)
             }
 
             if (out.length <= 5) {
@@ -33,17 +32,19 @@ const InfScroll = () => {
 
             setPosts(posts.concat(newPosts));
             setDisplayed(displayed.concat(newPosts.slice(0, 5)));
-        })
+        });
     }, []);
 
     const loadMorePosts = () => {
 
         setTimeout(() => {
+
             if (displayed.length >= posts.length - 5) {
                 setHasMore(false);
             }
         
             setDisplayed(displayed.concat(posts.slice(displayed.length, displayed.length + 5)));
+
         }, 2000);
 
     };
