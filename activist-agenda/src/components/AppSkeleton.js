@@ -208,6 +208,8 @@ const AppSkeleton = (props) => {
         } else {
           history.push("/login");
         }
+      case 5:
+        history.push("/settings");
           
     };
   };
