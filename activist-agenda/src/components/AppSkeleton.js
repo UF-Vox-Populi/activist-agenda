@@ -365,7 +365,6 @@ const AppSkeleton = (props) => {
   //Sets the news cards
   const news = (
     <Grid container spacing={3}>
-      <Grid item xs={12} sm={12} md={7} align="center"><NewsSortButtons /></Grid>
       <Grid item xs={12} sm={12} md={7}><NewsInfScroll/></Grid>
       </Grid>
   )

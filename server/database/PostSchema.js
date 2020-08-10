@@ -15,15 +15,17 @@ const postSchema = new mongoose.Schema({
 
   address: {type:String},
 
-  coordinates: {    latitude: mongoose.Number,
-                    longitude: mongoose.Number
+  coordinates: {    latitude: Number,
+                    longitude: Number
                 },
 
   date:{type:Date}, //yyyy-MM-DD
 
   supporters: [String],
 
-  isEvent: {type:Boolean}
+  isEvent: {type:Boolean},
+
+  flagged: {type: Boolean}
   
 });
 

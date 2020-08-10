@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InfiniteScroll from "react-infinite-scroll-component";
 import NewsCard from "./NewsCard";
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import { makeStyles } from '@material-ui/core/styles';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import WhatshotIcon from '@material-ui/icons/Whatshot';
 const NewsAPI = require('newsapi');
 
 var calls = require('../serverCalls');
@@ -17,11 +23,9 @@ const InfScroll = () => {
         newsapi.v2.everything({
             q: 'blacklivesmatter',
             language: 'en',
-            sortBy: 'popularity'
+            sortBy: 'publishedAt'
           }).then(out => {
             let newPosts = [];
-
-            console.log(out);
 
             for (var x = 0; x < out.articles.length; x++) {
                 newPosts.push(<NewsCard 
@@ -56,8 +60,60 @@ const InfScroll = () => {
 
     };
 
+    const [sortBy, setSortBy] = React.useState('');
+  
+    const handleSortBy = (event, newSortBy) => {
+
+        newsapi.v2.everything({
+            q: 'blacklivesmatter',
+            language: 'en',
+            sortBy: newSortBy
+          }).then(out => {
+            let newPosts = [];
+
+            for (var x = 0; x < out.articles.length; x++) {
+                newPosts.push(<NewsCard 
+                    title={out.articles[x].title} 
+                    author={out.articles[x].author} 
+                    avatarSrc={out.articles[x].urlToImage} 
+                    desc={out.articles[x].description} 
+                    source={out.articles[x].source.name} 
+                    url={out.articles[x].url} />)
+            }
+
+            if (out.length <= 5) {
+                setHasMore(false);
+            }
+
+            setPosts(posts.concat(newPosts));
+            setDisplayed(displayed.filter(post => post.title !== post.title).concat(newPosts.slice(0, 5)));
+
+            console.log(out);
+            console.log(displayed);
+            
+        });
+    };
+
     return (
         <div>
+            <div>
+            <ToggleButtonGroup
+                value={sortBy}
+                exclusive={true}
+                onChange={handleSortBy}
+                aria-label="sort by"
+                size="small"
+                align="center"
+            >
+                <ToggleButton value="publishedAt" aria-label="sort by latest">
+                    <DateRangeIcon fontSize="small" color="primary"/>Latest
+                </ToggleButton>
+                <ToggleButton value="popularity" aria-label="sort by popular">
+                    <WhatshotIcon fontSize="small" color="primary"/>Popular
+                </ToggleButton>
+            </ToggleButtonGroup>
+            </div>
+            <div>
             <InfiniteScroll
                 dataLength={displayed.length}
                 next={loadMorePosts}
@@ -65,9 +121,11 @@ const InfScroll = () => {
                 scrollThreshold={0.8}
                 loader={<p style={{ textAlign: "center" }}><CircularProgress/></p>}
                 endMessage={<p style={{ textAlign: "center" }}>Loaded all posts!</p>}
+                refreshFunction={handleSortBy}
             >
                 {displayed}
             </InfiniteScroll>
+            </div>
         </div>
     );
 }

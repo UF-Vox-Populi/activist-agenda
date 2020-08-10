@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ProtestDrawer from './ProtestDrawer';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
@@ -19,6 +19,8 @@ import Link from '@material-ui/core/Link';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Cookies from 'universal-cookie';
+
+var calls = require('../serverCalls');
 
 const useStyles = makeStyles({
     cardStyle: {
@@ -53,20 +55,6 @@ const OrgCard = (props) => {
                     <CardContent>
                         <Typography variant="body1" component="p">
                             {desc}<br/>
-                        </Typography>
-                        <Typography variant="body2">
-                            <b>Supporters: #</b>
-                        </Typography>
-                        <Typography>
-                            {cookie.get('authedUser') 
-                            ? <FormControlLabel
-                                    control={<Checkbox style={{ color: theme.palette.error.main }} icon={<FavoriteBorder />} 
-                                    checkedIcon={<Favorite />} 
-                                    name="checkedH" />}
-                                    label="I SUPPORT THIS" 
-                            />
-                            : null
-                            }
                         </Typography>
                     </CardContent>
                     <Divider/>

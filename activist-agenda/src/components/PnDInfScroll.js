@@ -16,11 +16,14 @@ const InfScroll = () => {
 
             for (var x = 0; x < out.length; x++) {
                 newPosts.push(<PnDCard 
+                    postID={out[x]._id}
                     id={out[x].posterID} 
                     protestTitle={out[x].title} 
                     host={out[x].poster} 
                     description={out[x].description} 
                     donLink={out[x].donationLink} 
+                    supporters={out[x].supporters}
+                    flagged={out[x].flagged}
                     />)
             }
 

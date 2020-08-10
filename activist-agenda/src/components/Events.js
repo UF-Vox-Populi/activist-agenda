@@ -101,7 +101,7 @@ export default class Event extends Component  {
   
   //Fetches event list from server
   updateEvents = () => {
-    calls.getEventPosts().then(eventList => {
+    calls.getEvents().then(eventList => {
       //Set state of event array
       this.setState({
         events: eventList

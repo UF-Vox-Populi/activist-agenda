@@ -13,6 +13,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
 import IconButton from '@material-ui/core/IconButton';
+import LocationSearchingIcon from '@material-ui/icons/LocationSearching';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
@@ -20,6 +21,22 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import TextField from '@material-ui/core/TextField';
 import Cookies from 'universal-cookie';
+
+/*
+const NodeGeocoder = require('node-geocoder');
+//https://www.npmjs.com/package/node-geocoder
+
+const geoOptions = {
+  provider: 'opencage',
+
+  // Optional depending on the providers
+  //fetch: customFetchImplementation,
+  apiKey: 'da669438ed354fae88c82aed45a90e20', // for Mapquest, -->OpenCage<--, Google Premier
+  formatter: null // 'gpx', 'string', ...
+};
+
+const geocoder = NodeGeocoder(geoOptions);
+*/
 
 var calls = require('../serverCalls');
 
@@ -88,7 +105,11 @@ function CreationSelectDropdown() {
         date: '',
         donURL: '',
         orgURL: '',
-        description: ''
+        description: '',
+        coordinates: {
+            latitude: 0,
+            longitude: 0
+        }
     })
 
     const handleDescriptionChange = description => event => {
@@ -134,15 +155,31 @@ function CreationSelectDropdown() {
         }
     }
 
-    /*const checkLocation = () => {
-        addressValidator.validate(protestVals.location, addressValidator.match.streetAddress, function(err, exact, inexact){
-            if (exact == []) {
-                console.log("wrong");
-            } else {
-                console.log(exact);
+    const checkLocation = (props) => {
+        /*geocoder.geocode(props, function(err, res) {
+            if (err) {
+                throw err;
+            } 
+            console.log("Here's what opencage found\n", res);
+            if (res) 
+            {
+                let streetNum = res[1].streetNumber;
+                let streetName = res[1].streetName;
+                let city = res[1].city;
+                let state = res[1].state;
+                let zip = res[1].zipcode;
+                let long = res[1].longitude;
+                let lat = res[1].latitude; 
+                const fullAddr = streetNum + ' ' + streetName + ', ' + city + ', ' + state + ' ' + zip;
+                setProVals({...protestVals, location: fullAddr, coordinates: {lat, long}});
             }
-        })
-    }*/
+                else
+                setProVals({...protestVals, location: ''})
+        });*/
+
+        setProVals({...protestVals, coordinates: {latitude: 29.631710, longitude: -82.375180}});
+
+    }
 
     const handlePnDSubmit = () => {
         if (
@@ -165,7 +202,7 @@ function CreationSelectDropdown() {
             protestVals.description != ''
             ) {
                 calls.getUser(cookie.get('authedUser')).then(out => {
-                    calls.addPost(true, out.username, cookie.get('authedUser'), '', protestVals.title, protestVals.location, protestVals.date, protestVals.description, protestVals.donURL, protestVals.orgURL);
+                    calls.addPost(true, out.username, cookie.get('authedUser'), '', protestVals.title, protestVals.location, protestVals.date, protestVals.description, protestVals.donURL, protestVals.orgURL, protestVals.coordinates);
                 })
                 handleDialogueClose();
             }
@@ -316,8 +353,12 @@ function CreationSelectDropdown() {
                         type="text"
                         variant="outlined"
                         fullWidth
+                        value={protestVals.location}
                         onChange={(e) => handleProtestChange(1, e)}
-                    />
+                    />  
+                    <IconButton  size='small' color='primary' onClick={() => checkLocation(protestVals.location)} > 
+                        <LocationSearchingIcon/> 
+                    </IconButton>
                     <TextField
                         required
                         margin="dense"

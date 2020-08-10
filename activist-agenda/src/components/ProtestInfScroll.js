@@ -16,6 +16,7 @@ const InfScroll = () => {
 
             for (var x = 0; x < out.length; x++) {
                 newPosts.push(<ProtestCard 
+                    postID={out[x]._id}
                     id={out[x].posterID} 
                     protestTitle={out[x].title} 
                     host={out[x].poster} 
@@ -24,6 +25,8 @@ const InfScroll = () => {
                     description={out[x].description} 
                     donLink={out[x].donationLink} 
                     orgLink={out[x].organizationLink} 
+                    supporters={out[x].supporters}
+                    flagged={out[x].flagged}
                     />)
             }
 

@@ -269,7 +269,7 @@ export function changeAuth(_id, newAuth) {
 }
 
 //Adds a post to the database
-export function addPost(isEvent, poster, posterID, icon, title, address, time, description, donationLink, organizationLink) {
+export function addPost(isEvent, poster, posterID, icon, title, address, time, description, donationLink, organizationLink, coordinates) {
 
     let reqs = {
         method: 'GET',
@@ -284,9 +284,15 @@ export function addPost(isEvent, poster, posterID, icon, title, address, time, d
             tim: time,
             desc: description,
             donation: donationLink,
-            organization: organizationLink
+            organization: organizationLink,
+            coords: {
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude
+            }
         }
     }
+
+    console.log(reqs.params.coords.latitude);
     
     return Axios(reqs).then(res => {
         return res.data;
@@ -341,6 +347,72 @@ export function getOtherPosts() {
     let reqs = {
         method: 'GET',
         url: baseUrl+"/api/getOtherPosts/",
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+export function addSupport(ID, currUser) {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/addSupport/",
+        params: {
+            id: ID,
+            user: currUser
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+export function removeSupport(ID, currUser) {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/removeSupport/",
+        params: {
+            id: ID,
+            user: currUser
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+export function addFlag(ID) {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/addFlag/",
+        params: {
+            id: ID
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+export function removeFlag(ID) {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/removeFlag/",
+        params: {
+            id: ID
+        }
     }
     
     return Axios(reqs).then(res => {

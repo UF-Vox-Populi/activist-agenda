@@ -16,7 +16,8 @@
             },
             "date": "2020-08-01",
             "isEvent": true,
-            "supporters": ["0", "1"]
+            "supporters": ["0", "1"],
+            "flagged": false
         },
         {
             "poster": "Poster2",
@@ -34,7 +35,8 @@
             },
             "date": "2020-08-02",
             "isEvent": true,
-            "supporters": ["0", "1", "2"]
+            "supporters": ["0", "1", "2"],
+            "flagged": false
         },
         {
             "poster": "Poster3",
@@ -52,7 +54,8 @@
             },
             "date": "2020-08-01",
             "isEvent": true,
-            "supporters": ["0"]
+            "supporters": ["0"],
+            "flagged": false
         },
         {
             "poster": "Poster1",
@@ -70,7 +73,8 @@
             },
             "date": "2020-08-01",
             "isEvent": false,
-            "supporters": ["0", "1"]
+            "supporters": ["0", "1"],
+            "flagged": false
         },
         {
             "poster": "Poster2",
@@ -88,7 +92,8 @@
             },
             "date": "2020-08-01",
             "isEvent": false,
-            "supporters": ["0", "1"]
+            "supporters": ["0", "1"],
+            "flagged": false
         },
         {
             "poster": "Poster3",
@@ -106,7 +111,8 @@
             },
             "date": "2020-08-01",
             "isEvent": false,
-            "supporters": ["0", "1"]
+            "supporters": ["0", "1"],
+            "flagged": false
         }
     ]
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProtestDrawer from './ProtestDrawer';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
@@ -11,6 +11,7 @@ import Divider from '@material-ui/core/Divider';
 import EmojiFlagsIcon from '@material-ui/icons/EmojiFlags';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+import FlagIcon from '@material-ui/icons/Flag';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
@@ -19,6 +20,8 @@ import Link from '@material-ui/core/Link';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Cookies from 'universal-cookie';
+
+var calls = require('../serverCalls');
 
 const useStyles = makeStyles({
     cardStyle: {
@@ -35,9 +38,41 @@ const makeProfLink = (id) => {
 const ProtestCard = (props) => {
     const classes = useStyles();
     const theme = useTheme();
-    const { avatarSrc, id, host, protestTitle, description, donLink, protestorCount } = props;
+    const { postID, avatarSrc, id, host, protestTitle, description, donLink, supporters, flagged } = props;
     const profLink = makeProfLink(id);
     const cookie = new Cookies();
+
+    const [num, setNum] = useState(supporters.length);
+    const [chcked, setChcked] = useState(false);
+    const [flged, setFlged] = useState(flagged);
+
+    const handleChange = (event) => {
+        setChcked(!chcked);
+
+        if (event.target.checked) {
+            calls.addSupport(postID, cookie.get('authedUser'));
+            setNum(num + 1);
+        } else {
+            calls.removeSupport(postID, cookie.get('authedUser'));
+            setNum(num - 1);
+        }
+    }
+
+    const handleFlag = (event) => {
+        setFlged(!flged);
+
+        if (event.target.checked) {
+            calls.addFlag(postID);
+        } else {
+            calls.removeFlag(postID);
+        }
+    }
+
+    useEffect(() => {
+        if (supporters.includes(cookie.get('authedUser'))) {
+            setChcked(true);
+        }
+    }, [])
 
     return (
         <Grid item>
@@ -52,9 +87,14 @@ const ProtestCard = (props) => {
                                 </IconButton>
                             }
                             action={
-                                <IconButton aria-label="flag">
-                                    <EmojiFlagsIcon />
-                                </IconButton>
+                                <FormControlLabel
+                                control={<Checkbox style={{ color: theme.palette.error.main }} icon={<EmojiFlagsIcon />} 
+                                checkedIcon={<FlagIcon />} 
+                                name="flaggedH" />}
+                                onChange={(event) => handleFlag(event)}
+                                checked={flged}
+                                onClick={() => setFlged(!flged)}
+                                />
                             }
                             title={protestTitle}
                             subheader={
@@ -86,7 +126,7 @@ const ProtestCard = (props) => {
                             <br/><Link href={donLink}>Link!</Link>
                         </Typography>
                         <Typography variant="body2">
-                            <b>Supporters: #</b>
+                            <b>Supporters: {num}</b>
                         </Typography>
                         <Typography>
                             {cookie.get('authedUser') 
@@ -95,6 +135,9 @@ const ProtestCard = (props) => {
                                     checkedIcon={<Favorite />} 
                                     name="checkedH" />}
                                     label="I SUPPORT THIS" 
+                                    onChange={(event) => handleChange(event)}
+                                    checked={chcked}
+                                    onClick={() => setChcked(!chcked)}
                             />
                             : null
                             }
