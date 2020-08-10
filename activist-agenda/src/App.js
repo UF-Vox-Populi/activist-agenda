@@ -11,6 +11,8 @@ import { MuiThemeProvider } from '@material-ui/core/styles'; // Allows custom co
 import theme from './theme.js' //Only draws from the login theme. Can't figure out how to switch to the skeleton theme :/
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import ForgotPass from './components/ForgotPass';
+import ResetPass from './components/ResetPass';
+import VerifyEmail from './components/VerifyEmail';
 
 /*
 Info: 
@@ -40,6 +42,8 @@ function App() {
             <Route path="/userprofile" component = {UserProfile} />
             <Route path="/editprofile" component = {EditProfile} />
             <Route path="/forgotPassword" component = {ForgotPass} />
+            <Route path="/resetPass/:id/:token" render={(props) => <ResetPass />} />
+            <Route path="/verifyEmail/:id/:token" render={(props) => <VerifyEmail />} />
           </Switch>
         </MuiThemeProvider>
         </header>

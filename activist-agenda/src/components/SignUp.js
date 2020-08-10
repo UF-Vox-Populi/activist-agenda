@@ -14,7 +14,9 @@ import { useTheme, makeStyles} from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import Container from '@material-ui/core/Container';
 
+import bcrypt from 'bcrypt';
 import {useHistory} from 'react-router-dom'; // ** Needed to switch between pages. May not be necessary if connected a different way.
+var mail = require('./../mailgun');
 var calls = require('./../serverCalls'); // ** To check username and email.
 
 
@@ -53,6 +55,26 @@ const useStyles = makeStyles((theme) => ({
 const emailRegex = RegExp(
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
 );
+
+async function verifyEmail(email_) {
+  var ID = calls.getUserIDbyEmail(email_);
+  var token = crypto.randomBytes(32).toString('hex');
+
+  await bcrypt.hash(token, null, null, (err,hash) => {
+    calls.createToken(ID, hash);
+  });
+
+  //send email with token
+  await mail.sendMailHtml(
+    'Activist-Agenda Support <support@mg.activistagenda.vision',
+    email_,
+    'Verify Email on Activist Agenda',
+    '<div style="width:50%;margin: 0 auto;font-family:Segoe UI"><h4><b>Verify Email</b></h4>' +
+    '<p>Thanks for signing up to Activist Agenda.</p><p>Please verify your email by clicking on the link below.</p>'+
+    '<a href="https://activist-agenda.herokuapp.com/verifyEmail/'+ID+'/'+token+
+    '">https://activist-agenda.herokuapp.com/verifyEmail/'+ID+'/'+token+'</a></div>'
+    );
+}
 
 export default function SignUp(props) {
   const classes = useStyles();
@@ -165,6 +187,8 @@ export default function SignUp(props) {
       !formErrs.email
     ) {
       calls.addUser(formData.userName, formData.password1, formData.email, formData.firstName, formData.lastName).then(data => {
+        //Create token to verify user email
+        verifyEmail(formData.email);
         if (props.modal)
           props.handleOpen(false, true);
         else

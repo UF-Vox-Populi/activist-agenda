@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import User from './database/UserSchema.js';
 import Event from './database/EventSchema.js';
 import Post from './database/PostSchema.js';
+import Token from './database/TokenSchema.js';
 import path from 'path';
 import * as fs from 'fs';
 
@@ -26,6 +27,9 @@ User.deleteMany({}, (err) => {
 });
 
 Post.deleteMany({}, (err) => {
+    if (err) throw err;
+});
+Token.deleteMany({}, (err) => {
     if (err) throw err;
 });
 
@@ -188,7 +192,7 @@ app.get("/api/addUser", (req, res) => {
 
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-    var newEntry = new User({username: req.query.user, password: req.query.pass, email: req.query.address, firstName: req.query.first, lastName: req.query.last})
+    var newEntry = new User({username: req.query.user, password: req.query.pass, email: req.query.address, firstName: req.query.first, lastName: req.query.last, emailVerified:false});
     newEntry.save((err) => {
         if (err) {
             res.send(false);
@@ -330,7 +334,7 @@ app.get("/api/addPost", (req, res) => {
             res.send(true);
         }
     });
-})
+});
 
 //Retrieves posts from the database. For now it just gets all of them.
 app.get("/api/getAllPosts", (req, res) => {
@@ -340,7 +344,78 @@ app.get("/api/getAllPosts", (req, res) => {
         if (err) throw err;
         res.send(docs);
     })
-})
+});
+
+app.get("/api/createToken", (req,res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    var newToken = new Token({
+        userID: req.query.ID,
+        emailToken: req.query.emailToken,
+    })
+
+    newToken.save((err) => {
+        if (err) {
+            res.send(false);
+            console.log(err);
+        } else {
+            res.send(true);
+        }
+    });
+});
+
+app.get("/api/addPasswordToken", (req,res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    
+    Token.findOneAndUpdate({userID:req.query.ID}, {passwordToken:req.query.passwordToken}, function (err, docs) {
+        if (err) {
+            console.log(err);
+            res.send(false);
+        } else {
+            res.send(true);
+        }
+    });
+});
+
+app.get("/api/verifyEmail/", (req,res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    Token.findById(req.query.ID, (err, token_) => {
+        if (err) {
+            res.send(false);
+        } else {
+            bcrypt.compare(req.query.tokenm, token_.emailToken, (errB, result) => {
+                if (result) {
+                    console.log('Token matches, email verified');
+                    User.findByIdAndUpdate(req.query.ID, {emailVerified:true}, (err) => {
+                        if (err) handleError(err);
+                    });
+                    res.send(true);
+                }
+                else 
+                    res.send(false);
+            });
+        }
+    });
+});
+
+app.get("/api/verifyPassToken/", (req,res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    
+    Token.findById(req.query.ID, (err, token_) => {
+        if (err) {
+            res.send(false);
+        } else {
+            bcrypt.compare(req.query.token, token_.passwordToken, (errBcrypt, result) => {
+                if (result) {
+                    res.send(true);
+                }
+                else 
+                    res.send(false);
+            });
+        }
+    });
+});
 
 // production mode
 if (process.env.NODE_ENV === 'production') {

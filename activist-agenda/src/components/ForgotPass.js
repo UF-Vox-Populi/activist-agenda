@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import sendMail from '../mailgun';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -8,9 +7,9 @@ import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Avatar from '@material-ui/core/Avatar';
 import HelpOutlinedIcon from '@material-ui/icons/HelpOutlined';
+import bcrypt from 'bcrypt';
 
-
-
+var mail = require('./../mailgun');
 var calls = require('../serverCalls');
 
 const useStyles = makeStyles((theme) => ({
@@ -27,29 +26,43 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+async function genToken(email_) {
+    var ID = calls.getUserIDbyEmail(email_);
+    var token = crypto.randomBytes(32).toString('hex');
+  
+    await bcrypt.hash(token, null, null, (err,hash) => {
+      calls.updateToken(ID, hash);
+    });
+  
+    //send email with token
+    await mail.sendMailHtml(
+      'Activist-Agenda Support <support@mg.activistagenda.vision',
+      email_,
+      'Password Reset Requested on Activist Agenda',
+      '<div style="width:50%;margin: 0 auto;font-family:Segoe UI"><h4><b>Password Reset</b></h4>' +
+      '<p>If you have not requested a password reset then you can safely ignore this email.</p><p>Otherwise, you can reset your password by clicking on the link below.</p>'+
+      '<a href="https://activist-agenda.herokuapp.com/resetPass/'+ID+'/'+token+
+      '">https://activist-agenda.herokuapp.com/resetPass/'+ID+'/'+token+'</a></div>'
+    );
+}
+
 export default function ForgotPass(props) {
     
     const classes = useStyles();
     const theme = useTheme();
 
     const [email, changeEmail] = useState('');
-    const [emailErr, changeErr] = useState(false);
+    const [emailErr, changeErr] = useState('');
 
     const handleButton = () => {
         if (calls.checkEmail(email)) {
-            console.log('Account found, sending email..')
-            changeErr(false);
-
-            sendMail(
-                'Activist-Agenda <support@activistagenda.vision>',
-                email,
-                'Password Reset Requested',
-                'Someone has requested a password reset for the account associated with this email.\n\nIf This was you please click the link below. Otherwise, you can safely ignore this email.'
-            );
+            console.log('Account found, sending email..');
+            genToken(email);
+            changeErr('');
         }
         else {
             console.log('Account not found')
-            changeErr(true);
+            changeErr('No matching email found');
         }
 
     }
@@ -76,7 +89,8 @@ export default function ForgotPass(props) {
                     label="Enter Email"
                     name="email"
                     autoComplete="email"
-                    error={emailErr}
+                    error={!emailErr}
+                    helperText={emailErr}
                     autoFocus
                     onChange={handleEmail}
                 />

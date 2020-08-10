@@ -285,7 +285,66 @@ export function getAllPosts() {
     return Axios(reqs).then(res => {
         return res.data;
     })
+}
 
+export function createToken(ID_, emailToken_) {
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/createToken/",
+        params: {
+            ID: ID_,
+            emailToken: emailToken_,
+        }
+    }
+
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+}
+
+export function updatePasswordToken(ID_, passwordToken_) {
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/updatePasswordToken/",
+        params: {
+            ID: ID_,
+            passwordToken: passwordToken_,
+        }
+    }
+
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+}
+
+export function verifyEmail(ID_, emailToken_) {
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/verifyEmail/",
+        params: {
+            ID: ID_,
+            emailToken: emailToken_,
+        }
+    }
+
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+}
+
+export function verifyPassToken(ID_, passwordToken_) {
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/verifyPassToken/",
+        params: {
+            ID: ID_,
+            passwordToken: passwordToken_,
+        }
+    }
+
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
 }
 
 
