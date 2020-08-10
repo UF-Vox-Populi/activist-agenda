@@ -269,7 +269,7 @@ export function changeAuth(_id, newAuth) {
 }
 
 //Adds a post to the database
-export function addPost(isEvent, poster, posterID, icon, title, address, time, description, donationLink, organizationLink) {
+export function addPost(isEvent, poster, posterID, icon, title, address, time, description, donationLink, organizationLink, coordinates) {
 
     let reqs = {
         method: 'GET',
@@ -284,7 +284,8 @@ export function addPost(isEvent, poster, posterID, icon, title, address, time, d
             tim: time,
             desc: description,
             donation: donationLink,
-            organization: organizationLink
+            organization: organizationLink,
+            coordinates: coordinates
         }
     }
     
