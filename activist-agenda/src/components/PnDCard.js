@@ -38,7 +38,7 @@ const makeProfLink = (id) => {
 const ProtestCard = (props) => {
     const classes = useStyles();
     const theme = useTheme();
-    const { postID, avatarSrc, id, host, date, protestTitle, protestLocation, description, donLink, orgLink, supporters, flagged } = props;
+    const { postID, avatarSrc, id, host, protestTitle, description, donLink, supporters, flagged } = props;
     const profLink = makeProfLink(id);
     const cookie = new Cookies();
 
@@ -119,14 +119,11 @@ const ProtestCard = (props) => {
                     }
                     <Divider />
                     <CardContent>
-                        <Typography className={classes.pos} color="textSecondary">
-                            {protestLocation} | {date}
-                        </Typography>
                         <Typography variant="body1" component="p">
                             {description}<br/>
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                            <br/>Link(s): <Link href={donLink}>Donation</Link> | <Link href={orgLink}>Petition</Link>
+                            <br/><Link href={donLink}>Link!</Link>
                         </Typography>
                         <Typography variant="body2">
                             <b>Supporters: {num}</b>
@@ -147,10 +144,6 @@ const ProtestCard = (props) => {
                         </Typography>
                     </CardContent>
                     <Divider/>
-                {/*</CardActionArea>*/}
-                <CardActions>
-                    <ProtestDrawer POI={protestLocation}/>
-                </CardActions>
             </Card>
         </Grid>
     );

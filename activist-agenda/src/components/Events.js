@@ -17,11 +17,12 @@ import { useTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { List } from 'material-ui';
 
-import ReactMapGL, { Marker } from 'react-map-gl';
-
+import ReactMapGL, { Marker, FlyToInterpolator, Popup } from 'react-map-gl';
+import EventInfo from './event-info';
 import '../App.css';
+import Events from 'material-ui/utils/events';
+import { MapsTransferWithinAStation } from 'material-ui/svg-icons';
 var calls = require('../serverCalls');
-//https://developers.google.com/calendar
 
 /* TODO:
 * Make API environment variable
@@ -34,16 +35,39 @@ var calls = require('../serverCalls');
 
 class Markers extends PureComponent {
   render() {
-    const {data} = this.props;
-    console.log("Pure Markers data:\n", data)
+    const {data, onClick} = this.props;
+    //console.log("Pure Markers data:\n", data)
+    
     return  data.map(
       entry =>  <Marker key={entry._id} 
                         longitude={entry.coordinates.longitude} 
                         latitude={entry.coordinates.latitude}
                 >
-                  <img src="/parade.svg" alt=""  width="30px" height="30px"/>
+                  <img src="/parade.svg" alt=""  width="30px" height="30px" onClick={() => onClick(entry)}/>
                 </Marker>
       )
+  }
+}
+
+class Popups extends PureComponent {
+  render() {
+    const {data} = this.props;
+    //console.log("Pure Popups: ", data)
+    return data.map(
+      entry => 
+        <Popup key={entry._id} 
+            longitude={entry.coordinates.longitude} 
+            latitude={entry.coordinates.latitude}
+            closeButton={true}
+            closeOnClick={false}
+            anchor="top"
+            dynamicPosition
+            offsetTop={-20}
+            >
+              
+        <EventInfo info={data}/>
+        </Popup>
+    )
   }
 }
 
@@ -60,16 +84,19 @@ export default class Event extends Component  {
         zoom: 10,
       },
       userLocation: {
-        lat: 29.6703882,
-        long: -82.339592
+        lat: '',
+        long: ''
       },
+      popupInfo: null,
       events: []
     };
   }
 
   //On Start..
   componentDidMount() {
+    this.goToPOI();
     this.updateEvents();
+    this.setUserLocation();
   }
   
   //Fetches event list from server
@@ -83,6 +110,7 @@ export default class Event extends Component  {
     })
   }
 
+
   //finding user location
   setUserLocation = () => {
     navigator.geolocation.getCurrentPosition(position => {
@@ -91,38 +119,72 @@ export default class Event extends Component  {
         lat: position.coords.latitude,
         long: position.coords.longitude
       };
-      
-      let newViewPort = {
-        height: "100vh",
-        width: "100vw",
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        zoom: 12
-      }
       this.setState({
-        viewPort: newViewPort,
         userLocation: setUserLocation
       });
     });
   };
 
+  goToPOI = () => {
+    console.log("POI: ", this.props.focusPoint)
+  }
+
+  goToUser = () => {
+    const viewPort = {
+      ...this.state.viewPort,
+      latitude:  this.state.userLocation.lat,
+      longitude:  this.state.userLocation.long,
+      zoom: 12,
+      transitionDuration: 3000,
+      transitionInterpolator: new FlyToInterpolator(),
+    };
+    this.setState({viewPort});
+  }
+
+  _onClickMarker = event => {
+    //console.log("You clickeds on: ", event);
+    this.setState({popupInfo: event}, this._renderPopup);
+  }
+
+  _renderPopup() {
+    const {popupInfo} = this.state;
+    console.log("popupInfo: ", popupInfo)
+    return (
+      
+        <Popup
+        tipSize={5}
+        anchor="top"
+        longitude={popupInfo.longitude}
+        latitude={popupInfo.latitude}
+        closeOnClick={false}
+        onClose={() => this.setState({popupInfo: null})}
+        >
+          <div>{popupInfo.summary}</div>
+        </Popup>
+      
+    )
+  }
+
+
   render () {
     return (
-      <div>
-        <button onClick={this.setUserLocation}> My Location  </button>
-        <button onClick={this.updateEvents}> Refresh Events  </button>
-
         <div>
           <ReactMapGL
               {...this.state.viewPort}
-              mapStyle="mapbox://styles/voxpopuli-352/ckd16dte314f71iob421cmt2f"
+              mapStyle="mapbox://styles/mapbox/streets-v11"
               mapboxApiAccessToken="pk.eyJ1Ijoidm94cG9wdWxpLTM1MiIsImEiOiJja2QxMjl0eHUwazFhMnJxdnlkZXdzbmN5In0.mDtjHH85xMmT7VbMhBBsEw"
               onViewportChange= { viewPort => this.setState({viewPort})}
           >
-              <Markers data={this.state.events}/>
+
+            <div style={{position: 'absolute', right: '5vw'}}>
+              <button onClick={this.goToUser}> My Location  </button>
+              <button onClick={this.updateEvents}> Toggle Event Info  </button>
+            </div>
+            
+            <Markers data={this.state.events} onClick={this._onClickMarker}/>
+            {this._renderPopup}
           </ReactMapGL>
         </div>
-      </div>
     );
   }
 }
