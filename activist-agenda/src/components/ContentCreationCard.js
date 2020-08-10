@@ -188,7 +188,7 @@ function CreationSelectDropdown() {
             pndVals.desc != ''
         ) {
             calls.getUser(cookie.get('authedUser')).then(out => {
-                calls.addPost(false, out.username, cookie.get('authedUser'), '', pndVals.title, '', '', pndVals.desc, pndVals.link);
+                calls.addPost(false, out.username, cookie.get('authedUser'), '', pndVals.title, '', '', pndVals.desc, pndVals.link, '', {});
             })
             handleDialogueClose();
         }
@@ -249,9 +249,7 @@ function CreationSelectDropdown() {
                         label="Description"
                         type="text"
                         inputProps={{ maxlength: CHARACTER_LIMIT }}
-                        value={values.description}
                         helperText={`${values.description.length}/${CHARACTER_LIMIT}`}
-                        onChange={handleDescriptionChange("description")}
                         variant="outlined"
                         fullWidth
                         onChange={(e) => handlePnDChange(2, e)}
