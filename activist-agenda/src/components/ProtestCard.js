@@ -75,7 +75,7 @@ const ProtestCard = (props) => {
     }, [])
 
     return (
-        <Grid item>
+        <Grid item xs={12} sm={12} md={12}>
             <Card className={classes.cardStyle}>
                 {/*<CardActionArea>*/}
                     {

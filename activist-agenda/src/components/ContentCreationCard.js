@@ -481,8 +481,8 @@ const ContentCreationCard = (props) => {
                 <CardHeader
                     avatar={<IconButton size="small"><Avatar src={avatarSrc}/></IconButton>}
                     action={<CreationSelectDropdown/>}
-                    title="Create Post"
-                    subheader="User (Logged In)"
+                    title="Show the World"
+                    subheader="Create a Post!"
                 />
             </Paper>
         </Grid>
