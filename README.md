@@ -12,9 +12,9 @@ The purpose of this app is to centralize data in terms of the political activism
 
 ## List of API Keys
 
-Details here and step-by-step file/line for API key replacement.
-API for GeoCoding: OpenCage
-MailGun API key is set inside activist-agenda/src/mailgun.js at line 3 using a Heroku config var.
+- Details here and step-by-step file/line for API key replacement.
+- API for GeoCoding: OpenCage
+- MailGun API key is set inside activist-agenda/src/mailgun.js at line 3 using a Heroku config var.
 
 ## Environmental Variables
 
