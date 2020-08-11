@@ -334,7 +334,6 @@ const AppSkeleton = (props) => {
   //Sets the protest cards
   const protests = (
     <>
-      <Grid item xs={12} sm={12} md={6} align="center">{<><ProtestSortButtons/><br/></>}</Grid>
       <Grid item xs={12} sm={12} md={6}>{loggedIn ? <><ContentCreationCard/><br/></> : <><Divider/><br/></>}</Grid>
       <ProtestInfScroll/>
     </>

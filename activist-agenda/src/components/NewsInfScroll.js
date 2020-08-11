@@ -88,9 +88,6 @@ const InfScroll = () => {
 
             setPosts(posts.concat(newPosts));
             setDisplayed(displayed.filter(post => post.title !== post.title).concat(newPosts.slice(0, 5)));
-
-            console.log(out);
-            console.log(displayed);
             
         });
     };

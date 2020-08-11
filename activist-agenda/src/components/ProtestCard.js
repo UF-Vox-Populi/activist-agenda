@@ -42,7 +42,7 @@ const ProtestCard = (props) => {
     const profLink = makeProfLink(id);
     const cookie = new Cookies();
 
-    const [num, setNum] = useState(supporters.length);
+    const [num, setNum] = useState(0);
     const [chcked, setChcked] = useState(false);
     const [flged, setFlged] = useState(flagged);
 
@@ -129,7 +129,7 @@ const ProtestCard = (props) => {
                             <br/>Link(s): <Link href={'http://' + donLink}>Donation</Link> | <Link href={'http://' + orgLink}>Petition</Link>
                         </Typography>
                         <Typography variant="body2">
-                            <b>Supporters: {num}</b>
+                            <b>Supporters: {supporters.length + num}</b>
                         </Typography>
                         <Typography>
                             {cookie.get('authedUser') 
