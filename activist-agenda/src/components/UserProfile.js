@@ -215,17 +215,6 @@ const UserProfile = (props) => {
                 <Grid item className={classes.nameSection}>
                     <Typography variant='h8'>{username}</Typography>
                 </Grid>
-            {/* Follow Info Section */}
-                <Grid container container direction='column' className={classes.followInfoSection}>
-                    <Grid item alignItems='center'>
-                        <Button variant='contained' className={classes.followInfoButton}>
-                            <ListItemText primary='20' secondary={<Typography variant='h8' style={{color: '#FFFFFF'}}>Followers</Typography>}/>
-                        </Button>
-                        <Button variant='contained' className={classes.followInfoButton}>
-                            <ListItemText primary='20' secondary={<Typography variant='h8' style={{color: '#FFFFFF'}}>Following</Typography>}/>
-                        </Button>
-                    </Grid>
-                </Grid>
 
             {/* Bio Section */}
             <Grid container container direction='column' className={classes.bioSection}>

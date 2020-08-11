@@ -75,7 +75,7 @@ const ProtestCard = (props) => {
     }, [])
 
     return (
-        <Grid item>
+        <Grid item xs={12} sm={12} md={12}>
             <Card className={classes.cardStyle}>
                 {/*<CardActionArea>*/}
                     {
@@ -126,7 +126,7 @@ const ProtestCard = (props) => {
                             {description}<br/>
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                            <br/>Link(s): <Link href={donLink}>Donation</Link> | <Link href={orgLink}>Petition</Link>
+                            <br/>Link(s): <Link href={'http://' + donLink}>Donation</Link> | <Link href={'http://' + orgLink}>Petition</Link>
                         </Typography>
                         <Typography variant="body2">
                             <b>Supporters: {num}</b>

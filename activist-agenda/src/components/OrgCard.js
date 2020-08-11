@@ -39,7 +39,7 @@ const OrgCard = (props) => {
     const cookie = new Cookies();
 
     return (
-        <Grid item>
+        <Grid item xs={12} sm={12} md={12}>
             <Card className={classes.cardStyle}>
                 {/*<CardActionArea>*/}
                     <CardHeader

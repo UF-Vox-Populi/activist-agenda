@@ -35,7 +35,7 @@ const NewsCard = (props) => {
     const { avatarSrc, title, author, desc, source, url } = props;
 
     return (
-        <Grid item>
+        <Grid item xs={12} sm={12} md={12}>
             <Card className={classes.cardStyle}>
                 {/*<CardActionArea>*/}
                     <CardHeader
@@ -47,7 +47,7 @@ const NewsCard = (props) => {
                         title={title}
                         subheader={author}
                     />
-                    <Divider />
+                    <Divider/>
                     <CardContent>
                         <Typography variant="body1" component="p">
                             {desc}<br/>

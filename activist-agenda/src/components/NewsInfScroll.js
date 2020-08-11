@@ -3,6 +3,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import InfiniteScroll from "react-infinite-scroll-component";
 import NewsCard from "./NewsCard";
 import DateRangeIcon from '@material-ui/icons/DateRange';
+import Grid from '@material-ui/core/Grid';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { makeStyles } from '@material-ui/core/styles';
 import ToggleButton from '@material-ui/lab/ToggleButton';
@@ -96,36 +97,39 @@ const InfScroll = () => {
 
     return (
         <div>
-            <div>
-            <ToggleButtonGroup
-                value={sortBy}
-                exclusive={true}
-                onChange={handleSortBy}
-                aria-label="sort by"
-                size="small"
-                align="center"
-            >
-                <ToggleButton value="publishedAt" aria-label="sort by latest">
-                    <DateRangeIcon fontSize="small" color="primary"/>Latest
-                </ToggleButton>
-                <ToggleButton value="popularity" aria-label="sort by popular">
-                    <WhatshotIcon fontSize="small" color="primary"/>Popular
-                </ToggleButton>
-            </ToggleButtonGroup>
-            </div>
-            <div>
-            <InfiniteScroll
-                dataLength={displayed.length}
-                next={loadMorePosts}
-                hasMore={hasMore}
-                scrollThreshold={0.8}
-                loader={<p style={{ textAlign: "center" }}><CircularProgress/></p>}
-                endMessage={<p style={{ textAlign: "center" }}>Loaded all posts!</p>}
-                refreshFunction={handleSortBy}
-            >
-                {displayed}
-            </InfiniteScroll>
-            </div>
+            <Grid container direction="column" xs={12} sm={12} md={6}>
+                <Grid item xs={12} sm={12} md={12} align="center">
+                    <ToggleButtonGroup
+                        value={sortBy}
+                        exclusive={true}
+                        onChange={handleSortBy}
+                        aria-label="sort by"
+                        size="small"
+                        align="center"
+                    >
+                        <ToggleButton value="publishedAt" aria-label="sort by latest">
+                            <DateRangeIcon fontSize="small" color="primary"/>Latest
+                        </ToggleButton>
+                        <ToggleButton value="popularity" aria-label="sort by popular">
+                            <WhatshotIcon fontSize="small" color="primary"/>Popular
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                </Grid>
+                <Grid item><br/></Grid>
+                <InfiniteScroll
+                    dataLength={displayed.length}
+                    next={loadMorePosts}
+                    hasMore={hasMore}
+                    scrollThreshold={0.8}
+                    loader={<p style={{ textAlign: "center" }}><CircularProgress/></p>}
+                    endMessage={<p style={{ textAlign: "center" }}>Loaded all posts!</p>}
+                    refreshFunction={handleSortBy}
+                >
+                    <Grid container direction="column" spacing={3} xs={12}>
+                        {displayed}
+                    </Grid>
+                </InfiniteScroll>
+            </Grid>
         </div>
     );
 }

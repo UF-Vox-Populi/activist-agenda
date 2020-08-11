@@ -121,30 +121,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   // needed for content to be below appbar
   toolbar: theme.mixins.toolbar,
   btn: {
@@ -327,7 +303,7 @@ const AppSkeleton = (props) => {
           onClick={(event) => handleListItemClick(event, 1)}
         >
           <ListItemIcon><StarIcon /></ListItemIcon>
-          <ListItemText primary="Organizations"/>
+          <ListItemText primary="Organizers"/>
         </ListItem>
         <ListItem
           button
@@ -357,31 +333,31 @@ const AppSkeleton = (props) => {
 
   //Sets the protest cards
   const protests = (
-    <Grid container spacing={3}>
-      <Grid item xs={12} sm={12} md={7} align="center"><ProtestSortButtons /></Grid>
-      <Grid item xs={12} sm={12} md={7}>{loggedIn ? <ContentCreationCard /> : <Divider /> }</Grid>
-      <Grid item xs={12} sm={12} md={7}><ProtestInfScroll/></Grid>
-    </Grid>
+    <>
+      <Grid item xs={12} sm={12} md={6} align="center">{<><ProtestSortButtons/><br/></>}</Grid>
+      <Grid item xs={12} sm={12} md={6}>{loggedIn ? <><ContentCreationCard/><br/></> : <><Divider/><br/></>}</Grid>
+      <ProtestInfScroll/>
+    </>
   );
 
   //Sets the news cards
   const news = (
-    <Grid container spacing={3}>
-      <Grid item xs={12} sm={12} md={7}><NewsInfScroll/></Grid>
-      </Grid>
+    <>
+      <NewsInfScroll/>
+    </>
   )
 
   const orgs = (
-    <Grid container spacing={3}>
-      <Grid item xs={12} sm={12} md={7}><OrgInfScroll/></Grid>
-    </Grid>
+    <>
+      <OrgInfScroll/>
+    </>
   )
 
   const PnD = (
-    <Grid container spacing={3}>
-    <Grid item xs={12} sm={12} md={7}>{loggedIn ? <ContentCreationCard /> : <Divider /> }</Grid>
-      <Grid item xs={12} sm={12} md={7}><PnDInfScroll/></Grid>
-    </Grid>
+    <>
+    <Grid item xs={12} sm={12} md={6}>{loggedIn ? <><ContentCreationCard/><br/></> : <><Divider/><br/></>}</Grid>
+    <PnDInfScroll/>
+    </>
   )
 
   //Sets which set of cards it displays, protests or news.
@@ -424,19 +400,6 @@ const AppSkeleton = (props) => {
           <Typography className={classes.appNameFlex} variant="h6" noWrap>
             Activist Agenda
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{'aria-label': 'search'}}
-            />
-          </div>
           {HeaderButtons()}
         </Toolbar>
       </AppBar>
