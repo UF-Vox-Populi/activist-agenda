@@ -14,7 +14,7 @@ The purpose of this app is to centralize data in terms of the political activism
 
 ## Environmental Variables
 
-All API keys are set using Heroku environment variables or config vars. These can be accessed in the code using  process.env.VAR_NAME . New variables can be set or edited under the “Reveal Config Vars” section in the settings.
+All API keys are set using Heroku environment variables or config vars. These can be accessed in the code using  `process.env.VAR_NAME` . New variables can be set or edited under the “Reveal Config Vars” section in the settings.
 
 Current Config Vars:
 `BASE_URL`
