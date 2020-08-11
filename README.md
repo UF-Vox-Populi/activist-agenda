@@ -10,7 +10,19 @@ The purpose of this app is to centralize data in terms of the political activism
 * News Data Aggregation
 * Showing support to a protest/petition/donation
 
-## Setting API's
+## List of API Keys
+
+## Environmental Variables
+
+All API keys are set using Heroku environment variables or config vars. These can be accessed in the code using  process.env.VAR_NAME . New variables can be set or edited under the “Reveal Config Vars” section in the settings.
+
+Current Config Vars:
+`BASE_URL`
+`MONGO_URI`
+`MG_API`
+`MAP_API`
+`NEWS_API`
+
 
 ## Running Local Build
 1. `npm run install-all`
