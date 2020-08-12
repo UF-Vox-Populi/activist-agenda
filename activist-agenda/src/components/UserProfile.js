@@ -151,7 +151,7 @@ const UserProfile = (props) => {
                 <Button variant='contained' className={classes.editFollowUnfollowButton} color="primary" onClick={() => toggleOpen(true)}>
                     Edit
                 </Button>
-                <Dialog open={modalOpen} onClose={() => {modalOpen(false)}} noValidate>
+                <Dialog open={modalOpen} onClose={() => {toggleModal(false)}} noValidate>
                     <EditProfile 
                         toggleOpen={toggleOpen}
                     />
