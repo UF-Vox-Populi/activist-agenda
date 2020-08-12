@@ -177,17 +177,13 @@ const AppSkeleton = (props) => {
   // Controls which menu list option should stay highlighted
   const handleListItemClick = (event, index) => {
     setSelectedNavIndex(index);
-    switch (index) {
-      case 4:
-        if (loggedIn) {
+    if (index === 4) {
+      if (loggedIn) {
           history.push("/userprofile/" + user);
         } else {
           history.push("/login");
-        }
-      case 5:
-        history.push("/settings");
-          
-    };
+      }
+    }
   };
 
   //login form
@@ -266,14 +262,14 @@ const AppSkeleton = (props) => {
             <ListItemIcon><PersonIcon /></ListItemIcon>
             <ListItemText primary="Profile"/>
           </ListItem>
-          <ListItem
+          {/* <ListItem
             button
             selected={selectedNavIndex === 5}
             onClick={(event) => handleListItemClick(event, 5)}
           >
             <ListItemIcon><SettingsIcon /></ListItemIcon>
             <ListItemText primary="Settings"/>
-          </ListItem>
+          </ListItem> */}
         </List>
       )
     };
