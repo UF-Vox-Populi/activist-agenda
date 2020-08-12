@@ -37,7 +37,7 @@ async function genToken(email_) {
         if (result) {
 
             //send email with token
-            const domain = process.env.BASE_URL || 'http://localhost:5000';
+            const domain = 'https://activist-agenda.herokuapp.com'; // Replace with http://localhost:5000 for local testing
             mail.sendMailHtml(
             'Activist Agenda reset@mg.activistagenda.vision',
             email_,
