@@ -451,12 +451,7 @@ app.get("/api/removeFlag", (req, res) => {
 })
 
 // production mode
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, 'activist-agenda/build')));
-    app.get('/*', (req, res) => {    
-        res.sendFile(path.join(__dirname, 'activist-agenda/build/index.html'));  
-    })
-}
+// process.env.NODE_ENV
 
 // Uncomment for local build
 app.use(express.static(path.join(__dirname, 'activist-agenda/build')));
