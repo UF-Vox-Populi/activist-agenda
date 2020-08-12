@@ -1,9 +1,7 @@
-import {Calendar, momentLocalizer, Views, Selection} from 'react-big-calendar';
+import {Calendar, momentLocalizer, Views} from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import React, {useState, Component, PureComponent} from 'react';
+import React, {Component} from 'react';
 import moment from 'moment';
-var calls = require('../serverCalls');
-
 
 const localizer = momentLocalizer(moment);
 
@@ -36,7 +34,6 @@ export default class EventCalendar extends Component {
                     })
                 );
         this.setState({events:fixed});
-        //console.log(fixed);
     }
 
     onView = (props) =>  {

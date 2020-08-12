@@ -31,15 +31,15 @@ const useStyles = makeStyles({
     },
 });
 
-const makeProfLink = (id) => {
-    return "/userprofile/" + id;
+const makeProfLink = (host) => {
+    return "/userprofile/" + host;
 }
 
 const ProtestCard = (props) => {
     const classes = useStyles();
     const theme = useTheme();
     const { postID, avatarSrc, id, host, date, protestTitle, protestLocation, description, donLink, orgLink, supporters, flagged } = props;
-    const profLink = makeProfLink(id);
+    const profLink = makeProfLink(host);
     const cookie = new Cookies();
 
     const [num, setNum] = useState(0);

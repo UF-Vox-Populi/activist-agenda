@@ -25,10 +25,8 @@ Resources:
 import React from 'react';
 import ContentCreationCard from './ContentCreationCard'
 import ProtestInfScroll from './ProtestInfScroll.js';
-import ProtestSortButtons from './ProtestSortButtons';
 import {useState} from 'react';
 import NewsInfScroll from './NewsInfScroll.js';
-import NewsSortButtons from './NewsSortButtons';
 import OrgInfScroll from './OrgInfScroll.js';
 import PnDInfScroll from './PnDInfScroll.js';
 
@@ -39,18 +37,16 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
-import { fade, makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
 
 // Material-UI icons
 import AssignmentIcon from '@material-ui/icons/Assignment';
@@ -58,8 +54,6 @@ import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import MenuIcon from '@material-ui/icons/Menu';
 import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import PersonIcon from '@material-ui/icons/Person';
-import SearchIcon from '@material-ui/icons/Search';
-import SettingsIcon from '@material-ui/icons/Settings';
 import StarIcon from '@material-ui/icons/Star';
 import Dialog from '@material-ui/core/Dialog';
 
@@ -68,7 +62,6 @@ import {useHistory} from 'react-router-dom';
 import Login from './Login';
 import Signup from './SignUp';
 import Cookies from 'universal-cookie';
-import Events from './Events';
 
 var calls = require('../serverCalls');
 
@@ -148,6 +141,8 @@ const AppSkeleton = (props) => {
 
   //Check authedUser cookie and set user state
   const [user, setUser] = useState('');
+  const [username, setUsername] = useState('');
+
   const cookie = new Cookies();
 
   // Handles when user is logged in, checks for cookie on load
@@ -158,6 +153,9 @@ const AppSkeleton = (props) => {
     if (cookie.get('authedUser') && !loggedIn) {
       setUser(cookie.get('authedUser'));
       setLoggedIn(true);
+      calls.getUser(cookie.get('authedUser')).then((user_) => {
+        setUsername(user_.username);
+      });
     }
   };
 
@@ -177,17 +175,14 @@ const AppSkeleton = (props) => {
   // Controls which menu list option should stay highlighted
   const handleListItemClick = (event, index) => {
     setSelectedNavIndex(index);
-    switch (index) {
-      case 4:
-        if (loggedIn) {
-          history.push("/userprofile/" + user);
-        } else {
-          history.push("/login");
-        }
-      case 5:
-        history.push("/settings");
-          
-    };
+    if (index === 4) {
+      if (loggedIn) {
+        console.log('username: ',username);
+        history.push("/userprofile/" + username);
+      } else {
+        history.push("/login");
+      }
+    }
   };
 
   //login form
@@ -266,14 +261,14 @@ const AppSkeleton = (props) => {
             <ListItemIcon><PersonIcon /></ListItemIcon>
             <ListItemText primary="Profile"/>
           </ListItem>
-          <ListItem
+          {/* <ListItem
             button
             selected={selectedNavIndex === 5}
             onClick={(event) => handleListItemClick(event, 5)}
           >
             <ListItemIcon><SettingsIcon /></ListItemIcon>
             <ListItemText primary="Settings"/>
-          </ListItem>
+          </ListItem> */}
         </List>
       )
     };
@@ -377,7 +372,7 @@ const AppSkeleton = (props) => {
 
   //Moves to the user profile upon the avatar button being clicked
   const goToProfile = () => {
-    history.push("/userprofile/" + user);
+    history.push("/userprofile/" + username);
   }
 
   //newPosts();

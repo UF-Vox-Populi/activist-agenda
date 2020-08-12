@@ -9,7 +9,7 @@ NOTE: Need to adjust urls to an input from the config file.
 
 //Checks if a user exists based on their email and password.
 
-const baseUrl = process.env.BASE_URL || "http://localhost:5000";
+const baseUrl = 'https://activist-agenda.herokuapp.com';  //process.env.BASE_URL || "http://localhost:5000"; 
 
 export function checkUser(email, password) {
 
@@ -107,6 +107,20 @@ export function getUserIDbyEmail(email) {
         url: baseUrl+"/api/userIDGet/",
         params: {
             email: email
+        }
+    }
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+}
+
+//Get's a user's id from inputting their email.
+export function getUserIDbyUsername(username) {
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/userIDGetUser/",
+        params: {
+            username: username
         }
     }
     return Axios(reqs).then(res => {

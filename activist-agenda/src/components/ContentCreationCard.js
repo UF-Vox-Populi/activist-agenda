@@ -53,9 +53,9 @@ function CreationSelectDropdown() {
     const anchorRef = React.useRef(null); // anchors the dropdown menu right below the button
     const cookie = new Cookies(); // For getting user info when putting down a post
 
-    const handleClick = () => {
-        console.info(`You clicked ${options[selectedIndex]}`);
-    };
+    // const handleClick = () => {
+    //     console.info(`You clicked ${options[selectedIndex]}`);
+    // };
 
     const handleMenuItemClick = (event, index) => {
         setSelectedIndex(index);
@@ -183,9 +183,9 @@ function CreationSelectDropdown() {
 
     const handlePnDSubmit = () => {
         if (
-            pndVals.title != '' &&
-            pndVals.link != '' &&
-            pndVals.desc != ''
+            pndVals.title !== '' &&
+            pndVals.link !== '' &&
+            pndVals.desc !== ''
         ) {
             calls.getUser(cookie.get('authedUser')).then(out => {
                 calls.addPost(false, out.username, cookie.get('authedUser'), '', pndVals.title, '', '', pndVals.desc, pndVals.link, '', {});
@@ -196,10 +196,10 @@ function CreationSelectDropdown() {
 
     const handlePost = () => {
         if (
-            protestVals.title != '' &&
-            protestVals.location != '' &&
-            protestVals.date != '' &&
-            protestVals.description != ''
+            protestVals.title !== '' &&
+            protestVals.location !== '' &&
+            protestVals.date !== '' &&
+            protestVals.description !== ''
             ) {
                 calls.getUser(cookie.get('authedUser')).then(out => {
                     calls.addPost(true, out.username, cookie.get('authedUser'), '', protestVals.title, protestVals.location, protestVals.date, protestVals.description, protestVals.donURL, protestVals.orgURL, protestVals.coordinates);
@@ -210,7 +210,7 @@ function CreationSelectDropdown() {
 
     function handleDialogue () {
         // Selected DONATION option from menu
-        if (selectedIndex == "0") {
+        if (selectedIndex === "0") {
             return (
                 <Dialog open={dialogueOpen} onClose={handleDialogueClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">A Humble Donation</DialogTitle>
@@ -267,7 +267,7 @@ function CreationSelectDropdown() {
             )
         }
         // Selected PETITION option from menu
-        else if (selectedIndex == "1") {
+        else if (selectedIndex === "1") {
             return (
                 <Dialog open={dialogueOpen} onClose={handleDialogueClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Post a Petition</DialogTitle>
@@ -324,7 +324,7 @@ function CreationSelectDropdown() {
             )
         }
         // Selected PROTEST option from menu
-        else if (selectedIndex == "2") {
+        else if (selectedIndex === "2") {
             return (
                 <Dialog open={dialogueOpen} onClose={handleDialogueClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Organize a Protest</DialogTitle>
@@ -418,7 +418,7 @@ function CreationSelectDropdown() {
             <Grid container direction="column" alignItems="right">
                 <Grid item xs={12}>
                     <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
-                        <Button onClick={handleClick} onClick={handleDialogueOpen}>{options[selectedIndex]}</Button>
+                        <Button onClick={handleDialogueOpen}>{options[selectedIndex]}</Button>
                         <Button
                             color="primary"
                             size="small"

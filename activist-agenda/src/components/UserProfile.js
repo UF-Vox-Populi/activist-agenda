@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Avatar } from '@material-ui/core';
@@ -65,7 +65,7 @@ const UserProfile = (props) => {
     const classes = useStyles();
     const { window } = props;
     const history = useHistory();
-    let { profID } = useParams();
+    let { user } = useParams();
 
     // Edit button modal
     const [modalOpen, toggleModal] = useState(false);
@@ -74,6 +74,7 @@ const UserProfile = (props) => {
         history.push("/");
     }
 
+    const [userID, setUserID] = useState('');
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [bio, setBio] = useState('');
@@ -91,43 +92,54 @@ const UserProfile = (props) => {
     const [userLevel, setUserLevel] = useState(0);
 
     // Gets information needed at the start
-    const onStartUp = () => {
+    useEffect(() => {
         if (started) {
             setStarted(false);
-            if (cookie.get('authedUser') === profID) {
-                setLoggedIn(true);
-            }
-            calls.getUser(profID).then(out => {
-                var first,last = '';
-                (out.firstName) ? first = out.firstName : first = ' ';
-                (out.lastName) ? last = ' ' + out.lastName: last = ' ';
+            calls.getUserIDbyUsername(user).then((profID) => {
+                if (profID === 'error') {
+                    setName('User Does Not Exist');
+                }
+                else {                    
+                    setUserID(profID);
+                    
+                    if (cookie.get('authedUser') === profID) {
+                        setLoggedIn(true);
+                    }
+                    calls.getUser(profID).then(out => {
+                        var first,last = '';
+                        (out.firstName) ? first = out.firstName : first = ' ';
+                        (out.lastName) ? last = ' ' + out.lastName: last = ' ';
+                        
+                        setName(first + last);
+                        setUsername(out.username);
+                        if(out.bio) setBio(out.bio);
+                        if (out.location) setLocation(out.location);
+                        
+                        if (cookie.get('authedUser') === profID) {
+                            setEmail(out.email);
+                            (out.emailVerified) ? setVerified('Email Verified') : setVerified('Email Not Verified.\nPlease Check Your Email.');
+                        }
+                        
+                        setProfileLevel(out.authLevel);
+                        calls.getUser(cookie.get('authedUser')).then(out2 => {
+                            setUserLevel(out2.authLevel);
+                        });
+                    });
+                }
+            })
 
-                setName(first + last);
-                setUsername(out.username);
-                if(out.bio) setBio(out.bio);
-                if (out.location) setLocation(out.location);
-
-                setEmail(out.email);
-                (out.emailVerified) ? setVerified('Email Verified') : setVerified('Email Not Verified.\nPlease Check Your Email.');
-
-                setProfileLevel(out.authLevel);
-                calls.getUser(cookie.get('authedUser')).then(out2 => {
-                    setUserLevel(out2.authLevel);
-                });
-            });
         }
-    };
-
-    onStartUp(); //run on startup
+    },[started]);
 
     const toggleOpen = (state) => {
         // Close edit modal after submit
+        setStarted(true);
         toggleModal(state);
         //Need to refresh page or update states here
     }
 
     const changeAuth = (newLevel) => {
-        calls.changeAuth(profID, newLevel).then(out => {
+        calls.changeAuth(userID, newLevel).then(out => {
             setStarted(true);
         });
     }
@@ -139,7 +151,7 @@ const UserProfile = (props) => {
                 <Button variant='contained' className={classes.editFollowUnfollowButton} color="primary" onClick={() => toggleOpen(true)}>
                     Edit
                 </Button>
-                <Dialog open={modalOpen} onClose={() => {toggleOpen(false)}} noValidate>
+                <Dialog open={modalOpen} onClose={() => {modalOpen(false)}} noValidate>
                     <EditProfile 
                         toggleOpen={toggleOpen}
                     />

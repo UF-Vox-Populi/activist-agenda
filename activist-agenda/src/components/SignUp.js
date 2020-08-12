@@ -69,7 +69,7 @@ async function verifyEmail(email_) {
 		}
   	});
 
-	const domain = process.env.BASE_URL || 'http://localhost:5000';
+	const domain = 'https://activist-agenda.herokuapp.com'; // Replace with http://localhost:5000 for local testing
 	//send email with token
 	mail.sendMailHtml(
 		'Activist Agenda verify@mg.activistagenda.vision',

@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import ProtestDrawer from './ProtestDrawer';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -12,7 +9,6 @@ import EmojiFlagsIcon from '@material-ui/icons/EmojiFlags';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import FlagIcon from '@material-ui/icons/Flag';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
@@ -31,15 +27,15 @@ const useStyles = makeStyles({
     },
 });
 
-const makeProfLink = (id) => {
-    return "/userprofile/" + id;
+const makeProfLink = (host) => {
+    return "/userprofile/" + host;
 }
 
 const ProtestCard = (props) => {
     const classes = useStyles();
     const theme = useTheme();
     const { postID, avatarSrc, id, host, protestTitle, description, donLink, supporters, flagged } = props;
-    const profLink = makeProfLink(id);
+    const profLink = makeProfLink(host);
     const cookie = new Cookies();
 
     const [num, setNum] = useState(0);
