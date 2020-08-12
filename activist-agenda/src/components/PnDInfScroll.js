@@ -61,7 +61,7 @@ const InfScroll = () => {
     const [sortBy, setSortBy] = React.useState('');
 
     const handleSortBy = (event, newSortBy) => {
-        if (newSortBy == 'popular') {
+        if (newSortBy === 'popular') {
             calls.getOtherPosts().then(out => {
                 let newPosts = [];
 

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -12,9 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import EditIcon from '@material-ui/icons/Edit';
 
 import theme from '../theme.js';
-import { height } from '@material-ui/system';
 
-import {useHistory} from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
 var calls = require('../serverCalls');
@@ -41,44 +39,57 @@ const useStyles = makeStyles((theme) => ({
 const EditProfile = (props) => {
 
     const classes = useStyles();
-    const { window } = props;
     const cookie = new Cookies();
-    const history = useHistory();
 
     const [first, setFirst] = useState('');
     const [last, setLast] = useState('');
-    const [username, setUsername] = useState('');
+    // const [username, setUsername] = useState('');
+    // const [userErr, setUserErr] = useState('')
+    //const [email, setEmail] = useState('');
     const [bio, setBio] = useState('');
     const [location, setLocation] = useState('');
     
     const userID = cookie.get('authedUser');    
 
     const alterFirstName = () => {
-        if (first != '') {
+        if (first !== '') {
             calls.changeFirstName(userID, first);
         }
     }
 
     const alterLastName = () => {
-        if (last != '') {
+        if (last !== '') {
             calls.changeLastName(userID, last);
         }
     }
 
-    const alterUsername = () => {
-        if (username != '') {
-            calls.changeUsername(userID, username);
-        }
-    }
+    // This is broke
+    // const alterUsername = () => {
+    //     console.log('Username after submit: ', username);
+    //     console.log('UserID: ',userID);
+    //     if (username) {
+    //         calls.changeUsername(userID, username);
+    //         .then((result) => {
+    //             console.log('user taken: ',result);
+    //             (result) ? setUserErr('') : setUserErr('Username Taken');
+    //         });
+    //     }
+    // }
+
+    // const alterEmail = () => {
+    //     if (username !== '') {
+    //         calls.changeEmail(userID, username);
+    //     }
+    // }
 
     const alterBio = () => {
-        if (bio != '') {
+        if (bio !== '') {
             calls.changeBio(userID, bio);
         }
     }
 
     const alterLocation = () => {
-        if (location != '') {
+        if (location !== '') {
             calls.changeLocation(userID, location);
         }
     }
@@ -86,27 +97,13 @@ const EditProfile = (props) => {
     const handleSubmit = () => {
         alterFirstName();
         alterLastName();
-        alterUsername();
         alterBio();
         alterLocation();
+        // alterUsername().then(() => {
+        //     if (userErr === '')
+        // });
         props.toggleOpen(false);
     }
-
-    /*
-    
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    name="Username"
-                                    variant="outlined"
-                                    fullWidth
-                                    id="userName"
-                                    label="Username"
-                                    autoFocus
-                                    onChange={(event) => setUsername(event.target.value)}
-                                />
-                            </Grid>
-                            */
 
     return (
         <div className={classes.paper}>
@@ -130,7 +127,6 @@ const EditProfile = (props) => {
                                     label="First Name"
                                     autoFocus
                                     onChange={(event) => setFirst(event.target.value)}
-                                    
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -144,6 +140,28 @@ const EditProfile = (props) => {
                                     onChange={(event) => setLast(event.target.value)}
                                 />
                             </Grid>
+                            {/* <Grid item xs={12}>
+                                <TextField
+                                    name="Username"
+                                    variant="outlined"
+                                    fullWidth
+                                    id="userName"
+                                    label="Username"
+                                    autoFocus
+                                    onChange={(event) => setUsername(event.target.value)}
+                                />
+                            </Grid> */}
+                            {/* <Grid item xs={12}>
+                                <TextField
+                                    name="Email"
+                                    variant="outlined"
+                                    fullWidth
+                                    id="email"
+                                    label="Email"
+                                    autoFocus
+                                    onChange={(event) => setEmail(event.target.value)}
+                                />
+                            </Grid> */}
                             <Grid item xs={12}>
                                 <TextField
                                     name="Bio"

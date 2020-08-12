@@ -6,8 +6,6 @@ import ProtestCard from "./ProtestCard";
 //SortBy ToggleButtonGroup
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import Grid from '@material-ui/core/Grid';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import { makeStyles } from '@material-ui/core/styles';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
@@ -66,7 +64,7 @@ const InfScroll = () => {
     const [sortBy, setSortBy] = React.useState('');
 
     const handleSortBy = (event, newSortBy) => {
-        if (newSortBy == 'popular') {
+        if (newSortBy === 'popular') {
             calls.getEventPosts().then(out => {
                 let newPosts = [];
 

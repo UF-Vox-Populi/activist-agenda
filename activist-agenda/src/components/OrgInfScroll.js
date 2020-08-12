@@ -15,8 +15,6 @@ const InfScroll = () => {
         calls.getAllOrgs().then(out => {
             let newPosts = [];
 
-            console.log(out);
-
             for (var x = 0; x < out.length; x++) {
                 newPosts.push(<OrgCard 
                     author={out[x].username} 
