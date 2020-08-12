@@ -6,7 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Avatar from '@material-ui/core/Avatar';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
-import {useHistory} from 'react-router-dom'; // ** Needed to switch between pages. May not be necessary if connected a different way.
+import {useHistory, useParams} from 'react-router-dom'; // ** Needed to switch between pages. May not be necessary if connected a different way.
 var calls = require('../serverCalls');
 
 const useStyles = makeStyles((theme) => ({
@@ -23,10 +23,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function ResetPass(props){
+export default function ResetPass(){
+
+    const {id, token} = useParams();
 
     const classes = useStyles();
-    const theme = useTheme();
     const history = useHistory(); // ** May be used to switch between pages, if needed.
 
     const [verText, changeVerText] = useState('Verifying Email...');
@@ -34,23 +35,35 @@ export default function ResetPass(props){
 
 
     useEffect(() => {
-        if (calls.verifyEmail(props.match.params.id, props.match.params.token)) {
-            changeVerText('Email Verified!');
-            changeAvColor('theme.palette.success.main');
-            setTimeout(() => {
-                history.push('/');
-            }, 750);
+        console.log('Verify Loaded\nRequest ID: ',id);
+        if (id && token) {
+            calls.verifyEmail(id, token).then((result) => {
+                if (result) {
+                    changeVerText('Email Verified!');
+                    changeAvColor('theme.palette.success.main');
+                    setTimeout(() => {
+                        history.push('/');
+                    }, 1000);
+                } else {
+                    console.log('User and Email Token not Verified');
+                    changeVerText('Verification Link Invalid.');
+                    changeAvColor('theme.palette.error.main');
+                    setTimeout(() => {
+                        history.push('/');
+                    }, 1000);
+                }
+            });
         }
         else
         {
-            console.log('User and Email Token not Verified');
+            console.log('Link missing params');
             changeVerText('Verification Link Invalid.');
             changeAvColor('theme.palette.error.main');
             setTimeout(() => {
                 history.push('/');
-            }, 750);
+            }, 1000);
         }
-    });
+    },[id, token, history]);
     
     return (
         <Container component="main" maxWidth="xs">

@@ -42,8 +42,8 @@ function App() {
             <Route path="/userprofile" component = {UserProfile} />
             <Route path="/editprofile" component = {EditProfile} />
             <Route path="/forgotPassword" component = {ForgotPass} />
-            <Route path="/resetPass/:id/:token" render={(props) => <ResetPass />} />
-            <Route path="/verifyEmail/:id/:token" render={(props) => <VerifyEmail />} />
+            <Route path="/resetPass/:id/:token" component={ResetPass} />
+            <Route path="/verifyEmail/:id/:token" component={VerifyEmail} />
           </Switch>
         </MuiThemeProvider>
         </header>

@@ -8,7 +8,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Avatar from '@material-ui/core/Avatar';
 import HelpOutlinedIcon from '@material-ui/icons/HelpOutlined';
 
-import {useHistory} from 'react-router-dom'; // ** Needed to switch between pages. May not be necessary if connected a different way.
+import {useHistory, useParams} from 'react-router-dom'; // ** Needed to switch between pages. May not be necessary if connected a different way.
 var calls = require('../serverCalls');
 
 const useStyles = makeStyles((theme) => ({
@@ -27,20 +27,27 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function ResetPass(props){
+export default function ResetPass(){
   const [tokenVerified, changeVerToken] = useState(false);
   const history = useHistory(); // ** May be used to switch between pages, if needed.
 
+  const {id, token} = useParams();
+  console.log(id,' | ', token);
+
   useEffect(() => {
-    if (calls.verifyPassToken(props.match.params.id, props.match.params.token)) {
-      changeVerToken(true);
+    if (id && token)
+    {
+      calls.verifyPassToken(id, token).then((exists) => {
+        if (exists) changeVerToken(true);
+        else console.log('Could not change password');
+      })
     }
     else
     {
       console.log('User and Password Token not Verified');
       history.push('/ForgotPass');
     }
-  })
+  }, [id, token, history]);
 
   const classes = useStyles();
   const theme = useTheme();
@@ -56,22 +63,22 @@ export default function ResetPass(props){
   const handleButton = () => {
     if (tokenVerified && password === password2)
     {
-      calls.changePassword(props.match.params.id,password);
+      calls.changePassword(id,password);
       history.push("/login");
     }
   }
 
   const handlePassword = (event) => {
-    changePass(event.value);
-    if (event.value.length() < 6) {
+    changePass(event.target.value);
+    if (event.target.value.length < 6) {
       //Password does not meet required length
       changeErr('Password must be at least 6 characters');
     } 
   }
 
   const handlePassword2 = (event) => {
-    changePass2(event.value);
-    if (event.value !== password) {
+    changePass2(event.target.value);
+    if (event.target.value !== password) {
       //Password does not meet required length
       changeErr2('Passwords must match');
     } 
@@ -95,7 +102,8 @@ export default function ResetPass(props){
                 id="password"
                 label="Enter a new password"
                 name="password"
-                error={!passErr}
+                type="password"
+                error={passErr}
                 autoFocus
                 helperText={passErr}
                 onChange={handlePassword}
@@ -108,7 +116,8 @@ export default function ResetPass(props){
                 id="password2"
                 label="Confirm new password"
                 name="password2"
-                error={!passErr2}
+                type="password"
+                error={passErr2}
                 autoFocus
                 helperText={passErr2}
                 onChange={handlePassword2}

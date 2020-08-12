@@ -82,6 +82,7 @@ const UserProfile = (props) => {
     const [username, setUsername] = useState('');
     const [bio, setBio] = useState('');
     const [location, setLocation] = useState('');
+    const [verified, setVerified] = useState('');
 
     //Check authedUser cookie and set user state
     const [user, setUser] = useState('');
@@ -101,6 +102,7 @@ const UserProfile = (props) => {
                 setUsername(out.username);
                 setBio(out.bio);
                 setLocation(out.location);
+                (out.emailVerified) ? setVerified('Email Verified') : setVerified('Email Not Verified.\nPlease Check Your Email.');
             })
         }
     };
@@ -144,6 +146,10 @@ const UserProfile = (props) => {
             {/* Location Section */}
             <Grid container container direction='column' className={classes.bioSection}>
                 <Typography variant='h8'>{location}</Typography>
+            </Grid>
+
+            <Grid item className={classes.nameSection}>
+                    <Typography variant='h8'>{verified}</Typography>
             </Grid>
 
             {/* Edit, Fullow, Unfollow Button Section */}
