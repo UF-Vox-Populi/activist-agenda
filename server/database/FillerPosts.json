@@ -2,33 +2,117 @@
     "posts": [
         {
             "poster": "Poster1",
+            "posterID": "5f2dcf2144f7f10cec35d8e3",
             "icon": "none",
             "title": "Get more supplies",
             "donationLink": "www.google.com",
             "organizationLink": "www.google.com",
             "description": "I will saw the tables of tyranny in half. Gnaw at the ankles of big business!",
             "time": "2020-08-03T14:56:59.301Z",
-            "location": "3101 Clark Butler Blvd, Gainesville, FL 32608"
+            "address": "3101 Clark Butler Blvd, Gainesville, FL 32608",
+            "coordinates": {
+                "latitude": 29.625490,
+                "longitude": -82.381410
+            },
+            "date": "2020-08-01",
+            "isEvent": true,
+            "supporters": ["0", "1"],
+            "flagged": false
         },
         {
             "poster": "Poster2",
+            "posterID": "5f2dcf2144f7f10cec35d8e4",
             "icon": "none",
             "title": "Take the power back",
             "donationLink": "www.yahoo.com",
             "organizationLink": "www.yahoo.com",
             "description": "I will restore the working man to his rightful glory. I will dismantle this oppressive establishment board by board!",
             "time": "2020-08-02T14:56:59.301Z",
-            "location": "301 SE 4th Ave, Gainesville, FL 32601"
+            "address": "301 SE 4th Ave, Gainesville, FL 32601",
+            "coordinates": {
+                "latitude": 29.647869,
+                "longitude": -82.321953
+            },
+            "date": "2020-08-02",
+            "isEvent": true,
+            "supporters": ["0", "1", "2"],
+            "flagged": false
         },
         {
             "poster": "Poster3",
+            "posterID": "5f2dcf2144f7f10cec35d8e5",
             "icon": "none",
             "title": "March on City Hall",
             "donationLink": "www.yahoo.com",
             "organizationLink": "www.yahoo.com",
             "description": "I can't just sit here, it's time for action!",
             "time": "2020-08-01T14:56:59.301Z",
-            "location": "200 E University Ave, Gainesville, FL 32601"
+            "address": "200 E University Ave, Gainesville, FL 32601",
+            "coordinates": {
+                "latitude": 29.652639,
+                "longitude": -82.323189
+            },
+            "date": "2020-08-01",
+            "isEvent": true,
+            "supporters": ["0"],
+            "flagged": false
+        },
+        {
+            "poster": "Poster1",
+            "posterID": "5f2dcf2144f7f10cec35d8e3",
+            "icon": "none",
+            "title": "Donate!",
+            "donationLink": "www.yahoo.com",
+            "organizationLink": "www.google.com",
+            "description": "Testing the donation post thingy",
+            "time": "2020-08-01T14:56:59.301Z",
+            "address": "200 E University Ave, Gainesville, FL 32601",
+            "coordinates": {
+                "latitude": 29.652639,
+                "longitude": -82.323189
+            },
+            "date": "2020-08-01",
+            "isEvent": false,
+            "supporters": ["0", "1"],
+            "flagged": false
+        },
+        {
+            "poster": "Poster2",
+            "posterID": "5f2dcf2144f7f10cec35d8e4",
+            "icon": "none",
+            "title": "Sign!",
+            "donationLink": "www.yahoo.com",
+            "organizationLink": "www.google.com",
+            "description": "Testing the petition post thingy",
+            "time": "2020-08-01T14:56:59.301Z",
+            "address": "200 E University Ave, Gainesville, FL 32601",
+            "coordinates": {
+                "latitude": 29.652639,
+                "longitude": -82.323189
+            },
+            "date": "2020-08-01",
+            "isEvent": false,
+            "supporters": ["0", "1"],
+            "flagged": false
+        },
+        {
+            "poster": "Poster3",
+            "posterID": "5f2dcf2144f7f10cec35d8e5",
+            "icon": "none",
+            "title": "Could be other things.",
+            "donationLink": "www.yahoo.com",
+            "organizationLink": "www.google.com",
+            "description": "Testing stuffs.",
+            "time": "2020-08-01T14:56:59.301Z",
+            "address": "200 E University Ave, Gainesville, FL 32601",
+            "coordinates": {
+                "latitude": 29.652639,
+                "longitude": -82.323189
+            },
+            "date": "2020-08-01",
+            "isEvent": false,
+            "supporters": ["0", "1"],
+            "flagged": false
         }
     ]
 }

@@ -22,6 +22,7 @@ function handleError(err,res) {
         throw err;
 }
 
+
 //Deletes all entries. Basically a reset, just used for testing purposes at the moment.
 User.deleteMany({}, (err) => {
     if (err) throw err;
@@ -40,7 +41,7 @@ fs.readFile('server/database/FillerUsers.json', 'utf8', (err, data) => {
     let userData = JSON.parse(data);
 
     userData.entries.forEach(element => {
-        var thing = new User({username:element.username, email:element.email, password:element.password, firstName:element.firstName, lastName:element.lastName, bio:element.bio, location:element.location, organizer:element.organizer});
+        var thing = new User({username:element.username, email:element.email, password:element.password, firstName:element.firstName, lastName:element.lastName, bio:element.bio, location:element.location, organizer:element.organizer, authLevel:element.authLevel});
         thing.save(function (err) {
             if (err) {
               return handleError(err);
@@ -84,13 +85,21 @@ fs.readFile('server/database/FillerPosts.json', 'utf8', (err, data) => {
     postData.posts.forEach(element => {
         var thing = new Post({
             poster: element.poster,
+            posterID: element.posterID,
             icon: element.icon,
             title: element.title,
             donationLink: element.donationLink,
             organizationLink: element.organizationLink,
             description: element.description,
             time: element.time,
-            location: element.location
+            address: element.address,
+            coordinates: {
+                latitude: element.coordinates.latitude,
+                longitude: element.coordinates.longitude
+            },
+            isEvent: element.isEvent,
+            supporters: element.supporters,
+            flagged: element.flagged
         });
         thing.save(function (err) {
             if (err) {
@@ -101,7 +110,6 @@ fs.readFile('server/database/FillerPosts.json', 'utf8', (err, data) => {
         mongoose.connection.close();
     });
 });
-
 
 //This is needed to run the Express app.
 const app = express();
@@ -195,7 +203,8 @@ app.get("/api/addUser", (req, res) => {
 
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-    var newEntry = new User({username: req.query.user, password: req.query.pass, email: req.query.address, firstName: req.query.first, lastName: req.query.last, emailVerified:false});
+    var newEntry = new User({username: req.query.user, password: req.query.pass, email: req.query.address, firstName: req.query.first, lastName: req.query.last, emailVerified:false, authLevel: 0});
+
     newEntry.save((err) => {
         if (err) {
             res.send(false);
@@ -321,19 +330,41 @@ app.get("/api/locationChange", (req, res) => {
     })
 });
 
+//Edits user's auth level
+app.get("/api/authChange", (req, res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.updateOne({ _id: req.query.id }, { authLevel: req.query.auth }, function (err) {
+        if (err) {
+            res.send(false);
+            throw err;
+        }
+        res.send(true);
+    })
+});
+
 //Stores a post into the database
 app.get("/api/addPost", (req, res) => {
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
+    console.log(req.query.coords.latitude);
+
     var newEntry = new Post({
+        isEvent: req.query.event,
         poster: req.query.poste,
+        posterID: req.query.posteID,
         icon: req.query.ico,
         title: req.query.titl,
         description: req.query.desc,
         time: req.query.tim,
-        location: req.query.loc,
+        address: req.query.location,
         donationLink: req.query.donation,
-        organizationLink: req.query.organization
+        organizationLink: req.query.organization,
+        supporters: [req.query.posteID],
+        coordinates: {
+            latitude: req.query.coords.latitude,
+            longitude: req.query.coords.longitude
+        }
     })
     newEntry.save((err) => {
         if (err) {
@@ -344,6 +375,16 @@ app.get("/api/addPost", (req, res) => {
         }
     });
 });
+
+//Retrieves organizers from the database. For now it just gets all of them.
+app.get("/api/getAllOrgs", (req, res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    User.find( {authLevel: 1}, function (err, docs) {
+        if (err) throw err;
+        res.send(docs);
+    })
+})
 
 //Retrieves posts from the database. For now it just gets all of them.
 app.get("/api/getAllPosts", (req, res) => {
@@ -422,6 +463,74 @@ app.get("/api/verifyPassToken/", (req,res) => {
         }
     });
 });
+
+//Retrieves posts from the database. For now it just gets all of them.
+app.get("/api/getEventPosts", (req, res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    Post.find( {isEvent: true}, function (err, docs) {
+        if (err) throw err;
+        res.send(docs);
+    })
+})
+
+//Retrieves posts from the database. For now it just gets all of them.
+app.get("/api/getOtherPosts", (req, res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    Post.find( {isEvent: false}, function (err, docs) {
+        if (err) throw err;
+        res.send(docs);
+    })
+})
+
+app.get("/api/addSupport", (req, res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    const filter = { _id: req.query.id }
+    const update = { $push: {supporters: req.query.user}}
+
+    Post.findOneAndUpdate( filter, update, function (err, docs) {
+        if (err) throw err;
+        res.send(docs);
+    })
+})
+
+app.get("/api/removeSupport", (req, res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    const filter = { _id: req.query.id }
+    const update = { $pull: {supporters: req.query.user}}
+
+    Post.findOneAndUpdate( filter, update, function (err, docs) {
+        if (err) throw err;
+        res.send(docs);
+    })
+})
+
+app.get("/api/addFlag", (req, res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    const filter = { _id: req.query.id }
+    const update = { flagged: true }
+
+    Post.findOneAndUpdate( filter, update, function (err, docs) {
+        if (err) throw err;
+        res.send(docs);
+    })
+})
+
+app.get("/api/removeFlag", (req, res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    const filter = { _id: req.query.id }
+    const update = { flagged: false }
+
+    Post.findOneAndUpdate( filter, update, function (err, docs) {
+        if (err) throw err;
+        res.send(docs);
+    })
+})
 
 // production mode
 if (process.env.NODE_ENV === 'production') {

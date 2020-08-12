@@ -9,7 +9,7 @@ NOTE: Need to adjust urls to an input from the config file.
 
 //Checks if a user exists based on their email and password.
 
-const baseUrl = process.env.BASE_URL || "http://localhost:5000";
+const baseUrl = process.env.BASE_URL; // || "http://localhost:5000";
 
 export function checkUser(email, password) {
 
@@ -28,7 +28,7 @@ export function checkUser(email, password) {
 
 }
 
-//Gets a user's info from their username and password
+//Gets a user's info from their id number
 export function getUser(_id) {
 
     let reqs = {
@@ -250,22 +250,62 @@ export function changeLocation(_id, location) {
 
 }
 
+//Changes a user's auth level
+export function changeAuth(_id, newAuth) {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/authChange/",
+        params: {
+            auth: newAuth,
+            id: _id
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
 //Adds a post to the database
-export function addPost(poster, icon, title, description, time, location, donationLink, organizationLink) {
+export function addPost(isEvent, poster, posterID, icon, title, address, time, description, donationLink, organizationLink, coordinates) {
 
     let reqs = {
         method: 'GET',
         url: baseUrl+"/api/addPost/",
         params: {
+            event: isEvent,
             poste: poster,
+            posteID: posterID,
             ico: icon,
             titl: title,
-            desc: description,
+            location: address,
             tim: time,
-            loc: location,
+            desc: description,
             donation: donationLink,
-            organization: organizationLink
+            organization: organizationLink,
+            coords: {
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude
+            }
         }
+    }
+
+    console.log(reqs.params.coords.latitude);
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+//Retrieves Organizers
+export function getAllOrgs() {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/getAllOrgs/",
     }
     
     return Axios(reqs).then(res => {
@@ -347,29 +387,95 @@ export function verifyPassToken(ID_, passwordToken_) {
     })
 }
 
+//Retrieves all posts from the database
+export function getEventPosts() {
 
-//Retrieves news in json format
-export function getNews(tags) {
-
-    let searchWords = 'q=';
-    var x;
-
-    for (x = 0; x < tags.length; x++) {
-        searchWords +=  '+' + tags[x];
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/getEventPosts/",
     }
     
-    console.log(searchWords);
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
 
-    var url = 'http://newsapi.org/v2/everything?' +
-        searchWords + '&' +
-        'sortBy=popularity&' +
-        'language=en&' +
-        'apiKey=8d3338893f324fa3934af0ce26e695ca';
+}
 
-    var req = new Request(url);
+export function getOtherPosts() {
 
-    return fetch(req).then(function(response) {
-        return response.json();
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/getOtherPosts/",
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+export function addSupport(ID, currUser) {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/addSupport/",
+        params: {
+            id: ID,
+            user: currUser
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+export function removeSupport(ID, currUser) {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/removeSupport/",
+        params: {
+            id: ID,
+            user: currUser
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+export function addFlag(ID) {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/addFlag/",
+        params: {
+            id: ID
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
+    })
+
+}
+
+export function removeFlag(ID) {
+
+    let reqs = {
+        method: 'GET',
+        url: baseUrl+"/api/removeFlag/",
+        params: {
+            id: ID
+        }
+    }
+    
+    return Axios(reqs).then(res => {
+        return res.data;
     })
 
 }

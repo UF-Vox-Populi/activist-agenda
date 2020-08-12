@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import theme from '../theme.js';
 import { height } from '@material-ui/system';
 
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import Cookies from 'universal-cookie';
 var calls = require('../serverCalls');
 
@@ -69,6 +69,7 @@ const UserProfile = (props) => {
     const classes = useStyles();
     const { window } = props;
     const history = useHistory();
+    let { profID } = useParams();
 
     const goToEdit = () => {
         history.push("/editprofile");
@@ -88,26 +89,118 @@ const UserProfile = (props) => {
     const [user, setUser] = useState('');
     const cookie = new Cookies();
 
-    // Handles when user is logged in, checks for cookie on load
+    // Checks for user commands and abilities
+    const [started, setStarted] = useState(true);
     const [loggedIn, setLoggedIn] = React.useState(false); // for logged in abilities
+    const [profileLevel, setProfileLevel] = useState(0);
+    const [userLevel, setUserLevel] = useState(0);
 
-    // Changes login state and stores userID in user state if cookie exists
-    const checkLogin = () => {
-        if (cookie.get('authedUser') && !loggedIn) {
-            setUser(cookie.get('authedUser'));
-            setLoggedIn(true);
-            console.log('User logged in with id: ', cookie.get('authedUser')); //remove later
-            calls.getUser(cookie.get('authedUser')).then(out => {
+    // Gets information needed at the start
+    const onStartUp = () => {
+        if (started) {
+            setStarted(false);
+            if (cookie.get('authedUser') == profID) {
+                setLoggedIn(true)
+            }
+            calls.getUser(profID).then(out => {
                 setName(out.firstName + ' ' + out.lastName);
                 setUsername(out.username);
                 setBio(out.bio);
                 setLocation(out.location);
+
                 (out.emailVerified) ? setVerified('Email Verified') : setVerified('Email Not Verified.\nPlease Check Your Email.');
-            })
+
+                setProfileLevel(out.authLevel);
+                calls.getUser(cookie.get('authedUser')).then(out2 => {
+                    setUserLevel(out2.authLevel);
+                });
+            });
         }
     };
 
-    checkLogin(); //run on startup
+    onStartUp(); //run on startup
+
+    const changeAuth = (newLevel) => {
+        calls.changeAuth(profID, newLevel).then(out => {
+            setStarted(true);
+        });
+    }
+
+    const setButtons = () => {
+        if (loggedIn) {
+            return (
+                <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={goToEdit}>
+                    Edit
+                </Button>
+            )
+        }
+        switch (userLevel) {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                switch (profileLevel) {
+                    case 0:
+                        return (
+                            <div>
+                            <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={() => changeAuth(1)}>
+                                Promote to Organizer
+                            </Button>
+                            </div>
+                        );
+                        break;
+                    case 1:
+                        return (
+                            <div>
+                            <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={() => changeAuth(0)}>
+                                Demote to User
+                            </Button>
+                            </div>
+                        );
+                        break;
+                }
+            case 3:
+                switch (profileLevel) {
+                    case 0:
+                        return (
+                            <div>
+                            <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={() => changeAuth(1)}>
+                                Promote to Organizer
+                            </Button>
+                            <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={() => changeAuth(2)}>
+                                Promote to Moderator
+                            </Button>
+                            </div>
+                        );
+                        break;
+                    case 1:
+                        return (
+                            <div>
+                            <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={() => changeAuth(0)}>
+                                Demote to User
+                            </Button>
+                            <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={() => changeAuth(2)}>
+                                Promote to Moderator
+                            </Button>
+                            </div>
+                        );
+                        break;
+                    case 2:
+                        return (
+                            <div>
+                            <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={() => changeAuth(0)}>
+                                Demote to User
+                            </Button>
+                            <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={() => changeAuth(1)}>
+                                Demote to Organizer
+                            </Button>
+                            </div>
+                        );
+                        break;
+                }
+        }
+    }
 
     return (
         <div className={classes.root}>
@@ -126,17 +219,6 @@ const UserProfile = (props) => {
                 <Grid item className={classes.nameSection}>
                     <Typography variant='h8'>{username}</Typography>
                 </Grid>
-            {/* Follow Info Section */}
-                <Grid container container direction='column' className={classes.followInfoSection}>
-                    <Grid item alignItems='center'>
-                        <Button variant='contained' className={classes.followInfoButton}>
-                            <ListItemText primary='20' secondary={<Typography variant='h8' style={{color: '#FFFFFF'}}>Followers</Typography>}/>
-                        </Button>
-                        <Button variant='contained' className={classes.followInfoButton}>
-                            <ListItemText primary='20' secondary={<Typography variant='h8' style={{color: '#FFFFFF'}}>Following</Typography>}/>
-                        </Button>
-                    </Grid>
-                </Grid>
 
             {/* Bio Section */}
             <Grid container container direction='column' className={classes.bioSection}>
@@ -148,20 +230,22 @@ const UserProfile = (props) => {
                 <Typography variant='h8'>{location}</Typography>
             </Grid>
 
+
             <Grid item className={classes.nameSection}>
                     <Typography variant='h8'>{verified}</Typography>
             </Grid>
 
             {/* Edit, Fullow, Unfollow Button Section */}
 
+
             <div>
             <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={goHome}>
                 Back
             </Button>
-            <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={goToEdit}>
-                Edit
-            </Button>
             </div>
+
+
+            {setButtons()}
 
             </Grid>
 

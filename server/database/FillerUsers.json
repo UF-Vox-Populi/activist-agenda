@@ -1,54 +1,15 @@
 {
     "entries": [
         {
-            "username": "Laurence-RM",
-            "email": "laurence.mullen@ufl.edu",
-            "password": "password",
-            "firstName": "Laurence",
-            "lastName": "Mullen",
-            "bio": "Put your bio here!",
+            "username": "Admin",
+            "email": "admin@gmail.com",
+            "password": "qnHXybJzz7HvffTWXZL6",
+            "firstName": "Ad",
+            "lastName": "Min",
+            "bio": "The main site Admin",
             "location": "Gainesville, FL",
-            "organizer": true
-        },
-        {
-            "username": "nicoleajoy",
-            "email": "nicoleajoy@ufl.edu",
-            "password": "password",
-            "firstName": "Nicole",
-            "lastName": "Ajoy",
-            "bio": "Put your bio here!",
-            "location": "Gainesville, FL",
-            "organizer": true
-        },
-        {
-            "username": "OverlordPenguin",
-            "email": "johngray@ufl.edu",
-            "password": "password",
-            "firstName": "John",
-            "lastName": "Gray",
-            "bio": "Put your bio here!",
-            "location": "Gainesville, FL",
-            "organizer": true
-        },
-        {
-            "username": "tysonf",
-            "email": "tysonfreeman10@gmail.com",
-            "password": "password",
-            "firstName": "Tyson",
-            "lastName": "Freeman",
-            "bio": "Put your bio here!",
-            "location": "Gainesville, FL",
-            "organizer": true
-        },
-        {
-            "username": "XavierJEsteve",
-            "email": "xesteve@ufl.edu",
-            "password": "password",
-            "firstName": "Xavier",
-            "lastName": "Esteve",
-            "bio": "Put your bio here!",
-            "location": "Gainesville, FL",
-            "organizer": true
+            "zip": 32607,
+            "authLevel": 3
         }
     ]
 }

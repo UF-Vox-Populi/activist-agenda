@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ProtestDrawer from './ProtestDrawer';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
@@ -18,6 +18,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Link from '@material-ui/core/Link';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import Cookies from 'universal-cookie';
+
+var calls = require('../serverCalls');
 
 const useStyles = makeStyles({
     cardStyle: {
@@ -29,10 +32,11 @@ const useStyles = makeStyles({
 
 //Cards for news articles. Currently only holds the title, author, description, icon image, and source link.
 
-const NewsCard = (props) => {
+const OrgCard = (props) => {
     const classes = useStyles();
     const theme = useTheme();
-    const { avatarSrc, title, author, desc, source, url } = props;
+    const { avatarSrc, author, desc, location } = props;
+    const cookie = new Cookies();
 
     return (
         <Grid item xs={12} sm={12} md={12}>
@@ -44,16 +48,13 @@ const NewsCard = (props) => {
                                 <Avatar src={avatarSrc}/>
                             </IconButton>
                         }
-                        title={title}
-                        subheader={author}
+                        title={author}
+                        subheader={location}
                     />
-                    <Divider/>
+                    <Divider />
                     <CardContent>
                         <Typography variant="body1" component="p">
                             {desc}<br/>
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                            <br/>Source: <Link href={url}>{source}</Link>
                         </Typography>
                     </CardContent>
                     <Divider/>
@@ -63,4 +64,4 @@ const NewsCard = (props) => {
     );
 };
 
-export default NewsCard;
+export default OrgCard;

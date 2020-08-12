@@ -24,11 +24,13 @@ Resources:
 // Personal components
 import React from 'react';
 import ContentCreationCard from './ContentCreationCard'
-import ProtestCard from './ProtestCard';
+import ProtestInfScroll from './ProtestInfScroll.js';
 import ProtestSortButtons from './ProtestSortButtons';
 import {useState} from 'react';
+import NewsInfScroll from './NewsInfScroll.js';
 import NewsSortButtons from './NewsSortButtons';
-import NewsCard from './NewsCard';
+import OrgInfScroll from './OrgInfScroll.js';
+import PnDInfScroll from './PnDInfScroll.js';
 
 // Material-UI components
 import AppBar from '@material-ui/core/AppBar';
@@ -119,30 +121,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   // needed for content to be below appbar
   toolbar: theme.mixins.toolbar,
   btn: {
@@ -180,7 +158,6 @@ const AppSkeleton = (props) => {
     if (cookie.get('authedUser') && !loggedIn) {
       setUser(cookie.get('authedUser'));
       setLoggedIn(true);
-      console.log('User logged in with id: ', cookie.get('authedUser')); //remove later
     }
   };
 
@@ -201,18 +178,14 @@ const AppSkeleton = (props) => {
   const handleListItemClick = (event, index) => {
     setSelectedNavIndex(index);
     switch (index) {
-      case 0:
-        newPosts();
-        break;
-      case 3:
-        newNews();
-        break;
       case 4:
         if (loggedIn) {
-          history.push("/userprofile");
+          history.push("/userprofile/" + user);
         } else {
           history.push("/login");
         }
+      case 5:
+        history.push("/settings");
           
     };
   };
@@ -330,7 +303,7 @@ const AppSkeleton = (props) => {
           onClick={(event) => handleListItemClick(event, 1)}
         >
           <ListItemIcon><StarIcon /></ListItemIcon>
-          <ListItemText primary="Organizations"/>
+          <ListItemText primary="Organizers"/>
         </ListItem>
         <ListItem
           button
@@ -358,136 +331,32 @@ const AppSkeleton = (props) => {
     </div>
   );
 
-  //Sets up a blank json that the news api can pull things into.
-  const [articles, setArticles] = useState({
-    articles: [
-      {
-        title: '',
-        author: '',
-        urlToImage: '',
-        description: '',
-        url: '',
-        source: {
-          name: ''
-        }
-      },
-      {
-        title: '',
-        author: '',
-        urlToImage: '',
-        description: '',
-        url: '',
-        source: {
-          name: ''
-        }
-      },
-      {
-        title: '',
-        author: '',
-        urlToImage: '',
-        description: '',
-        url: '',
-        source: {
-          name: ''
-        }
-      },
-      {
-        title: '',
-        author: '',
-        urlToImage: '',
-        description: '',
-        url: '',
-        source: {
-          name: ''
-        }
-      },
-      {
-        title: '',
-        author: '',
-        urlToImage: '',
-        description: '',
-        url: '',
-        source: {
-          name: ''
-        }
-      }
-    ]
-  });
-
-  //Sets up a blank json that the server can put posts into
-  const [posts, setPosts] = useState([
-      {
-        poster: '',
-        title: '',
-        donationLink: '',
-        organizationLink: '',
-        description: '',
-        time: '',
-        location: ''
-      },
-      {
-        poster: '',
-        title: '',
-        donationLink: '',
-        organizationLink: '',
-        description: '',
-        time: '',
-        location: ''
-      },
-      {
-        poster: '',
-        title: '',
-        donationLink: '',
-        organizationLink: '',
-        description: '',
-        time: '',
-        location: ''
-      }
-    ]
-  );
-
-  //Gets articles on the latest BLM and protest related articles.
-  const newNews = () => {
-    calls.getNews(['blacklivesmatter', 'protest']).then(out => {
-      setArticles(out);
-    })
-  }
-
-  //Get posts from the database
-  const [updated, setUpdated] = useState(false);
-  const newPosts = () => {
-    if (!updated) {
-      calls.getAllPosts().then(out => {
-        setPosts(out);
-      })
-      setUpdated(true);
-    }
-  }
-
-  //Grabs new post once per reload
-  newPosts();
-
   //Sets the protest cards
   const protests = (
-    <Grid container spacing={3}>
-      <Grid item xs={12} sm={12} md={8} align="center"><ProtestSortButtons /></Grid>
-      <Grid item xs={12} sm={12} md={8}>{loggedIn ? <ContentCreationCard /> : <Divider /> }</Grid>
-      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}  protestTitle={posts[posts.length-1].title} host={posts[posts.length-1].poster} protestLocation={posts[posts.length-1].location} date={posts[posts.length-1].time.substring(0,10)} description={posts[posts.length-1].description} donLink={posts[posts.length-1].donationLink} orgLink={posts[posts.length-1].organizationLink}/></Grid>
-      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}  protestTitle={posts[posts.length-2].title} host={posts[posts.length-2].poster} protestLocation={posts[posts.length-2].location} date={posts[posts.length-2].time.substring(0,10)} description={posts[posts.length-2].description} donLink={posts[posts.length-2].donationLink} orgLink={posts[posts.length-2].organizationLink}/></Grid>
-      <Grid item xs={12} sm={12} md={8}><ProtestCard displayLoggedInBtns={loggedIn}  protestTitle={posts[posts.length-3].title} host={posts[posts.length-3].poster} protestLocation={posts[posts.length-3].location} date={posts[posts.length-3].time.substring(0,10)} description={posts[posts.length-3].description} donLink={posts[posts.length-3].donationLink} orgLink={posts[posts.length-3].organizationLink}/></Grid>
-    </Grid>
+    <>
+      <Grid item xs={12} sm={12} md={6}>{loggedIn ? <><ContentCreationCard/><br/></> : <><Divider/><br/></>}</Grid>
+      <ProtestInfScroll/>
+    </>
   );
 
   //Sets the news cards
   const news = (
-    <Grid container spacing={3}>
-      <Grid item xs={12} sm={12} md={8} align="center"><NewsSortButtons /></Grid>
-      <Grid item xs={12} sm={12} md={8}><NewsCard title={articles.articles[0].title} author={articles.articles[0].author} avatarSrc={articles.articles[0].urlToImage} desc={articles.articles[0].description} source={articles.articles[0].source.name} url={articles.articles[0].url} /></Grid>
-      <Grid item xs={12} sm={12} md={8}><NewsCard title={articles.articles[1].title} author={articles.articles[1].author} avatarSrc={articles.articles[1].urlToImage} desc={articles.articles[1].description} source={articles.articles[1].source.name} url={articles.articles[1].url}/></Grid>
-      <Grid item xs={12} sm={12} md={8}><NewsCard title={articles.articles[2].title} author={articles.articles[2].author} avatarSrc={articles.articles[2].urlToImage} desc={articles.articles[2].description} source={articles.articles[2].source.name} url={articles.articles[2].url}/></Grid>
-      <Grid item xs={12} sm={12} md={8}><NewsCard title={articles.articles[3].title} author={articles.articles[3].author} avatarSrc={articles.articles[3].urlToImage} desc={articles.articles[3].description} source={articles.articles[3].source.name} url={articles.articles[3].url}/></Grid>
-      <Grid item xs={12} sm={12} md={8}><NewsCard title={articles.articles[4].title} author={articles.articles[4].author} avatarSrc={articles.articles[4].urlToImage} desc={articles.articles[4].description} source={articles.articles[4].source.name} url={articles.articles[4].url}/></Grid>
-    </Grid>
+    <>
+      <NewsInfScroll/>
+    </>
+  )
+
+  const orgs = (
+    <>
+      <OrgInfScroll/>
+    </>
+  )
+
+  const PnD = (
+    <>
+    <Grid item xs={12} sm={12} md={6}>{loggedIn ? <><ContentCreationCard/><br/></> : <><Divider/><br/></>}</Grid>
+    <PnDInfScroll/>
+    </>
   )
 
   //Sets which set of cards it displays, protests or news.
@@ -495,6 +364,10 @@ const AppSkeleton = (props) => {
     switch(selectedNavIndex) {
       case 0:
         return protests;
+      case 1:
+        return orgs;
+      case 2:
+        return PnD;
       case 3:
         return news;
       default:
@@ -504,7 +377,7 @@ const AppSkeleton = (props) => {
 
   //Moves to the user profile upon the avatar button being clicked
   const goToProfile = () => {
-    history.push("/userprofile");
+    history.push("/userprofile/" + user);
   }
 
   //newPosts();
@@ -526,19 +399,6 @@ const AppSkeleton = (props) => {
           <Typography className={classes.appNameFlex} variant="h6" noWrap>
             Activist Agenda
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{'aria-label': 'search'}}
-            />
-          </div>
           {HeaderButtons()}
         </Toolbar>
       </AppBar>
