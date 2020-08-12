@@ -11,6 +11,9 @@ import SettingsPage from './components/SettingsPage';
 import { MuiThemeProvider } from '@material-ui/core/styles'; // Allows custom color theme
 import theme from './theme.js' //Only draws from the login theme. Can't figure out how to switch to the skeleton theme :/
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import ForgotPass from './components/ForgotPass';
+import ResetPass from './components/ResetPass';
+import VerifyEmail from './components/VerifyEmail';
 
 /*
 Info: 
@@ -39,7 +42,11 @@ function App() {
             <Route path="/events" component = {Events} />
             <Route path="/userprofile/:profID" component = {UserProfile} />
             <Route path="/editprofile" component = {EditProfile} />
+            <Route path="/forgotPassword" component = {ForgotPass} />
+            <Route path="/resetPass/:id/:token" component={ResetPass} />
+            <Route path="/verifyEmail/:id/:token" component={VerifyEmail} />
             <Route path="/settings" component = {SettingsPage} />
+
           </Switch>
         </MuiThemeProvider>
         </header>

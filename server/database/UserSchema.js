@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   bio:{type:String},
   location:{type:String},
   zip:{type:mongoose.Number},
+  emailVerified:{type:Boolean},
   authLevel:{type:mongoose.Number}
 });
 

@@ -83,6 +83,7 @@ const UserProfile = (props) => {
     const [username, setUsername] = useState('');
     const [bio, setBio] = useState('');
     const [location, setLocation] = useState('');
+    const [verified, setVerified] = useState('');
 
     //Check authedUser cookie and set user state
     const [user, setUser] = useState('');
@@ -106,6 +107,9 @@ const UserProfile = (props) => {
                 setUsername(out.username);
                 setBio(out.bio);
                 setLocation(out.location);
+
+                (out.emailVerified) ? setVerified('Email Verified') : setVerified('Email Not Verified.\nPlease Check Your Email.');
+
                 setProfileLevel(out.authLevel);
                 calls.getUser(cookie.get('authedUser')).then(out2 => {
                     setUserLevel(out2.authLevel);
@@ -226,7 +230,13 @@ const UserProfile = (props) => {
                 <Typography variant='h8'>{location}</Typography>
             </Grid>
 
-            {/* Edit, Follow, Unfollow Button Section */}
+
+            <Grid item className={classes.nameSection}>
+                    <Typography variant='h8'>{verified}</Typography>
+            </Grid>
+
+            {/* Edit, Fullow, Unfollow Button Section */}
+
 
             <div>
             <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={goHome}>

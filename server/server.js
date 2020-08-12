@@ -3,7 +3,9 @@ import mongoose from 'mongoose';
 import User from './database/UserSchema.js';
 import Event from './database/EventSchema.js';
 import Post from './database/PostSchema.js';
+import Token from './database/TokenSchema.js';
 import path from 'path';
+import bcrypt from 'bcryptjs';
 import * as fs from 'fs';
 
 //Connects to the mongo database as soon as the server starts up.
@@ -15,7 +17,7 @@ const __dirname = path.resolve();
 //Handle Errors
 function handleError(err,res) {
     if (res)
-        res.send(err);
+        res.send(false);
     else
         throw err;
 }
@@ -27,6 +29,9 @@ User.deleteMany({}, (err) => {
 });
 
 Post.deleteMany({}, (err) => {
+    if (err) throw err;
+});
+Token.deleteMany({}, (err) => {
     if (err) throw err;
 });
 
@@ -163,8 +168,8 @@ app.get("/api/userGet", (req, res) => {
 app.get("/api/usernameCheck", (req, res) => {
 
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
-    // find is case insensitive
-    User.find({username: {$regex:req.query.user,$options: 'i'}}, function (err, docs) {
+    var userLower = req.query.user.toLowerCase();
+    User.find({username: userLower}, function (err, docs) {
         if (err) return handleError(err,res);
 
         if (JSON.stringify(docs) === '[]') {
@@ -179,10 +184,12 @@ app.get("/api/usernameCheck", (req, res) => {
 app.get("/api/emailCheck", (req, res) => {
 
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
-    //email is stored as lower case already, but case insensitive just in case
-    User.find({email: {$regex:req.query.address,$options: 'i'}}, function (err, docs) {
-        if (err) return handleError(err,res);
 
+    var emailLower = req.query.address.toLowerCase();
+    User.find({email: emailLower}, function (err, docs) {
+
+        if (err) return handleError(err,res);
+        
         if (JSON.stringify(docs) === '[]') {
             res.send(false);
         }
@@ -196,7 +203,8 @@ app.get("/api/addUser", (req, res) => {
 
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-    var newEntry = new User({username: req.query.user, password: req.query.pass, email: req.query.address, firstName: req.query.first, lastName: req.query.last, authLevel: 0})
+    var newEntry = new User({username: req.query.user, password: req.query.pass, email: req.query.address, firstName: req.query.first, lastName: req.query.last, emailVerified:false, authLevel: 0});
+
     newEntry.save((err) => {
         if (err) {
             res.send(false);
@@ -212,16 +220,22 @@ app.get("/api/addUser", (req, res) => {
 app.get("/api/userIDGet", (req, res) => {
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
     User.findOne({email: req.query.email}, function (err, docs) {
-        if (err) return handleError(err,res);
-        res.send(docs._id);
-    })
+        if (err) 
+            return handleError(err,res);
+        else {
+            if (docs) res.send(docs._id);
+            else throw 'ERROR: no matching email found in database.';
+        }
+    });
 });
 
 app.get("/api/getEvents", (req, res) => {
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
     Event.find( function(err, docs) {
-        if (err) return handleError(err);
-        res.send(docs);
+        if (err) 
+            return handleError(err);
+        else
+            res.send(docs);
     })
 });
 //Edit functions send true if they worked and false if they don't
@@ -360,7 +374,7 @@ app.get("/api/addPost", (req, res) => {
             res.send(true);
         }
     });
-})
+});
 
 //Retrieves organizers from the database. For now it just gets all of them.
 app.get("/api/getAllOrgs", (req, res) => {
@@ -380,7 +394,75 @@ app.get("/api/getAllPosts", (req, res) => {
         if (err) throw err;
         res.send(docs);
     })
-})
+});
+
+app.get("/api/createToken", (req,res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    var newToken = new Token({
+        userID: req.query.ID,
+        emailToken: req.query.emailToken,
+    })
+
+    newToken.save((err) => {
+        if (err) throw err;
+    });
+});
+
+app.get("/api/updatePasswordToken", (req,res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    
+    Token.findOneAndUpdate({userID:req.query.ID}, {passwordToken:req.query.passwordToken}, function (err, docs) {
+        if (err) throw err;
+        else if (!docs) {
+            console.log('Could not find or update user: ',req.query.ID);
+            res.send(false);
+        } else res.send(true);
+    });
+});
+
+app.get("/api/verifyEmail/", (req,res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    Token.findOne({userID: req.query.ID}, (err, token_) => {
+        if (err || !token_) {
+            res.send(false);
+        } else {
+            bcrypt.compare(req.query.emailToken, token_.emailToken, (errB, result) => {
+                if (errB) throw errB;
+                if (result) {
+                    User.findByIdAndUpdate(req.query.ID, {emailVerified:true}, (err) => {
+                        if (err) handleError(err);
+                    });
+                    res.send(true);
+                }
+                else 
+                    res.send(false);
+            });
+        }
+    });
+});
+
+app.get("/api/verifyPassToken/", (req,res) => {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    
+    Token.findOne({userID: req.query.ID}, (err, token_) => {
+        if (err) throw err;
+        else if (!token_) {
+            console.log('Password token does not exist for user: ',req.query.ID);
+            res.send(false);
+        } else {
+            bcrypt.compare(req.query.passwordToken, token_.passwordToken, (errBcrypt, result) => {
+                if (errBcrypt) throw errBcrypt;
+                if (result) {
+                    res.send(true);
+                }
+                else 
+                    res.send(false);
+            });
+        }
+    });
+});
 
 //Retrieves posts from the database. For now it just gets all of them.
 app.get("/api/getEventPosts", (req, res) => {
@@ -459,10 +541,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Uncomment for local build
-// app.use(express.static(path.join(__dirname, 'activist-agenda/build')));
-// app.get('/*', (req, res) => {    
-//     res.sendFile(path.join(__dirname, 'activist-agenda/build/index.html'));  
-// })
+app.use(express.static(path.join(__dirname, 'activist-agenda/build')));
+app.get('/*', (req, res) => {   
+    res.sendFile(path.join(__dirname, 'activist-agenda/build/index.html'));  
+})
 
 //Basically sets the server up to listen for any inputs from serverCalls.js and the like.
 app.listen(port, () => console.log(`App now listening on port ${port}`));
