@@ -2,14 +2,15 @@
 
 # dependencies
 /node_modules
-/.pnp
+/activist-agenda/node_modules
+/activist-agenda/.pnp
 .pnp.js
 
 # testing
 /coverage
 
 # production
-/build
+/activist-agenda/build
 
 # misc
 .DS_Store

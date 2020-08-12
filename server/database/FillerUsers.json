@@ -1,0 +1,16 @@
+{
+    "entries": [
+        {
+            "username": "Admin",
+            "email": "admin@gmail.com",
+            "password": "$2a$10$Yfg/XJSg/cy6lU751NMz2eDQySssUTqtQsLG5MPTuDoBaIr/qcLFW",
+            "firstName": "Admin",
+            "lastName": "Account",
+            "bio": "Activist Agenda Admin",
+            "location": "Gainesville, FL",
+            "zip": 32607,
+            "emailVerified": true,
+            "authLevel": 3
+        }
+    ]
+}
