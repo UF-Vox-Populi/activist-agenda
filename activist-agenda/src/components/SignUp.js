@@ -181,9 +181,6 @@ export default function SignUp(props) {
 		handleChange(evt);
 		evt.preventDefault();
 		//Should be done when error free aka button has already been enabled
-		console.log("Testing handleSubmission");
-		console.log("Form data\n", formData);
-		console.log("Form errors\n", formErrs);
 
 		//since submit button will only be available when there are no errors, this may be redundant
 		if (
@@ -193,7 +190,8 @@ export default function SignUp(props) {
 			!formErrs.email
 		) {
 			setValid(false);
-			calls.addUser(formData.userName, formData.password1, formData.email, formData.firstName, formData.lastName).then(data => {
+			
+			calls.addUser(formData.userName, bcrypt.hashSync(formData.password1), formData.email, formData.firstName, formData.lastName).then(data => {
 				//Create token to verify user email
 				verifyEmail(formData.email);
 				if (props.modal)

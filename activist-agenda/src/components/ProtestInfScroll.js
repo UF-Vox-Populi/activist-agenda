@@ -23,9 +23,9 @@ const InfScroll = () => {
         calls.getEventPosts().then(out => {
             let newPosts = [];
 
-            out.reverse();
+            // out.reverse();   This is breaking stuff weird
 
-            for (var x = 0; x < out.length; x++) {
+            for (var x = out.length-1; x >= 0; x--) {
                 newPosts.push(<ProtestCard 
                         postID={out[x]._id}
                         id={out[x].posterID} 

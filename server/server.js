@@ -135,18 +135,25 @@ app.get("/api/test", (req, res) => {
     res.send(true);
 });
   
+//bcrypt.hash('qnHXybJzz7HvffTWXZL6', 10, (err, hash) => {console.log(hash)});
+
 //Checks if a user is in the database. False if no, True if yes.
 app.get("/api/userCheck", (req, res) => {
 
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true}); //Far as I can tell, you have to reconnect each time.
 
-    User.find({email: req.query.mail, password: req.query.pass}, function (err, docs) {
+    User.findOne({email: req.query.mail}, function (err, docs) {
         if (err) return handleError(err,res); //This will return it to the Express server, which you can read on your terminal.
 
-        if (JSON.stringify(docs) === '[]') { //Basically checks if it's empty.
-            res.send(false);
+        if (docs)
+        {    bcrypt.compare(req.query.pass,docs.password, (err, result) => {
+                if (err)
+                    console.log('Error comparing password and hash', err);
+
+                (result) ? res.send(true) : res.send(false);
+            });
         }
-        else res.send(true);
+        else res.send(false);
     })
 
 });

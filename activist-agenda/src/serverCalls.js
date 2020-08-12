@@ -9,7 +9,7 @@ NOTE: Need to adjust urls to an input from the config file.
 
 //Checks if a user exists based on their email and password.
 
-const baseUrl = process.env.BASE_URL; // || "http://localhost:5000";
+const baseUrl = process.env.BASE_URL || "http://localhost:5000";
 
 export function checkUser(email, password) {
 

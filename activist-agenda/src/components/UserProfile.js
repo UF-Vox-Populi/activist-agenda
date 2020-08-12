@@ -2,15 +2,11 @@ import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Avatar } from '@material-ui/core';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import Dialog from '@material-ui/core/Dialog';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-
-import theme from '../theme.js';
-import { height } from '@material-ui/system';
-
+import theme from '../theme.js'
+import EditProfile from './EditProfile';
 import {useHistory, useParams} from 'react-router-dom';
 import Cookies from 'universal-cookie';
 var calls = require('../serverCalls');
@@ -71,9 +67,8 @@ const UserProfile = (props) => {
     const history = useHistory();
     let { profID } = useParams();
 
-    const goToEdit = () => {
-        history.push("/editprofile");
-    }
+    // Edit button modal
+    const [modalOpen, toggleModal] = useState(false);
 
     const goHome = () => {
         history.push("/");
@@ -83,10 +78,10 @@ const UserProfile = (props) => {
     const [username, setUsername] = useState('');
     const [bio, setBio] = useState('');
     const [location, setLocation] = useState('');
+    const [email, setEmail] = useState('');
     const [verified, setVerified] = useState('');
 
     //Check authedUser cookie and set user state
-    const [user, setUser] = useState('');
     const cookie = new Cookies();
 
     // Checks for user commands and abilities
@@ -99,15 +94,20 @@ const UserProfile = (props) => {
     const onStartUp = () => {
         if (started) {
             setStarted(false);
-            if (cookie.get('authedUser') == profID) {
-                setLoggedIn(true)
+            if (cookie.get('authedUser') === profID) {
+                setLoggedIn(true);
             }
             calls.getUser(profID).then(out => {
-                setName(out.firstName + ' ' + out.lastName);
-                setUsername(out.username);
-                setBio(out.bio);
-                setLocation(out.location);
+                var first,last = '';
+                (out.firstName) ? first = out.firstName : first = ' ';
+                (out.lastName) ? last = ' ' + out.lastName: last = ' ';
 
+                setName(first + last);
+                setUsername(out.username);
+                if(out.bio) setBio(out.bio);
+                if (out.location) setLocation(out.location);
+
+                setEmail(out.email);
                 (out.emailVerified) ? setVerified('Email Verified') : setVerified('Email Not Verified.\nPlease Check Your Email.');
 
                 setProfileLevel(out.authLevel);
@@ -120,6 +120,12 @@ const UserProfile = (props) => {
 
     onStartUp(); //run on startup
 
+    const toggleOpen = (state) => {
+        // Close edit modal after submit
+        toggleModal(state);
+        //Need to refresh page or update states here
+    }
+
     const changeAuth = (newLevel) => {
         calls.changeAuth(profID, newLevel).then(out => {
             setStarted(true);
@@ -129,10 +135,17 @@ const UserProfile = (props) => {
     const setButtons = () => {
         if (loggedIn) {
             return (
-                <Button variant='contained' className={classes.editFollowUnfollowButton} onClick={goToEdit}>
+            <>
+                <Button variant='contained' className={classes.editFollowUnfollowButton} color="primary" onClick={() => toggleOpen(true)}>
                     Edit
                 </Button>
-            )
+                <Dialog open={modalOpen} onClose={() => {toggleOpen(false)}} noValidate>
+                    <EditProfile 
+                        toggleOpen={toggleOpen}
+                    />
+                </Dialog>
+            </>
+            );
         }
         switch (userLevel) {
             case 0:
@@ -217,7 +230,7 @@ const UserProfile = (props) => {
                     <Typography variant='h6'>{name}</Typography>
                 </Grid>
                 <Grid item className={classes.nameSection}>
-                    <Typography variant='h8'>{username}</Typography>
+                    <Typography variant='h7'>{username}</Typography>
                 </Grid>
 
             {/* Bio Section */}
@@ -230,8 +243,11 @@ const UserProfile = (props) => {
                 <Typography variant='h8'>{location}</Typography>
             </Grid>
 
-
-            <Grid item className={classes.nameSection}>
+            {/* Email and Verified Section */}
+            <Grid item className={classes.bioSection}>
+                    <Typography variant='h8'>{email}</Typography>
+            </Grid>
+            <Grid item className={classes.bioSection}>
                     <Typography variant='h8'>{verified}</Typography>
             </Grid>
 

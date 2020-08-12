@@ -1,17 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Avatar } from '@material-ui/core';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
+import EditIcon from '@material-ui/icons/Edit';
 
 import theme from '../theme.js';
 import { height } from '@material-ui/system';
@@ -25,18 +23,19 @@ var calls = require('../serverCalls');
 const palette = theme.palette;
 
 const useStyles = makeStyles((theme) => ({
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.info.main,
+    },
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(4),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-      },
-      submitButton: {
-          marginTop: theme.spacing(2),
-      },
-      bioField: {
-          height: 50,
-      }
+    },
+    submitButton: {
+        margin: theme.spacing(2, 0, 4),
+    }
 }));
 
 const EditProfile = (props) => {
@@ -51,34 +50,36 @@ const EditProfile = (props) => {
     const [username, setUsername] = useState('');
     const [bio, setBio] = useState('');
     const [location, setLocation] = useState('');
+    
+    const userID = cookie.get('authedUser');    
 
     const alterFirstName = () => {
         if (first != '') {
-            calls.changeFirstName(cookie.get('authedUser'), first);
+            calls.changeFirstName(userID, first);
         }
     }
 
     const alterLastName = () => {
         if (last != '') {
-            calls.changeLastName(cookie.get('authedUser'), last);
+            calls.changeLastName(userID, last);
         }
     }
 
     const alterUsername = () => {
         if (username != '') {
-            calls.changeUsername(cookie.get('authedUser'), username);
+            calls.changeUsername(userID, username);
         }
     }
 
     const alterBio = () => {
         if (bio != '') {
-            calls.changeBio(cookie.get('authedUser'), bio);
+            calls.changeBio(userID, bio);
         }
     }
 
     const alterLocation = () => {
         if (location != '') {
-            calls.changeLocation(cookie.get('authedUser'), location);
+            calls.changeLocation(userID, location);
         }
     }
 
@@ -88,7 +89,7 @@ const EditProfile = (props) => {
         alterUsername();
         alterBio();
         alterLocation();
-        history.push('/');
+        props.toggleOpen(false);
     }
 
     /*
@@ -113,6 +114,9 @@ const EditProfile = (props) => {
                 <Container component="main" maxWidth="xs">      
                     <CssBaseline />
                     <div className={classes.paper}>
+                        <Avatar className={classes.avatar}>
+                            <EditIcon />
+                        </Avatar>
                         <Typography component="h1" variant="h5">
                             Edit Profile        
                         </Typography>
@@ -126,6 +130,7 @@ const EditProfile = (props) => {
                                     label="First Name"
                                     autoFocus
                                     onChange={(event) => setFirst(event.target.value)}
+                                    
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -147,7 +152,7 @@ const EditProfile = (props) => {
                                     id="userName"
                                     label="Bio"
                                     autoFocus
-                                    className={classes.bioField}
+                                    multiline={true}
                                     onChange={(event) => setBio(event.target.value)}
                                 />
                             </Grid>
