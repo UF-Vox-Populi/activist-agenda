@@ -1,102 +1,14 @@
 {
     "entries": [
         {
-            "username": "Laurence-RM",
-            "email": "laurence.mullen@ufl.edu",
-            "password": "password",
-            "firstName": "Laurence",
-            "lastName": "Mullen",
-            "bio": "Put your bio here!",
-            "location": "Gainesville, FL",
-            "zip": 32603,
-            "authLevel": 3
-        },
-        {
-            "username": "nicoleajoy",
-            "email": "nicoleajoy@ufl.edu",
-            "password": "password",
-            "firstName": "Nicole",
-            "lastName": "Ajoy",
-            "bio": "Put your bio here!",
-            "location": "Gainesville, FL",
-            "zip": 32605,
-            "authLevel": 3
-        },
-        {
-            "username": "OverlordPenguin",
-            "email": "johngray@ufl.edu",
-            "password": "password",
-            "firstName": "John",
-            "lastName": "Gray",
-            "bio": "Put your bio here!",
-            "location": "Gainesville, FL",
-            "zip": 32607,
-            "authLevel": 3
-        },
-        {
-            "username": "tysonf",
-            "email": "tysonfreeman10@gmail.com",
-            "password": "password",
-            "firstName": "Tyson",
-            "lastName": "Freeman",
-            "bio": "Put your bio here!",
-            "location": "Gainesville, FL",
-            "zip": 32601,
-            "authLevel": 3
-        },
-        {
-            "username": "XavierJEsteve",
-            "email": "xesteve@ufl.edu",
-            "password": "password",
-            "firstName": "Xavier",
-            "lastName": "Esteve",
-            "bio": "Put your bio here!",
-            "location": "Gainesville, FL",
-            "zip": 32606,
-            "authLevel": 3
-        },
-        {
-            "username": "RegUser",
-            "email": "reguser@gmail.com",
-            "password": "password",
-            "firstName": "John",
-            "lastName": "Smith",
-            "bio": "Regular User",
-            "location": "Gainesville, FL",
-            "zip": 32605,
-            "authLevel": 0
-        },
-        {
-            "username": "Organizer",
-            "email": "organizer@gmail.com",
-            "password": "password",
-            "firstName": "Organ",
-            "lastName": "Izer",
-            "bio": "Protest Organizer",
-            "location": "Gainesville, FL",
-            "zip": 32605,
-            "authLevel": 1
-        },
-        {
-            "username": "Moderator",
-            "email": "mod@gmail.com",
-            "password": "password",
-            "firstName": "Mod",
-            "lastName": "Erator",
-            "bio": "Usual Moderator",
-            "location": "Gainesville, FL",
-            "zip": 32605,
-            "authLevel": 2
-        },
-        {
             "username": "Admin",
             "email": "admin@gmail.com",
-            "password": "password",
+            "password": "qnHXybJzz7HvffTWXZL6",
             "firstName": "Ad",
             "lastName": "Min",
-            "bio": "The Admin",
+            "bio": "The main site Admin",
             "location": "Gainesville, FL",
-            "zip": 32605,
+            "zip": 32607,
             "authLevel": 3
         }
     ]

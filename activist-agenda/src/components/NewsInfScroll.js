@@ -18,7 +18,9 @@ const InfScroll = () => {
     const [posts, setPosts] = useState([]);
     const [hasMore, setHasMore] = useState(true);
 
-    const newsapi = new NewsAPI('8d3338893f324fa3934af0ce26e695ca', { corsProxyUrl: 'https://cors-anywhere.herokuapp.com/' });
+    const news = process.env.NEWS_API || '8d3338893f324fa3934af0ce26e695ca';
+
+    const newsapi = new NewsAPI(news, { corsProxyUrl: 'https://cors-anywhere.herokuapp.com/' });
 
     useEffect(() => {
         newsapi.v2.everything({

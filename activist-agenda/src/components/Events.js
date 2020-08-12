@@ -172,7 +172,7 @@ export default class Event extends Component  {
           <ReactMapGL
               {...this.state.viewPort}
               mapStyle="mapbox://styles/mapbox/streets-v11"
-              mapboxApiAccessToken="pk.eyJ1Ijoidm94cG9wdWxpLTM1MiIsImEiOiJja2QxMjl0eHUwazFhMnJxdnlkZXdzbmN5In0.mDtjHH85xMmT7VbMhBBsEw"
+              mapboxApiAccessToken={process.env.MAP_API || "pk.eyJ1Ijoidm94cG9wdWxpLTM1MiIsImEiOiJja2QxMjl0eHUwazFhMnJxdnlkZXdzbmN5In0.mDtjHH85xMmT7VbMhBBsEw"}
               onViewportChange= { viewPort => this.setState({viewPort})}
           >
 

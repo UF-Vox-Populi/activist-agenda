@@ -20,16 +20,16 @@ function handleError(err,res) {
         throw err;
 }
 
-/*
+
 //Deletes all entries. Basically a reset, just used for testing purposes at the moment.
 User.deleteMany({}, (err) => {
     if (err) throw err;
 });
-*/
+
 Post.deleteMany({}, (err) => {
     if (err) throw err;
 });
-/*
+
 //Reads the Filler Users json and puts in all of us for testing purposes.
 fs.readFile('server/database/FillerUsers.json', 'utf8', (err, data) => {
     if (err) throw err;
@@ -46,7 +46,7 @@ fs.readFile('server/database/FillerUsers.json', 'utf8', (err, data) => {
         mongoose.connection.close();
     });
 });
-*/
+
 fs.readFile('server/database/fillerEvents.json', 'utf8', (err, data) => {
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
     
@@ -459,10 +459,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Uncomment for local build
-app.use(express.static(path.join(__dirname, 'activist-agenda/build')));
-app.get('/*', (req, res) => {    
-    res.sendFile(path.join(__dirname, 'activist-agenda/build/index.html'));  
-})
+// app.use(express.static(path.join(__dirname, 'activist-agenda/build')));
+// app.get('/*', (req, res) => {    
+//     res.sendFile(path.join(__dirname, 'activist-agenda/build/index.html'));  
+// })
 
 //Basically sets the server up to listen for any inputs from serverCalls.js and the like.
 app.listen(port, () => console.log(`App now listening on port ${port}`));
