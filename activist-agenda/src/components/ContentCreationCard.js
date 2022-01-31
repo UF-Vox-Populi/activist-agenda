@@ -31,7 +31,7 @@ const geoOptions = {
 
   // Optional depending on the providers
   //fetch: customFetchImplementation,
-  apiKey: 'da669438ed354fae88c82aed45a90e20', // for Mapquest, -->OpenCage<--, Google Premier
+  apiKey: '', // for Mapquest, -->OpenCage<--, Google Premier
   formatter: null // 'gpx', 'string', ...
 };
 
